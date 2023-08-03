@@ -46,23 +46,24 @@ const Card = () => {
 // </div>
 
 
-<div className="carousel-item min-h-screen bg-base-200" onCLick = {HandleButtonClick}>
+<div className="carousel-item min-h-screen bg-base-100" onCLick = {HandleButtonClick}>
       {/* Display trendingShows if available */}
       {Array.isArray(trendingShows) && trendingShows.length > 0 ? (
         <div>
           <h3>Trending TV Shows</h3>
           <div className="hero-content flex-col lg:flex-row-reverse">
             {trendingShows.map(show => (
-              <button onClick = {HandleButtonClick}>
+             
               <div key={show.id} className="show-item">
+                 <button onClick = {HandleButtonClick}>
                 <img
                   alt={`TV Show Poster for ${show.name}`}
                   src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
                 />
                 <h1 className="text-5xl font-bold">{show.name}</h1>
                 <p className = "py-4">First Air Date: {show.first_air_date}</p>
+                </button>
               </div>
-              </button>
             ))}
           </div>
         </div>

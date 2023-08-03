@@ -29,7 +29,11 @@ const Home = () => {
   return (
     <div className='App'>
        <h1 className="text-5xl font-bold text-center">saved shows</h1>
-      <Card/>
+      <div className = "carousel carousel-center rounded-box">
+        <div className = "carousel-item">
+        <Card className = "rounded-box"/>
+        </div>
+        </div>
     </div>
   );
 };

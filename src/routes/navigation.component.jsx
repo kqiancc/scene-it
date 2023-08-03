@@ -7,23 +7,6 @@ import SearchBar from '../components/search-bar.component';
 
 const Navigation = () => {
     return (
-    //     <Fragment>
-    //     <div className="navigation">
-    //       <Link className = 'logo-container' to = '/'>
-    //       <CrwnLogo className = 'logo'/>
-    //       </Link>
-    //       <div className="nav-links-container">
-    //         <Link className="nav-link" to="/recents">
-    //           recents
-    //         </Link>
-    //         <Link className = 'nav-link' to= '/sign-in'>
-    //           sign in
-    //         </Link>
-    //       </div>
-    //     </div>
-    //     <Outlet />
-    //   </Fragment>)}
-
     <Fragment>
       <div className="App">
         <div class="navbar bg-base-100">
