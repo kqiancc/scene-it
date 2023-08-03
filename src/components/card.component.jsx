@@ -10,7 +10,7 @@ const Card = () => {
    
   const HandleButtonClick = () => {
     // Use the navigate function to navigate to the "/about" route
-    navigate('/display-show');
+    navigate('/display-episodes');
   };
 
   useEffect(() => {

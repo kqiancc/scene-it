@@ -28,7 +28,7 @@ const Home = () => {
 
   return (
     <div className='App'>
-      <h1 className='app-title'>saved shows</h1>
+       <h1>saved shows</h1>
 
       {/* <SearchBox
         className='monsters-search-box'
