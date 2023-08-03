@@ -32,28 +32,44 @@ const Card = () => {
   }, []); // Empty dependency array ensures the effect runs only once on component mount
 
   return (
-    <button className='card-container' onClick = {HandleButtonClick}>
+    
+    // <button className='carousel-item' onClick = {HandleButtonClick}>
+  //    <div className="hero min-h-screen bg-base-200">
+  // <div className="hero-content flex-col lg:flex-row-reverse">
+  //   <img src="/images/stock/photo-1635805737707-575885ab0820.jpg" className="max-w-sm rounded-lg shadow-2xl" />
+  //   <div>
+  //     <h1 className="text-5xl font-bold">SHOW TITLES APPEAR HERE</h1>
+  //     <p className="py-6">RELEASE DATES APPEAR HERE</p>
+
+//     </div>
+//   </div>
+// </div>
+
+
+<div className="carousel-item min-h-screen bg-base-200" onCLick = {HandleButtonClick}>
       {/* Display trendingShows if available */}
       {Array.isArray(trendingShows) && trendingShows.length > 0 ? (
         <div>
           <h3>Trending TV Shows</h3>
-          <div className="show-list">
+          <div className="hero-content flex-col lg:flex-row-reverse">
             {trendingShows.map(show => (
+              <button onClick = {HandleButtonClick}>
               <div key={show.id} className="show-item">
                 <img
                   alt={`TV Show Poster for ${show.name}`}
                   src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
                 />
-                <h4>{show.name}</h4>
-                <p>First Air Date: {show.first_air_date}</p>
+                <h1 className="text-5xl font-bold">{show.name}</h1>
+                <p className = "py-4">First Air Date: {show.first_air_date}</p>
               </div>
+              </button>
             ))}
           </div>
         </div>
       ) : (
         <p>No trending TV shows found.</p>
       )}
-    </button>
+    </div>
   );
 };
 

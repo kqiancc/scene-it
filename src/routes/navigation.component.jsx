@@ -2,6 +2,8 @@ import {Fragment} from 'react'
 import {Outlet, Link} from 'react-router-dom';
 import {ReactComponent as CrwnLogo } from '../assets/crown.svg'
 import Home from './home.component';
+import Filters from '../components/filters.component';
+import SearchBar from '../components/search-bar.component';
 
 const Navigation = () => {
     return (
@@ -39,30 +41,8 @@ const Navigation = () => {
             </div>
           </div>
           <div class="flex-none gap-2">
-
-            <div className="drawer drawer-end">
-                <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-                <div className="drawer-content">
-                    {/* Page content here */}
-                    <label htmlFor="my-drawer-4" className="drawer-button btn btn-primary">filters</label>
-                </div> 
-                <div className="drawer-side">
-                    <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
-                    <ul className="menu p-4 w-80 h-full bg-base-200 text-base-content">
-                    {/* Sidebar content here */}
-                    <li><a>Sidebar Item 1</a></li>
-                    <li><a>Sidebar Item 2</a></li>
-                    </ul>
-                </div>
-                </div> 
-            <div class="form-control">
-              <input
-                type="text"
-                placeholder="Search"
-                class="input input-bordered w-24 md:w-auto"
-              />
-             
-            </div>
+          <Filters/>
+          <SearchBar/>
             <div class="dropdown dropdown-end">
               <label tabindex="0" class="btn btn-ghost btn-circle avatar">
                 <div>

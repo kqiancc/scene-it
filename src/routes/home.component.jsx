@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import CardList from '../components/card-list.component';
 import Filters from '../components/filters.component';
+import Card from '../components/card.component';
 
 const Home = () => {
   const [searchField, setSearchField] = useState('');
@@ -28,14 +28,8 @@ const Home = () => {
 
   return (
     <div className='App'>
-       <h1>saved shows</h1>
-
-      {/* <SearchBox
-        className='monsters-search-box'
-        onChangeHandler={onSearchChange}
-        placeholder='search monsters'
-      /> */}
-      <CardList monsters={filteredMonsters} />
+       <h1 className="text-5xl font-bold text-center">saved shows</h1>
+      <Card/>
     </div>
   );
 };
