@@ -32,6 +32,7 @@ const Home = () => {
     <div className='App'>
     <h1 className="text-5xl font-bold text-center padding">search shows</h1>
    
+   
    <div className = "carousel carousel-beginning rounded-box">
      <div className = "carousel-item">
      <Card className = "rounded-box"/>

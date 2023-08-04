@@ -8,9 +8,9 @@ const Card = () => {
 
   const navigate = useNavigate();
 
-  const HandleButtonClick = () => {
+  const HandleButtonClick = (showId) => {
     // Use the navigate function to navigate to the "/display-episodes" route
-    navigate('/display-episodes', { state: { searchTerm } });
+    navigate('/display-episodes', { state: { showId } });
   };
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const Card = () => {
       {Array.isArray(filteredShows) && filteredShows.length > 0 ? (
         filteredShows.map((show) => (
           <div key={show.id} className="carousel-item">
-            <button onClick={HandleButtonClick}>
+             <button onClick={() => HandleButtonClick(show)}>
               <div className="relative">
                 <img
                   alt={`TV Show Poster for ${show.name}`}
