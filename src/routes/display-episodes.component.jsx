@@ -32,20 +32,23 @@ const YourComponent = () => {
           </div>
 
           <div className="flex flex-col w-full">
-            <div className="grid h-10 card bg-base-200 rounded-box place-items-left">
-              <input
+            <div className="grid h-10 card base-200 rounded-box place-items-left">
+            <div className=" place-items-center">
+            <input
                 type="text"
                 value={userInput}
                 onChange={handleInputChange}
                 placeholder="Personal tags"
                 className="input input-bordered input-info w-full max-w-xs"
-              />
-<div className="flex w-full">
-  <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">content</div>
-  <div className="divider divider-horizontal">OR</div>
-  <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">content</div>
-</div>
-              <div className="badge badge-secondary">{userInput}</div>
+              />  
+           <div className="divider divider-horizontal"></div>
+           <div className="badge badge-secondary">{userInput}</div>
+            <div className="grid h-10 flex-grow card base-200 rounded-box place-items-center">
+           
+            </div>
+            </div>
+          
+
             </div>
             <div className="divider"></div>
             <div className="grid h-10 card bg-base-200 rounded-box place-items-left">
