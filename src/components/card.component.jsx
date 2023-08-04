@@ -18,7 +18,7 @@ const Card = () => {
     // Replace 'YOUR_TMDB_API_KEY' with your actual TMDb API key
     const apiKey = '1b2efb1dfa6123bdd9569b0959c0da25';
 
-    const url = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}`;
+    const url = `https://api.themoviedb.org/3/tv/top_rated?api_key=${apiKey}`;
     const options = {
       method: 'GET',
       headers: {
