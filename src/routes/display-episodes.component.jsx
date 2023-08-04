@@ -42,7 +42,7 @@ const YourComponent = () => {
                 className="input input-bordered input-info w-full max-w-xs"
               />  
            <div className="divider divider-horizontal"></div>
-           <div className="badge">{userInput}</div>
+           <div className="badge badge-secondary">{userInput}</div>
             <div className="grid h-10 flex-grow card base-200 rounded-box place-items-center">
            
             </div>
