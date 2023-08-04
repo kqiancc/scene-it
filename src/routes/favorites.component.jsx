@@ -1,7 +1,7 @@
 const Favorites = () => {
     return (
     <div> 
-      <h1> hellaur </h1>
+      <h1> coming soon as well </h1>
     </div>
     );
   };
