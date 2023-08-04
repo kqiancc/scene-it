@@ -1,20 +1,20 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
-const MovieCard = () => {
+const Card = () => {
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
   const navigate = useNavigate();
 
-  const HandleButtonClick = () => {
-    // Use the navigate function to navigate to the "/display-movie-details" route
-    navigate('/display-movie-details', { state: { searchTerm } });
+  const HandleButtonClick = (movie) => {
+    // Use the navigate function to navigate to the "/movie-details" route
+    navigate('/movie-details', { state: { movie } });
   };
 
   useEffect(() => {
-    const apiKey = '1b2efb1dfa6123bdd9569b0959c0da25';
+    const apiKey = '1b2efb1dfa6123bdd9569b0959c0da25'; // Replace this with your actual TMDB API key
     const url = `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&api_key=${apiKey}`;
 
     fetch(url)
@@ -54,7 +54,7 @@ const MovieCard = () => {
       {Array.isArray(filteredMovies) && filteredMovies.length > 0 ? (
         filteredMovies.map((movie) => (
           <div key={movie.id} className="carousel-item">
-            <button onClick={HandleButtonClick}>
+            <button onClick={() => HandleButtonClick(movie)}>
               <div className="relative">
                 <img
                   alt={`Movie Poster for ${movie.title}`}
@@ -75,4 +75,4 @@ const MovieCard = () => {
   );
 };
 
-export default MovieCard;
+export default Card;

@@ -19,22 +19,9 @@ const DisplayEpisodes = () => {
      <p>Released: {showId.first_air_date}</p>
      <p>Rating: {showId.vote_average}/10</p>
     <div className="card-actions justify-end">
-      <button className="btn btn-primary">Seasons</button>
     </div>
   </div>
 </div>
-
-  // <div>
-      
-  //     <img
-  //       src={`https://image.tmdb.org/t/p/w500${showId.poster_path}`}
-  //       alt={`Poster for ${showId.name}`}
-  //     />
-  //     <p>Overview: {showId.overview}</p>
-  //     <p>Release Date: {showId.first_air_date}</p>
-  //     <p>Rating: {showId.vote_average}/10</p>
-  //     {/* Add more information as needed */}
-  //   </div>
   );
 };
 
