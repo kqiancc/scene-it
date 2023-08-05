@@ -69,7 +69,7 @@ const Card = () => {
           </div>
         ))
       ) : (
-        <p>No movies found.</p>
+        <p></p>
       )}
     </div>
   );

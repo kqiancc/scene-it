@@ -69,7 +69,7 @@ const Card = () => {
           </div>
         ))
       ) : (
-        <p>No TV shows found.</p>
+        <p></p>
       )}
     </div>
   );
