@@ -16,7 +16,7 @@ const Card = () => {
   useEffect(() => {
     const apiKey = '1b2efb1dfa6123bdd9569b0959c0da25';
     const url = `https://api.themoviedb.org/3/search/tv?query=${searchTerm}&api_key=${apiKey}`;
-
+    
     fetch(url)
       .then((res) => res.json())
       .then((data) => {

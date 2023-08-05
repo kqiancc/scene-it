@@ -5,199 +5,84 @@ const DisplayEpisodes = () => {
   const location = useLocation();
   const showId = location.state?.showId || null;
 
+  const [seasons, setSeasons] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const apiKey = '1b2efb1dfa6123bdd9569b0959c0da25'; // Replace with your API key
+    const fetchSeasons = async () => {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/tv/${showId.id}?api_key=${apiKey}&language=en-US&append_to_response=seasons`
+        );
+        const data = await response.json();
+
+        if (data.seasons) {
+          setSeasons(data.seasons);
+          setLoading(false);
+        } else {
+          setError('Seasons data not found.');
+          setLoading(false);
+        }
+      } catch (error) {
+        setError('Error fetching data.');
+        setLoading(false);
+      }
+    };
+
+    if (showId) {
+      fetchSeasons();
+    } else {
+      setLoading(false);
+    }
+  }, [showId]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
-<div className="card card-side bg-base-100 shadow-xl">
-  <figure>     
-     <img
-        src={`https://image.tmdb.org/t/p/w500${showId.poster_path}`}
-        alt={`${showId.name}`}
-      />
-      </figure>
-  <div className="card-body">
-    <h2 className="card-title">{`${showId.name}`}</h2>
-    <p>{showId.overview}</p>
-     <p>Released: {showId.first_air_date}</p>
-     <p>Rating: {showId.vote_average}/10</p>
-    <div className="card-actions justify-end">
+    <div>
+      <div className="card card-side bg-base-100 shadow-xl">
+        <figure>
+          <img
+            src={`https://image.tmdb.org/t/p/w500${showId.poster_path}`}
+            alt={`${showId.name}`}
+          />
+        </figure>
+        <div className="card-body">
+          <h2 className="card-title">{`${showId.name}`}</h2>
+          <p>{showId.overview}</p>
+          <p>Released: {showId.first_air_date}</p>
+          <p>Rating: {showId.vote_average}/10</p>
+          <div className="card-actions justify-end">
+            {/* Add any additional actions if needed */}
+          </div>
+        </div>
+      </div>
+
+      <h>Seasons</h>
+      <ul style={{ display: 'flex', flexWrap: 'wrap', listStyle: 'none', padding: 0 }}>
+  {seasons.map((season) => (
+    season.season_number > 0 && (
+      <li key={season.id} style={{ marginRight: '10px', marginBottom: '10px' }}>
+        <button className="btn btn-outline btn-warning">
+          Season {season.season_number} - {season.episode_count} episodes
+        </button>
+      </li>
+    )
+  ))}
+</ul>
+
     </div>
-  </div>
-</div>
   );
 };
 
 export default DisplayEpisodes;
-
-// import React, { useState } from 'react';
-
-// const YourComponent = () => {
-//   const [userInput, setUserInput] = useState('');
-
-//   const handleInputChange = (event) => {
-//     setUserInput(event.target.value);
-//   };
-
-
-
-
-
-//   return (
-//     <div>
-//       <div className="collapse collapse-plus bg-base-200">
-//         <input type="radio" name="my-accordion-3" checked="checked" />
-
-//         <div className="collapse-title text-xl font-medium">
-//           <img
-//             src="/images/stock/photo-1635805737707-575885ab0820.jpg"
-//             className="max-w-sm rounded-lg shadow-2xl"
-//             alt="Episode Poster"
-//           />
-//           <h1 className="text-2xl font-bold">Episode Title</h1>
-//           <p className="py-2">Episode Synopsis</p>
-//         </div>
-
-//         <div className="collapse-content">
-//           <div className="rating gap-1">
-//             <input type="radio" name="rating-3" className="mask mask-heart bg-red-400" />
-//             <input type="radio" name="rating-3" className="mask mask-heart bg-orange-400" />
-//             <input type="radio" name="rating-3" className="mask mask-heart bg-yellow-400" />
-//             <input type="radio" name="rating-3" className="mask mask-heart bg-lime-400" />
-//             <input type="radio" name="rating-3" className="mask mask-heart bg-green-400" />
-//           </div>
-
-//           <div className="flex flex-col w-full">
-//             <div className="grid h-10 card base-200 rounded-box place-items-left">
-//             <div className=" place-items-center">
-//             <input
-//                 type="text"
-//                 value={userInput}
-//                 onChange={handleInputChange}
-//                 placeholder="Personal tags"
-//                 className="input input-bordered input-info w-full max-w-xs"
-//               />  
-//            <div className="divider divider-horizontal"></div>
-//            <div className="badge badge-secondary">{userInput}</div>
-//             <div className="grid h-10 flex-grow card base-200 rounded-box place-items-center">
-           
-//             </div>
-//             </div>
-          
-
-//             </div>
-//             <div className="divider"></div>
-//             <div className="grid h-10 card bg-base-200 rounded-box place-items-left">
-//               <input
-//                 type="text"
-//                 placeholder="Personal notes"
-//                 className="input input-bordered input-primary w-full max-w-xs"
-//               />
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default YourComponent;
-
-
-// // import React, { useState } from 'react';
-
-// // const DisplayEpisodes = () => {
-    
-// //   const [userInput, setUserInput] = useState('');
-
-// //   const HandleInputChange = (event) => {
-// //     setUserInput(event.target.value);
-// //   };
-
-
-// //   return (
-// //         <div> 
-// //     <div className="collapse collapse-plus bg-base-200">
-// //       <input type="radio" name="my-accordion-3" checked="checked" /> 
-     
-// //       <div className="collapse-title text-xl font-medium">
-// //     <img src="/images/stock/photo-1635805737707-575885ab0820.jpg" className="max-w-sm rounded-lg shadow-2xl" />
-// //       <h1 className="text-2xl font-bold">Episode Title</h1>
-// //       <p className="py-2">Episode Synopsis</p>
-// //       </div>
-
-// //       <div className="collapse-content"> 
-     
-// //       <div className="rating gap-1">
-// //   <input type="radio" name="rating-3" className="mask mask-heart bg-red-400"  />
-// //   <input type="radio" name="rating-3" className="mask mask-heart bg-orange-400" />
-// //   <input type="radio" name="rating-3" className="mask mask-heart bg-yellow-400"  />
-// //   <input type="radio" name="rating-3" className="mask mask-heart bg-lime-400"  />
-// //   <input type="radio" name="rating-3" className="mask mask-heart bg-green-400" />
-// // </div>
-
-
-// //         <div className="flex flex-col w-full">
-// //         <div className="grid h-10 card bg-base-200 rounded-box place-items-left">
-// //         <input type="text" placeholder="Personal tags" className="input input-bordered input-info w-full max-w-xs" />
-// //         </div> 
-// //         <div className="divider">
-// //         </div> 
-// //         <div className="grid h-10 card bg-base-200 rounded-box place-items-left">
-// //         <input type="text" placeholder="Personal notes" className="input input-bordered input-primary w-full max-w-xs" />  
-// //         </div>
-// //         </div>
-// //       </div>
-   
-
-
-   
-   
-// //     </div>
-// //     <div className="collapse collapse-plus bg-base-200">
-// //       <input type="radio" name="my-accordion-3" checked="checked"/> 
-// //       <div className="collapse-title text-xl font-medium">
-// //         Click to open this one and close others
-// //       </div>
-// //       <div className="collapse-content"> 
-// //         <p>hello</p>
-// //       </div>
-// //     </div>
-// //     <div className="collapse collapse-plus bg-base-200">
-// //       <input type="radio" name="my-accordion-3"checked="checked" /> 
-// //       <div className="collapse-title text-xl font-medium">
-// //         Click to open this one and close others
-// //       </div>
-// //       <div className="collapse-content"> 
-// //         <p>hello</p>
-// //       </div>
-// //     </div>
-// //     </div>
-// //   );
-// //   };
-
-
-
-// //   <div className="hero min-h-screen bg-base-200">
-// //   <div className="hero-content flex-col lg:flex-row">
-// //     <img src="/images/stock/photo-1635805737707-575885ab0820.jpg" className="max-w-sm rounded-lg shadow-2xl" />
-// //     <div>
-// //       <h1 className="text-5xl font-bold">Box Office News!</h1>
-// //       <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-// //       <div className="flex flex-col w-full">
-// //         <div className="grid h-20 card bg-base-300 rounded-box place-items-center">
-// //         <input type="text" placeholder="Personal tags" className="input input-bordered input-info w-full max-w-xs" />
-// //         </div>
-// //         <div className="divider"></div> 
-// //         <div className="grid h-20 card bg-base-200 rounded-box place-items-center">
-// //         <input type="text" placeholder="Personal notes" className="input input-bordered input-primary w-full max-w-xs" />  
-// //         </div>
-// //         </div>
-// //     </div>
-// //   </div>
-  
-// // </div>
-
-
-
-// //   export default DisplayEpisodes;
-
 
 

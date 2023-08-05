@@ -12,11 +12,11 @@ const Navigation = () => {
         <div class="navbar bg-base-100">
           <div class="flex-1"> 
             <Link class="btn btn-ghost normal-case text-xl" to = '/'>
-                RAJE
+                RAJE.TV
                 </Link>
             <div className="join">
-                <Link className="join-item btn" to="/recents" aria-label="recents">
-                    recents
+                <Link className="join-item btn" to="/saved" aria-label="recents">
+                    saved
                 </Link>
                 <Link className="join-item btn" to="/favorites" aria-label="favorites">
                      favorites
@@ -24,8 +24,8 @@ const Navigation = () => {
             </div>
           </div>
           <div class="flex-none gap-2">
-          <Filters/>
-          <SearchBar/>
+          {/* <Filters/> */}
+          {/* <SearchBar/> */}
             <div class="dropdown dropdown-end">
               <label tabindex="0" class="btn btn-ghost btn-circle avatar">
                 <div>
