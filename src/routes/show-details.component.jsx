@@ -86,7 +86,7 @@ const DisplayEpisodes = () => {
                style={{ width: '175px', height: 'auto' }} 
                />
                 </figure>
-          <div className="card-body">
+          <div className="card-body text-left">
              <h2 className="font-bold text-2xl">
              Season {season.season_number}</h2>
              <p className="text-lg" >{season.episode_count} Episodes</p>
