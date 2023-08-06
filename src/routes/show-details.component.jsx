@@ -51,13 +51,16 @@ const DisplayEpisodes = () => {
 
   return (
     <div>
-      <div className="card card-side bg-base-200 shadow-xl">
-        <figure className = "float-left">
+      <div className="flex bg-base-300 shadow-xl">
+        <figure className = "flex-shrink-0">
           <img
             src={`https://image.tmdb.org/t/p/w500${showId.poster_path}`}
-            alt={`${showId.name}`}/>
+            alt={`${showId.name}`}
+            className="h-96 w-auto object-contain"
+            // style={{ width: '500px', height: 'auto' }} 
+            />
         </figure>
-        <div className="card-body">
+        <div className="card-body max-w-full">
           <h2 className="font-bold text-3xl">{`${showId.name}`}</h2>
           <p className="text-xl">{seasons.filter(season => season.season_number > 0).length} Seasons - {seasons.reduce((total, season) => (season.season_number > 0 ? 
             total + season.episode_count : total), 0)} Episodes</p>
@@ -76,11 +79,11 @@ const DisplayEpisodes = () => {
            <button 
         onClick={() => HandleButtonClick(showId, season.season_number)}>
             <div className="collapse-title text-xl font-small">
-               <figure className = "float-left">
+               <figure className = "float-left items-center justify-center">
                 <img  
                src={`https://image.tmdb.org/t/p/w500${season.poster_path}`}
                alt={`Episode ${season.episode_number} - ${season.name}`}
-               style={{ width: '200px', height: 'auto' }} 
+               style={{ width: '175px', height: 'auto' }} 
                />
                 </figure>
           <div className="card-body">
