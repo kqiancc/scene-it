@@ -53,8 +53,8 @@ const DisplayEpisodes = () => {
       <h1 className = "font-bold text-5xl text-center p-5"> Season {seasonNumber}</h1> 
       <div/>  
         {episodes.map((episode) => (
-          <div className="collapse collapse-plus bg-base-200 w-9/12 justify-right" key={episode.id}>
-            <input type="radio" name="my-accordion-3" className= "justify-center" /> 
+          <div className="collapse collapse-plus bg-base-200 w-9/12 " key={episode.id}>
+            <input type="radio" name="my-accordion-3" /> 
             <div className="collapse-title text-xl font-small">
                <figure className = "float-left">
                 <img  

@@ -51,39 +51,71 @@ const DisplayEpisodes = () => {
 
   return (
     <div>
-      <div className="card card-side bg-base-100 shadow-xl">
-        <figure>
+      <div className="card card-side bg-base-200 shadow-xl">
+        <figure className = "float-left">
           <img
             src={`https://image.tmdb.org/t/p/w500${showId.poster_path}`}
             alt={`${showId.name}`}
           />
         </figure>
         <div className="card-body">
-          <h2 className="card-title">{`${showId.name}`}</h2>
-          <p>Rating: {showId.vote_average}/10</p>
-          <p>Released: {showId.first_air_date}</p>    
-          <p>{showId.overview}</p>
+          <h2 className="font-bold text-3xl">{`${showId.name}`}</h2>
+          <p className="italic text-xl">Rating: {showId.vote_average}/10</p>
+          <p className="italic text-xl">Released: {showId.first_air_date}</p> 
+          <p className="italic text-xl">Episodes: {showId.number_of_seasons}</p>      
+          <p className="text-xl">{showId.overview}</p>
           <div className="card-actions justify-end">
           </div>
         </div>
       </div>
-      <ul style={{ display: 'flex', flexWrap: 'wrap', listStyle: 'none', padding: 0 }}>
+      <div/>  
+     
   {seasons.map((season) => (
     season.season_number > 0 && (
-      <li key={season.id} style={{ marginRight: '10px', marginBottom: '10px' }}>
-        <button className="btn btn-outline btn-warning"  
+          <div className="bg-base-200 w-9/12 " key={season.id}>
+           <button 
         onClick={() => HandleButtonClick(showId, season.season_number)}>
-          Season {season.season_number} - {season.episode_count} episodes
-        </button>
-      </li>
-    )
-  ))}
-</ul>
-
-    </div>
+            <div className="collapse-title text-xl font-small">
+               <figure className = "float-left">
+                <img  
+               src={`https://image.tmdb.org/t/p/w500${season.poster_path}`}
+               alt={`Episode ${season.episode_number} - ${season.name}`}
+               style={{ width: '200px', height: 'auto' }} 
+               />
+                </figure>
+          <div className="card-body">
+             <h2 className="font-bold text-2xl">
+             Season {season.season_number} - {season.episode_count} episodes
+            </h2>
+            <p className = "italic text-lg">{season.vote_average}/10</p>
+            <p className = "italic text-lg">Aired: {season.air_date} </p>
+            <p className = "text-xl" >{season.overview}</p>
+            <div className="card-actions justify-end">
+            <div className="rating gap-1"></div>
+            </div>
+            </div>
+            </div>
+            </button>
+            </div>
+            )
+            ))}
+        </div>
   );
 };
 
 export default DisplayEpisodes;
 
 
+      {/* <ul style={{ display: 'flex', flexWrap: 'wrap', listStyle: 'none', padding: 0 }}>
+  {seasons.map((season) => (
+    season.season_number > 0 && (
+      
+      <li key={season.id} style={{ marginRight: '10px', marginBottom: '10px' }}>
+        <button className="btn btn-outline btn-warning"  
+        onClick={() => HandleButtonClick(showId, season.season_number)}>
+          Season {season.season_number} - {season.episode_count} episodes
+          <p>{season.overview}</p> */}
+        {/* </button>
+      </li> */}
+ 
+{/* </ul> */}
