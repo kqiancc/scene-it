@@ -55,14 +55,14 @@ const DisplayEpisodes = () => {
         <figure className = "float-left">
           <img
             src={`https://image.tmdb.org/t/p/w500${showId.poster_path}`}
-            alt={`${showId.name}`}
-          />
+            alt={`${showId.name}`}/>
         </figure>
         <div className="card-body">
           <h2 className="font-bold text-3xl">{`${showId.name}`}</h2>
+          <p className="text-xl">{seasons.filter(season => season.season_number > 0).length} Seasons - {seasons.reduce((total, season) => (season.season_number > 0 ? 
+            total + season.episode_count : total), 0)} Episodes</p>
           <p className="italic text-xl">Rating: {showId.vote_average}/10</p>
           <p className="italic text-xl">Released: {showId.first_air_date}</p> 
-          <p className="italic text-xl">Episodes: {showId.number_of_seasons}</p>      
           <p className="text-xl">{showId.overview}</p>
           <div className="card-actions justify-end">
           </div>
@@ -85,8 +85,8 @@ const DisplayEpisodes = () => {
                 </figure>
           <div className="card-body">
              <h2 className="font-bold text-2xl">
-             Season {season.season_number} - {season.episode_count} episodes
-            </h2>
+             Season {season.season_number}</h2>
+             <p className="text-lg" >{season.episode_count} Episodes</p>
             <p className = "italic text-lg">{season.vote_average}/10</p>
             <p className = "italic text-lg">Aired: {season.air_date} </p>
             <p className = "text-xl" >{season.overview}</p>
@@ -105,17 +105,3 @@ const DisplayEpisodes = () => {
 
 export default DisplayEpisodes;
 
-
-      {/* <ul style={{ display: 'flex', flexWrap: 'wrap', listStyle: 'none', padding: 0 }}>
-  {seasons.map((season) => (
-    season.season_number > 0 && (
-      
-      <li key={season.id} style={{ marginRight: '10px', marginBottom: '10px' }}>
-        <button className="btn btn-outline btn-warning"  
-        onClick={() => HandleButtonClick(showId, season.season_number)}>
-          Season {season.season_number} - {season.episode_count} episodes
-          <p>{season.overview}</p> */}
-        {/* </button>
-      </li> */}
- 
-{/* </ul> */}
