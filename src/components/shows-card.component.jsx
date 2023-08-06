@@ -49,7 +49,7 @@ const Card = () => {
           onChange={handleInputChange}
         />
       </div>
-      
+      <div className = "divider-vertical"></div>
       {Array.isArray(filteredShows) && filteredShows.length > 0 ? (
         filteredShows.map((show) => (
           <div key={show.id} className="carousel-item">

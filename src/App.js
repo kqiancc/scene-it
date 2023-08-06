@@ -8,6 +8,7 @@ import Saved from "./routes/saved.component";
 import Favorites from "./routes/favorites.component";
 import MovieDetails from "./routes/movie-details.component";
 import DisplayEpisodes from "./routes/display-episodes.component";
+import { app } from "./firebase-config";
 
 const App = () => {
   return (

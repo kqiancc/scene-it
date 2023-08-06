@@ -50,13 +50,13 @@ const DisplayEpisodes = () => {
 
   return (
     <div>   
-      <h1 className = "card-title text-center">Season {seasonNumber}</h1> 
+      <h1 className = "font-bold text-5xl text-center p-5"> Season {seasonNumber}</h1> 
       <div/>  
         {episodes.map((episode) => (
-          <div className="collapse collapse-plus bg-base-200" key={episode.id}>
-            <input type="radio" name="my-accordion-3" /> 
+          <div className="collapse collapse-plus bg-base-200 w-9/12 justify-right" key={episode.id}>
+            <input type="radio" name="my-accordion-3" className= "justify-center" /> 
             <div className="collapse-title text-xl font-small">
-               <figure>
+               <figure className = "float-left">
                 <img  
                src={`https://image.tmdb.org/t/p/w500${episode.still_path}`}
                alt={`Episode ${episode.episode_number} - ${episode.name}`}
@@ -64,12 +64,12 @@ const DisplayEpisodes = () => {
                />
                 </figure>
           <div className="card-body">
-             <h2 className="card-title">
+             <h2 className="font-bold text-2xl">
             Episode {episode.episode_number}: {episode.name}
             </h2>
-            <h1>{episode.vote_average}/10 - {episode.runtime} minutes</h1>
-            <h1>Aired: {episode.air_date} </h1>
-            <p>{episode.overview}</p>
+            <h1 className = "italic">{episode.vote_average}/10 - {episode.runtime} minutes</h1>
+            <h1 className = "italic">Aired: {episode.air_date} </h1>
+            <p >{episode.overview}</p>
             <div className="card-actions justify-end">
             <div className="rating gap-1">
               {/*make button like clickable...*/}
