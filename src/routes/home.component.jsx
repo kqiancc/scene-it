@@ -12,6 +12,7 @@ const Home = () => {
   return (
     <div className='App'>
     <h1 className="text-5xl font-bold text-center padding">search shows</h1>
+ 
    
     <div className="flex flex-col w-full border-opacity-50">
   <div className="grid h-100 card bg-base-300 rounded-box place-items-left">

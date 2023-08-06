@@ -49,8 +49,7 @@ const Card = () => {
           onChange={handleInputChange}
         />
       </div>
-
-      {/* Display filteredShows if available */}
+      
       {Array.isArray(filteredShows) && filteredShows.length > 0 ? (
         filteredShows.map((show) => (
           <div key={show.id} className="carousel-item">

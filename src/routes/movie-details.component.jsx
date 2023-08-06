@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Outlet } from 'react-router-dom';
 import {Fragment} from 'react';
+import Notes from '../components/notes.component';
 
 const MovieDetails = () => {
   const location = useLocation();
@@ -30,43 +31,7 @@ const MovieDetails = () => {
         </div>
       </div>
     </div>
-
-    <div className="rating gap-1">
-      <input type="radio" name="rating-3" className="mask mask-heart bg-red-400" />
-      <input type="radio" name="rating-3" className="mask mask-heart bg-orange-400" />
-      <input type="radio" name="rating-3" className="mask mask-heart bg-yellow-400" />
-      <input type="radio" name="rating-3" className="mask mask-heart bg-lime-400" />
-      <input type="radio" name="rating-3" className="mask mask-heart bg-green-400" />
-    </div>
-
-    <div className="flex flex-col w-full">
-      <div className="grid h-10 card base-200 rounded-box place-items-left">
-        <div className="place-items-center">
-          <input
-            type="text"
-            value={userInput}
-            onChange={HandleInputChange}
-            placeholder="Personal tags"
-            className="input input-bordered input-info w-full max-w-xs"
-          />
-          <div className="divider divider-horizontal"></div>
-          <div className="badge badge-secondary">{userInput}</div>
-          <div className="grid h-10 flex-grow card base-200 rounded-box place-items-center">
-            {/* Add any additional elements here */}
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div className="divider"></div>
-
-    <div className="grid h-10 card bg-base-100 rounded-box place-items-left">
-      <input
-        type="text"
-        placeholder="Personal notes"
-        className="input input-bordered input-primary w-full max-w-xs"
-      />
-    </div>
+    <Notes/>
   </div>
 );
 };

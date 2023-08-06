@@ -6,8 +6,8 @@ import SignIn from "./routes/sign-in.component";
 import ShowDetails from "./routes/show-details.component";
 import Saved from "./routes/saved.component";
 import Favorites from "./routes/favorites.component";
-import DisplaySeasons from "./routes/display-seasons.component";
 import MovieDetails from "./routes/movie-details.component";
+import DisplayEpisodes from "./routes/display-episodes.component";
 
 const App = () => {
   return (
@@ -17,7 +17,7 @@ const App = () => {
         <Route path="saved" element={<Saved />} />
         <Route path="sign-in" element={<SignIn />} />
         <Route path="show-details" element={<ShowDetails />} />
-        <Route path="display-seasons" element={<DisplaySeasons />} />
+        <Route path="display-episodes" element={<DisplayEpisodes />} />
         <Route path="favorites" element={<Favorites />} />
         <Route path="movie-details" element={<MovieDetails />} />
       </Route>

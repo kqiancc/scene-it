@@ -1,5 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 
 const DisplayEpisodes = () => {
   const location = useLocation();
@@ -9,8 +12,15 @@ const DisplayEpisodes = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const navigate = useNavigate();
+
+  const HandleButtonClick = (showId, seasonNumber) => {
+    // Use the navigate function to navigate to the "/display-episodes" route
+    navigate('/display-episodes', { state: { showId, seasonNumber } });
+  };
+
   useEffect(() => {
-    const apiKey = '1b2efb1dfa6123bdd9569b0959c0da25'; // Replace with your API key
+    const apiKey = '1b2efb1dfa6123bdd9569b0959c0da25'; 
     const fetchSeasons = async () => {
       try {
         const response = await fetch(
@@ -31,20 +41,13 @@ const DisplayEpisodes = () => {
       }
     };
 
-    if (showId) {
-      fetchSeasons();
-    } else {
-      setLoading(false);
-    }
+    if (showId) { fetchSeasons();} 
+    else {setLoading(false);}
   }, [showId]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) {return <div>Loading...</div>;}
 
-  if (error) {
-    return <div>{error}</div>;
-  }
+  if (error) {return <div>{error}</div>;}
 
   return (
     <div>
@@ -57,21 +60,19 @@ const DisplayEpisodes = () => {
         </figure>
         <div className="card-body">
           <h2 className="card-title">{`${showId.name}`}</h2>
-          <p>{showId.overview}</p>
-          <p>Released: {showId.first_air_date}</p>
           <p>Rating: {showId.vote_average}/10</p>
+          <p>Released: {showId.first_air_date}</p>    
+          <p>{showId.overview}</p>
           <div className="card-actions justify-end">
-            {/* Add any additional actions if needed */}
           </div>
         </div>
       </div>
-
-      <h>Seasons</h>
       <ul style={{ display: 'flex', flexWrap: 'wrap', listStyle: 'none', padding: 0 }}>
   {seasons.map((season) => (
     season.season_number > 0 && (
       <li key={season.id} style={{ marginRight: '10px', marginBottom: '10px' }}>
-        <button className="btn btn-outline btn-warning">
+        <button className="btn btn-outline btn-warning"  
+        onClick={() => HandleButtonClick(showId, season.season_number)}>
           Season {season.season_number} - {season.episode_count} episodes
         </button>
       </li>
