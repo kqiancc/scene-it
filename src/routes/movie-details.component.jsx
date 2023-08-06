@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
-import { useLocation, Outlet } from 'react-router-dom';
-import { Fragment } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const MovieDetails = () => {
   const location = useLocation();
   const movieId = location.state?.movie || null;
   const [userInput, setUserInput] = useState('');
   const [userNotes, setUserNotes] = useState('');
-  const [tags, setTags] = useState([]);
-  const [notes, setNotes] = useState([]);
+  const [tags, setTags] = useState(() => JSON.parse(localStorage.getItem('tags')) || []);
+  const [notes, setNotes] = useState(() => JSON.parse(localStorage.getItem('notes')) || []);
 
   const handleInputChange = (event) => {
     setUserInput(event.target.value);
@@ -21,7 +20,11 @@ const MovieDetails = () => {
   const handleInputKeyPress = (event) => {
     if (event.key === 'Enter') {
       if (userInput.trim() !== '') {
-        setTags([...tags, userInput]);
+        setTags((prevTags) => {
+          const newTags = [...prevTags, userInput];
+          localStorage.setItem('tags', JSON.stringify(newTags));
+          return newTags;
+        });
         setUserInput('');
       }
     }
@@ -30,11 +33,27 @@ const MovieDetails = () => {
   const handleNotesKeyPress = (event) => {
     if (event.key === 'Enter') {
       if (userNotes.trim() !== '') {
-        setNotes([...notes, userNotes]);
+        setNotes((prevNotes) => {
+          const newNotes = [...prevNotes, userNotes];
+          localStorage.setItem('notes', JSON.stringify(newNotes));
+          return newNotes;
+        });
         setUserNotes('');
       }
     }
   };
+
+  useEffect(() => {
+    // Initialize tags and notes from local storage on component mount
+    const storedTags = JSON.parse(localStorage.getItem('tags'));
+    const storedNotes = JSON.parse(localStorage.getItem('notes'));
+    if (storedTags) {
+      setTags(storedTags);
+    }
+    if (storedNotes) {
+      setNotes(storedNotes);
+    }
+  }, []);
 
   return (
     <div>
