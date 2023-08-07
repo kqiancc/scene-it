@@ -6,8 +6,14 @@ const MovieDetails = () => {
   const movieId = location.state?.movie || null;
   const [userInput, setUserInput] = useState('');
   const [userNotes, setUserNotes] = useState('');
-  const [tags, setTags] = useState(() => JSON.parse(localStorage.getItem('tags')) || []);
-  const [notes, setNotes] = useState(() => JSON.parse(localStorage.getItem('notes')) || []);
+  const [tags, setTags] = useState(() => {
+    const storedTags = JSON.parse(localStorage.getItem(`tags_${movieId.id}`));
+    return storedTags || [];
+  });
+  const [notes, setNotes] = useState(() => {
+    const storedNotes = JSON.parse(localStorage.getItem(`notes_${movieId.id}`));
+    return storedNotes || [];
+  });
 
   const handleInputChange = (event) => {
     setUserInput(event.target.value);
@@ -22,7 +28,7 @@ const MovieDetails = () => {
       if (userInput.trim() !== '') {
         setTags((prevTags) => {
           const newTags = [...prevTags, userInput];
-          localStorage.setItem('tags', JSON.stringify(newTags));
+          localStorage.setItem(`tags_${movieId.id}`, JSON.stringify(newTags));
           return newTags;
         });
         setUserInput('');
@@ -35,7 +41,7 @@ const MovieDetails = () => {
       if (userNotes.trim() !== '') {
         setNotes((prevNotes) => {
           const newNotes = [...prevNotes, userNotes];
-          localStorage.setItem('notes', JSON.stringify(newNotes));
+          localStorage.setItem(`notes_${movieId.id}`, JSON.stringify(newNotes));
           return newNotes;
         });
         setUserNotes('');
@@ -45,15 +51,15 @@ const MovieDetails = () => {
 
   useEffect(() => {
     // Initialize tags and notes from local storage on component mount
-    const storedTags = JSON.parse(localStorage.getItem('tags'));
-    const storedNotes = JSON.parse(localStorage.getItem('notes'));
+    const storedTags = JSON.parse(localStorage.getItem(`tags_${movieId.id}`));
+    const storedNotes = JSON.parse(localStorage.getItem(`notes_${movieId.id}`));
     if (storedTags) {
       setTags(storedTags);
     }
     if (storedNotes) {
       setNotes(storedNotes);
     }
-  }, []);
+  }, [movieId]);
 
   return (
     <div>
