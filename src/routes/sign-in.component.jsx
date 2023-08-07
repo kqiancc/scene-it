@@ -10,6 +10,7 @@ const SignIn = ()=> {
     console.log("Endcoded JWT ID token: " + response.credential);
     var userObject = jwt_decode(response.credential);
     console.log(userObject);
+    setUser(userObject);
     document.getElementById("signInDiv").hidden = true;
   }
 
@@ -35,29 +36,20 @@ const SignIn = ()=> {
   //if we have no user, sign in button
   //if have user, show log out button
 
- 
-
     return (
-      <div id="signInDiv"></div>
-// {/* <div className="hero min-h-screen bg-base-200"> */}
-//   {/* <div className="hero-content flex-col lg:flex-row-reverse">
-//     <div className="text-center">
-//          </div>
-//     <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-//       <div className="card-body">
-//         <div className="form-control "> */}
-   
-//       {/* {Object.keys(user).length != 0 &&
-//       <button onClick= {(e) => handleSignOut(e)}> Sign Out</button>}
-//         </div>   
-//         <div className="form-control mt-6">
-//           <button className="btn btn-primary">Login</button>
-//         </div>
-//       </div>
-//     </div>
-//   </div> */}
-// </div>
+      <div className="App">
+        <div id="signInDiv"></div> 
+          {user &&
+         <div>
+            <h3 className="text-lg font-semibold mt-2">{user.name}</h3>
+         </div> }
+         {Object.keys(user).length != 0 &&
+         <button className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded focus:outline-none mt-4"
+         onClick={(e) => handleSignOut(e)}>sign out
+         </button> }
+      </div>
     );
   }
   
   export default SignIn;
+
