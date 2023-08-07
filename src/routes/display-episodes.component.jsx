@@ -21,7 +21,17 @@ const DisplayEpisodes = () => {
         const data = await response.json();
 
         if (data.episodes) {
-          setEpisodes(data.episodes);
+          setEpisodes(
+            data.episodes.map((episode) => ({
+              ...episode,
+              tags: JSON.parse(
+                localStorage.getItem(`tags_${showId.id}_${seasonNumber}_${episode.id}`)
+              ) || [],
+              notes: JSON.parse(
+                localStorage.getItem(`notes_${showId.id}_${seasonNumber}_${episode.id}`)
+              ) || [],
+            }))
+          );
           setLoading(false);
         } else {
           setError('Episodes data not found.');
@@ -38,7 +48,31 @@ const DisplayEpisodes = () => {
     } else {
       setLoading(false);
     }
-  }, [showId]);
+  }, [showId, seasonNumber]);
+
+  const handleTagsChange = (episodeId, newTags) => {
+    setEpisodes((prevEpisodes) =>
+      prevEpisodes.map((episode) =>
+        episode.id === episodeId ? { ...episode, tags: newTags } : episode
+      )
+    );
+    localStorage.setItem(
+      `tags_${showId.id}_${seasonNumber}_${episodeId}`,
+      JSON.stringify(newTags)
+    );
+  };
+
+  const handleNotesChange = (episodeId, newNotes) => {
+    setEpisodes((prevEpisodes) =>
+      prevEpisodes.map((episode) =>
+        episode.id === episodeId ? { ...episode, notes: newNotes } : episode
+      )
+    );
+    localStorage.setItem(
+      `notes_${showId.id}_${seasonNumber}_${episodeId}`,
+      JSON.stringify(newNotes)
+    );
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -49,41 +83,50 @@ const DisplayEpisodes = () => {
   }
 
   return (
-    <div>   
-      <h1 className = "font-bold text-5xl text-center p-5"> Season {seasonNumber}</h1> 
-      <div/>  
-        {episodes.map((episode) => (
-          <div className="collapse collapse-plus bg-base-200 w-9/12 " key={episode.id}>
-            <input type="radio" name="my-accordion-3" /> 
-            <div className="collapse-title text-xl font-small">
-               <figure className = "float-left">
-                <img  
-               src={`https://image.tmdb.org/t/p/w500${episode.still_path}`}
-               alt={`Episode ${episode.episode_number} - ${episode.name}`}
-               style={{ width: '300px', height: 'auto' }} 
-               />
-                </figure>
-          <div className="card-body">
-             <h2 className="font-bold text-2xl">
-            Episode {episode.episode_number}: {episode.name}
-            </h2>
-            <h1 className = "italic">{episode.vote_average}/10 - {episode.runtime} minutes</h1>
-            <h1 className = "italic">Aired: {episode.air_date} </h1>
-            <p >{episode.overview}</p>
-            <div className="card-actions justify-end">
-            <div className="rating gap-1">
-              {/*make button like clickable...*/}
-              <input type="radio" name="rating-3" className="mask mask-heart bg-purple-400" />
-              </div> 
-              </div>
+    <div>
+      <h1 className="font-bold text-5xl text-center p-5">Season {seasonNumber}</h1>
+      <div />
+      {episodes.map((episode) => (
+        <div className="collapse collapse-plus bg-base-200 w-9/12 " key={episode.id}>
+          <input type="radio" name="my-accordion-3" />
+          <div className="collapse-title text-xl font-small">
+            <figure className="float-left">
+              <img
+                src={`https://image.tmdb.org/t/p/w500${episode.still_path}`}
+                alt={`Episode ${episode.episode_number} - ${episode.name}`}
+                style={{ width: '300px', height: 'auto' }}
+              />
+            </figure>
+            <div className="card-body">
+              <h2 className="font-bold text-2xl">
+                Episode {episode.episode_number}: {episode.name}
+              </h2>
+              <h1 className="italic">
+                {episode.vote_average}/10 - {episode.runtime} minutes
+              </h1>
+              <h1 className="italic">Aired: {episode.air_date} </h1>
+              <p>{episode.overview}</p>
+              <div className="card-actions justify-end">
+                <div className="rating gap-1">
+                  {/*make button like clickable...*/}
+                  <input
+                    type="radio"
+                    name="rating-3"
+                    className="mask mask-heart bg-purple-400"
+                  />
+                </div>
               </div>
             </div>
-            <div className="collapse-content">   
-            <Notes/> 
-           </div>
           </div>
-        ))}
-       
+          <div className="collapse-content">
+            <Notes
+              episodeData={episode}
+              onTagsChange={(newTags) => handleTagsChange(episode.id, newTags)}
+              onNotesChange={(newNotes) => handleNotesChange(episode.id, newNotes)}
+            />
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
