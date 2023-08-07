@@ -1,8 +1,6 @@
 import {Fragment} from 'react'
 import {Outlet, Link} from 'react-router-dom';
-import Home from './home.component';
-import Filters from '../components/filters.component';
-import SearchBar from '../components/search-bar.component';
+import SignIn from './sign-in.component';
 
 const Navigation = () => {
     return (
@@ -23,8 +21,6 @@ const Navigation = () => {
             </div>
           </div>
           <div class="flex-none gap-2">
-          {/* <Filters/> */}
-          {/* <SearchBar/> */}
             <div class="dropdown dropdown-end">
               <label tabindex="0" class="btn btn-ghost btn-circle avatar">
                 <div>
@@ -41,17 +37,7 @@ const Navigation = () => {
                 tabindex="0"
                 class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
               >
-                <li>
-                  <a class="justify-between">
-                    Profile
-                  </a>
-                </li>
-                <li>
-                <Link to="/sign-in">Sign In</Link>
-                </li>
-                <li>
-                  <a>Logout</a>
-                </li>
+                  <SignIn/>
               </ul>
             </div>
           </div>

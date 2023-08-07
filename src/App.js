@@ -8,7 +8,6 @@ import Saved from "./routes/saved.component";
 import Favorites from "./routes/favorites.component";
 import MovieDetails from "./routes/movie-details.component";
 import DisplayEpisodes from "./routes/display-episodes.component";
-import { app } from "./firebase-config";
 
 const App = () => {
   return (
@@ -16,7 +15,7 @@ const App = () => {
       <Route path="/" element={<Navigation />}>
         <Route index element={<Home />} />
         <Route path="saved" element={<Saved />} />
-        <Route path="sign-in" element={<SignIn />} />
+        {/* <Route path="sign-in" element={<SignIn />} /> */}
         <Route path="show-details" element={<ShowDetails />} />
         <Route path="display-episodes" element={<DisplayEpisodes />} />
         <Route path="favorites" element={<Favorites />} />
