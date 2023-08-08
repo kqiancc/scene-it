@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Card from '../components/shows-card.component';
 import MovieCard from '../components/movies-card.component';
-import Fragment from "react";
-import { Outlet, Link } from "react-router-dom";
 
 const Home = () => {
   const [searchField, setSearchField] = useState('');

@@ -7,8 +7,14 @@ import Saved from "./routes/saved.component";
 import Favorites from "./routes/favorites.component";
 import MovieDetails from "./routes/movie-details.component";
 import DisplayEpisodes from "./routes/display-episodes.component";
+import Login from "./firebase/login";
+import firebase from "./firebase/config";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const App = () => {
+  const auth = firebase.firebaseAuth;
+  const [user, loading, error] = useAuthState(auth);
+
   return (
     <Routes>
       <Route path="/" element={<Navigation />}>
@@ -18,6 +24,10 @@ const App = () => {
         <Route path="display-episodes" element={<DisplayEpisodes />} />
         <Route path="favorites" element={<Favorites />} />
         <Route path="movie-details" element={<MovieDetails />} />
+        <Route
+          path="/Login"
+          element={<Login user={user} loading={loading} error={error} />}
+        />
       </Route>
     </Routes>
   );
