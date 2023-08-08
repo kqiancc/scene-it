@@ -1,3 +1,5 @@
+//all functions we need to store or push data is in this file
+
 import { initializeApp } from "firebase/app";
 
 import {
@@ -50,7 +52,7 @@ const INITIAL_DOC = {
 };
 
 ///////////////////////// AUTH /////////////////////////////////////
-export const SignInWithGoogle = async () => {
+const signInWithGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, googleProvider);
     const user = res.user;
@@ -76,12 +78,7 @@ const logout = () => {
   signOut(auth);
 };
 
-export default {
-  SignInWithGoogle,
-  logout,
-  db,
-  firebaseAuth: auth,
-};
+export { signInWithGoogle, logout, db, auth };
 
 // import { initializeApp } from "firebase/app";
 // import { getFirestore } from "firebase/firestore";
