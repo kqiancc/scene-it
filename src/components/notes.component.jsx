@@ -86,7 +86,7 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
             className="input input-bordered input-primary w-full max-w-xs"
             style={{ overflowWrap: 'break-word', minHeight: '40px' }}
           />
-          <div className="text-xs mt-1 text-gray-600">
+          <div className="text-xs mt-1 text-gray-500">
             {userNotes.length} / 300 characters
           </div>
           
