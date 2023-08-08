@@ -1,5 +1,5 @@
 import { RiGoogleFill } from 'react-icons/ri';
-import  {SignInWithGoogle} from './config';
+import  {signInWithGoogle} from './firebase';
 
 const GoogleLogIn = () => {
 	return (
@@ -8,7 +8,8 @@ const GoogleLogIn = () => {
 				<button
 					type='submit'
 					className='btn btn-wide btn-primary'
-					onClick={SignInWithGoogle}>
+					onClick={signInWithGoogle}
+				>
 					<RiGoogleFill className='w-5 h-5' />
 					&nbsp; google sign in
 				</button>
