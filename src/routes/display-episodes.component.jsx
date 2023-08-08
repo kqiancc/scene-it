@@ -21,17 +21,11 @@ const DisplayEpisodes = () => {
         const data = await response.json();
 
         if (data.episodes) {
-          setEpisodes(
-            data.episodes.map((episode) => ({
-              ...episode,
-              tags: JSON.parse(
-                localStorage.getItem(`tags_${showId.id}_${seasonNumber}_${episode.id}`)
-              ) || [],
-              notes: JSON.parse(
-                localStorage.getItem(`notes_${showId.id}_${seasonNumber}_${episode.id}`)
-              ) || [],
-            }))
-          );
+          setEpisodes(data.episodes.map((episode) => ({
+            ...episode,
+            tags: JSON.parse(localStorage.getItem(`tags_${showId.id}_${seasonNumber}_${episode.id}`)) || [],
+            notes: JSON.parse(localStorage.getItem(`notes_${showId.id}_${seasonNumber}_${episode.id}`)) || [],
+          })));
           setLoading(false);
         } else {
           setError('Episodes data not found.');
@@ -56,10 +50,7 @@ const DisplayEpisodes = () => {
         episode.id === episodeId ? { ...episode, tags: newTags } : episode
       )
     );
-    localStorage.setItem(
-      `tags_${showId.id}_${seasonNumber}_${episodeId}`,
-      JSON.stringify(newTags)
-    );
+    localStorage.setItem(`tags_${showId.id}_${seasonNumber}_${episodeId}`, JSON.stringify(newTags));
   };
 
   const handleNotesChange = (episodeId, newNotes) => {
@@ -68,10 +59,7 @@ const DisplayEpisodes = () => {
         episode.id === episodeId ? { ...episode, notes: newNotes } : episode
       )
     );
-    localStorage.setItem(
-      `notes_${showId.id}_${seasonNumber}_${episodeId}`,
-      JSON.stringify(newNotes)
-    );
+    localStorage.setItem(`notes_${showId.id}_${seasonNumber}_${episodeId}`, JSON.stringify(newNotes));
   };
 
   if (loading) {
