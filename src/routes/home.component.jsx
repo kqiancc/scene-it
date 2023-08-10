@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Card from '../components/shows-card.component';
 import MovieCard from '../components/movies-card.component';
+import FirestoreUpdate from '../components/firestore-update';
 
 const Home = () => {
   const [searchField, setSearchField] = useState('');
@@ -12,6 +13,9 @@ const Home = () => {
 
     <div>
     <h1 className="text-5xl font-bold text-center padding">Search Media</h1>
+    <div>
+    <FirestoreUpdate label={'Update movie'}/>
+    </div>
     <div class="text-2xl flex flex-col items-center justify-center h-screen gap-y-10">
     <div className="flex flex-col w-full border-opacity-50">
   <div className="items-center grid h-100 card bg-base-100 rounded-box place-items-left">

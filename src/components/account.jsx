@@ -9,13 +9,7 @@ const Account = ({ user }) => {
 	const [mode, setMode] = useState('all');
 	const [stats, setStats] = useState(false);
 
-	// useEffect(() => { //how to laod in the initial data
-	// 	async function fetchData() {
-	// 		const s = await getStats();
-	// 		setStats(s);
-	// 	}
-	// 	fetchData();
-	// }, [setStats]);
+
 
 	return user ? (
 		<div className='flex flex-col items-center h-screen py-40 overflow-y-auto scrollbar'>
