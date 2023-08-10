@@ -9,7 +9,9 @@ import {
 } from "react-icons/ri";
 import { logout } from "../firebase/firebase";
 
+
 const Navigation = ({ user }) => {
+
   return (
     <Fragment>
       <div className="App">

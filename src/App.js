@@ -8,7 +8,6 @@ import Favorites from "./routes/favorites.component";
 import MovieDetails from "./routes/movie-details.component";
 import DisplayEpisodes from "./routes/display-episodes.component";
 import Login from "./firebase/login";
-import firebase from "./firebase/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Account from "./components/account";
 import { auth } from "./firebase/firebase";
