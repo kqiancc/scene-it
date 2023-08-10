@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
+import { db, getMovie, addNewMovie, getMovieTags, updateUserMovieField } from '../firebase/firebase'; // Import your addNewMovie function
+import { getAuth } from 'firebase/auth'; // Import Firebase's authentication module
 
 const MovieDetails = () => {
   const location = useLocation();
-  const movieId = location.state?.movie || null;
+  const movie = location.state?.movie || null;
   const [userInput, setUserInput] = useState('');
   const [userNotes, setUserNotes] = useState('');
   const [tags, setTags] = useState(() => {
-    const storedTags = JSON.parse(localStorage.getItem(`tags_${movieId.id}`));
+    const storedTags = JSON.parse(localStorage.getItem(`tags_${movie.id}`));
     return storedTags || [];
   });
   const [notes, setNotes] = useState(() => {
-    const storedNotes = JSON.parse(localStorage.getItem(`notes_${movieId.id}`));
+    const storedNotes = JSON.parse(localStorage.getItem(`notes_${movie.id}`));
     return storedNotes || [];
   });
 
@@ -28,9 +31,23 @@ const MovieDetails = () => {
       if (userInput.trim() !== '') {
         setTags((prevTags) => {
           const newTags = [...prevTags, userInput];
-          localStorage.setItem(`tags_${movieId.id}`, JSON.stringify(newTags));
+          localStorage.setItem(`tags_${movie.id}`, JSON.stringify(newTags));
           return newTags;
         });
+      //FIREBASE STUFF
+        //this currently saves every new tag under its like own "movie"
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (user) {
+          addNewMovie(
+            movie.id,
+            movie.title,
+            movie.vote_average,
+            [userInput], // Pass the tag as an array
+            null // Pass notes as null or update your function to include it
+          );
+        }
+
         setUserInput('');
       }
     }
@@ -41,9 +58,22 @@ const MovieDetails = () => {
       if (userNotes.trim() !== '') {
         setNotes((prevNotes) => {
           const newNotes = [...prevNotes, userNotes];
-          localStorage.setItem(`notes_${movieId.id}`, JSON.stringify(newNotes));
+          localStorage.setItem(`notes_${movie.id}`, JSON.stringify(newNotes));
           return newNotes;
         });
+        //FIREBASE STUFF
+        //theoretically if its just one note thing that you can edit, then this does work so
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (user) {
+          addNewMovie(
+            movie.id,
+            movie.title,
+            movie.vote_average,
+            null, // Pass the tag as an array
+            [userNotes] // Pass notes as null or update your function to include it
+          );
+        }
         setUserNotes('');
       }
     }
@@ -51,32 +81,31 @@ const MovieDetails = () => {
 
   useEffect(() => {
     // Initialize tags and notes from local storage on component mount
-    const storedTags = JSON.parse(localStorage.getItem(`tags_${movieId.id}`));
-    const storedNotes = JSON.parse(localStorage.getItem(`notes_${movieId.id}`));
+    const storedTags = JSON.parse(localStorage.getItem(`tags_${movie.id}`));
+    const storedNotes = JSON.parse(localStorage.getItem(`notes_${movie.id}`));
     if (storedTags) {
       setTags(storedTags);
     }
     if (storedNotes) {
       setNotes(storedNotes);
     }
-  }, [movieId]);
+  }, [movie]);
 
   return (
     <div>
       <div className="card card-side bg-base-100 shadow-xl">
         <figure>
           <img
-            src={`https://image.tmdb.org/t/p/w500${movieId.poster_path}`}
-            alt={movieId.title}
+            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            alt={movie.title}
           />
         </figure>
         <div className="card-body">
-          <h2 className="card-title">{movieId.title}</h2>
-          <p>{movieId.overview}</p>
-          <p>Released: {movieId.release_date}</p>
-          <p>Rating: {movieId.vote_average}/10</p>
+          <h2 className="card-title">{movie.title}</h2>
+          <p>{movie.overview}</p>
+          <p>Released: {movie.release_date}</p>
+          <p>Rating: {movie.vote_average}/10</p>
           <div className="card-actions justify-end">
-            {/* Add any additional actions if needed */}
           </div>
         </div>
       </div>
