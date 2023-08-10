@@ -60,9 +60,9 @@ const Navigation = ({ user }) => {
                 </div>
               </div>
             ) : (
-              <Link to="/login" tabIndex={-1}>
+              <Link to="/login">
                 <button
-                  className="absolute right-0 pr-10 pt-14 hover:animate-pulse"
+                  className="absolute right-0 pr-5 pt-3 "
                   tabIndex={-1}
                 >
                   <RiUser3Line className="w-5 h-5" />

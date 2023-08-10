@@ -214,4 +214,67 @@ const addNewMovie = async (
   }
 };
 
-export { signInWithGoogle, logout, db, auth, updateUserMovieField };
+const getMovie = async (movieId) => {
+  try {
+    // Retrieve the user's document reference
+    const docRef = doc(db, "users", userUid);
+
+    // Get the user's document snapshot
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+
+      // Find the movie by searching for the movie ID
+      const movie = userData.movies.find((movie) => movie.movie_id === movieId);
+
+      if (movie) {
+        return movie; // Return the movie if found
+      } else {
+        console.log("Movie not found.");
+        return null; // Return null if the movie is not found
+      }
+    } else {
+      console.log("User document not found.");
+      return null; // Return null if the user document is not found
+    }
+  } catch (error) {
+    console.error("Error getting movie:", error);
+    return null; // Return null if there's an error
+  }
+};
+
+const getMovieTags = async (movieId) => {
+  try {
+    // Retrieve the user's document reference
+    const docRef = doc(db, "users", userUid);
+
+    // Get the user's document snapshot
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+
+      // Find the movie by searching for the movie ID
+      const movie = userData.movies.find((movie) => movie.movie_id === movieId);
+
+      if (movie && Array.isArray(movie.tags)) {
+        return movie.tags; // Return the tags if found
+      }
+    }
+  } catch (error) {
+    console.error("Error getting movie tags:", error);
+  }
+  return []; // Return an empty array if tags are not found
+};
+
+export {
+  signInWithGoogle,
+  logout,
+  db,
+  auth,
+  getMovie,
+  getMovieTags,
+  updateUserMovieField,
+  addNewMovie,
+};
