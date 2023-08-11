@@ -229,6 +229,8 @@ const getMovie = async (movieId) => {
       const movie = userData.movies.find((movie) => movie.movie_id === movieId);
 
       if (movie) {
+        console.log("movie found");
+        console.log(movie.movie_tags);
         return movie; // Return the movie if found
       } else {
         console.log("Movie not found.");

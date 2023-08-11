@@ -26,7 +26,7 @@ const MovieDetails = () => {
     setUserNotes(event.target.value);
   };
 
-  const handleInputKeyPress = (event) => {
+  const handleInputKeyPress = async (event) => {
     if (event.key === 'Enter') {
       if (userInput.trim() !== '') {
         setTags((prevTags) => {
@@ -34,26 +34,35 @@ const MovieDetails = () => {
           localStorage.setItem(`tags_${movie.id}`, JSON.stringify(newTags));
           return newTags;
         });
-      //FIREBASE STUFF
-        //this currently saves every new tag under its like own "movie"
+
+        //saving tags to firestore
         const auth = getAuth();
         const user = auth.currentUser;
-        if (user) {
-          addNewMovie(
-            movie.id,
-            movie.title,
-            movie.vote_average,
-            [userInput], // Pass the tag as an array
-            null // Pass notes as null or update your function to include it
-          );
-        }
+        if (user){
+          const existingMovie = await getMovie(movie.id)
 
+          //check if movie already exists
+          if (existingMovie){
+            const old_tags = existingMovie.movie_tags
+            const new_tags = [...old_tags, userInput]
+            updateUserMovieField(movie.id,"movie_tags",new_tags)
+
+          } else { //save movie and tag to firestore
+            addNewMovie(
+              movie.id,
+              movie.title,
+              movie.vote_average,
+              [userInput], 
+              []
+            );
+          }
+        }
         setUserInput('');
       }
     }
   };
 
-  const handleNotesKeyPress = (event) => {
+  const handleNotesKeyPress = async (event) => {
     if (event.key === 'Enter') {
       if (userNotes.trim() !== '') {
         setNotes((prevNotes) => {
@@ -61,18 +70,26 @@ const MovieDetails = () => {
           localStorage.setItem(`notes_${movie.id}`, JSON.stringify(newNotes));
           return newNotes;
         });
-        //FIREBASE STUFF
-        //theoretically if its just one note thing that you can edit, then this does work so
+       
+        //saving note to firestore
         const auth = getAuth();
         const user = auth.currentUser;
-        if (user) {
-          addNewMovie(
-            movie.id,
-            movie.title,
-            movie.vote_average,
-            null, // Pass the tag as an array
-            [userNotes] // Pass notes as null or update your function to include it
-          );
+        if (user){
+          const existingMovie = await getMovie(movie.id)
+
+          //check if movie already exists
+          if (existingMovie){
+            updateUserMovieField(movie.id,"movie_notes", userNotes)
+
+          } else { //save movie and note to firestore
+            addNewMovie(
+              movie.id,
+              movie.title,
+              movie.vote_average,
+              null, 
+              [userNotes]
+            );
+          }
         }
         setUserNotes('');
       }
