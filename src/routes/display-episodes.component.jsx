@@ -4,7 +4,7 @@ import Notes from '../components/notes.component';
 
 const DisplayEpisodes = () => {
   const location = useLocation();
-  const showId = location.state?.showId || null;
+  const show = location.state?.show || null;
   const seasonNumber = location.state?.seasonNumber || null;
 
   const [episodes, setEpisodes] = useState([]);
@@ -16,15 +16,15 @@ const DisplayEpisodes = () => {
       try {
         const apiKey = '1b2efb1dfa6123bdd9569b0959c0da25';
         const response = await fetch(
-          `https://api.themoviedb.org/3/tv/${showId.id}/season/${seasonNumber}?api_key=${apiKey}&language=en-US`
+          `https://api.themoviedb.org/3/tv/${show.id}/season/${seasonNumber}?api_key=${apiKey}&language=en-US`
         );
         const data = await response.json();
 
         if (data.episodes) {
           setEpisodes(data.episodes.map((episode) => ({
             ...episode,
-            tags: JSON.parse(localStorage.getItem(`tags_${showId.id}_${seasonNumber}_${episode.id}`)) || [],
-            notes: JSON.parse(localStorage.getItem(`notes_${showId.id}_${seasonNumber}_${episode.id}`)) || [],
+            tags: JSON.parse(localStorage.getItem(`tags_${show.id}_${seasonNumber}_${episode.id}`)) || [],
+            notes: JSON.parse(localStorage.getItem(`notes_${show.id}_${seasonNumber}_${episode.id}`)) || [],
           })));
           setLoading(false);
         } else {
@@ -37,12 +37,12 @@ const DisplayEpisodes = () => {
       }
     };
 
-    if (showId) {
+    if (show) {
       fetchEpisodes();
     } else {
       setLoading(false);
     }
-  }, [showId, seasonNumber]);
+  }, [show, seasonNumber]);
 
   const handleTagsChange = (episodeId, newTags) => {
     setEpisodes((prevEpisodes) =>
@@ -50,7 +50,7 @@ const DisplayEpisodes = () => {
         episode.id === episodeId ? { ...episode, tags: newTags } : episode
       )
     );
-    localStorage.setItem(`tags_${showId.id}_${seasonNumber}_${episodeId}`, JSON.stringify(newTags));
+    localStorage.setItem(`tags_${show.id}_${seasonNumber}_${episodeId}`, JSON.stringify(newTags));
   };
 
   const handleNotesChange = (episodeId, newNotes) => {
@@ -59,7 +59,7 @@ const DisplayEpisodes = () => {
         episode.id === episodeId ? { ...episode, notes: newNotes } : episode
       )
     );
-    localStorage.setItem(`notes_${showId.id}_${seasonNumber}_${episodeId}`, JSON.stringify(newNotes));
+    localStorage.setItem(`notes_${show.id}_${seasonNumber}_${episodeId}`, JSON.stringify(newNotes));
   };
 
   if (loading) {
