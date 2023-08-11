@@ -16,8 +16,6 @@ import {
   doc,
   setDoc,
   updateDoc,
-  increment,
-  arrayUnion,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -53,13 +51,15 @@ const createMovie = (
 };
 
 const createEpisode = (
-  episodeNumber,
+  episode_id,
+  episode_name,
   episode_rating,
   episode_tags,
   episode_notes
 ) => {
   return {
-    episode_number: episodeNumber,
+    episode_id,
+    episode_name,
     episode_rating,
     episode_tags,
     episode_notes,
@@ -94,8 +94,6 @@ const signInWithGoogle = async () => {
     const docRef = doc(db, "users", user.uid);
     const docSnap = await getDoc(doc(db, "users", user.uid));
 
-    // TODO: add firebase rule where users can only access their own document
-
     //if document doesnt exist (ie new user), create a document
     if (!docSnap.exists()) {
       await setDoc(doc(db, "users", user.uid), {
@@ -107,14 +105,25 @@ const signInWithGoogle = async () => {
     } else {
       // Existing user, add new movie to the movies array
       const userData = docSnap.data().user_data;
-      const newMovie = createMovie(
-        "13903",
-        "Movie Name",
-        "4.0",
-        ["Action", "Romance"],
-        ["Exciting new film!", "A do not watch!"]
-      );
-      userData.movies.push(newMovie);
+      // const newMovie = createMovie(
+      //   "13903",
+      //   "Movie Name",
+      //   "4.0",
+      //   ["Action", "Romance"],
+      //   ["Exciting new film!", "A do not watch!"]
+      // );
+      // userData.movies.push(newMovie);
+
+      // // Add a new episode
+      // const newEpisode = createEpisode(
+      //   "episodeId123",
+      //   "Episode Title",
+      //   "3.5",
+      //   ["Drama", "Mystery"],
+      //   ["Interesting episode!", "A must-watch!"]
+      // );
+      // userData.episodes.push(newEpisode);
+
       await updateDoc(docRef, { user_data: userData });
     }
   } catch (err) {
@@ -139,7 +148,7 @@ const logout = () => {
   signOut(auth);
 };
 
-///////////////////////// FUNCTIONS /////////////////////////////////////
+///////////////////////// MOVIES /////////////////////////////////////
 const updateUserMovieField = async (movieId, fieldToUpdate, newValue) => {
   try {
     // Retrieve the user's document reference
@@ -246,7 +255,68 @@ const getMovie = async (movieId) => {
   }
 };
 
-const getMovieTags = async (movieId) => {
+///////////////////////// EPISODES /////////////////////////////////////
+
+const updateEpisodeField = async (episodeId, fieldToUpdate, newValue) => {
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const episodeIndex = userData.tv_shows.findIndex(
+        (episode) => episode.episode_id === episodeId
+      );
+
+      if (episodeIndex !== -1) {
+        userData.tv_shows[episodeIndex][fieldToUpdate] = newValue;
+        await updateDoc(docRef, { user_data: userData });
+        console.log("Episode field updated successfully.");
+      } else {
+        console.log("Episode not found.");
+      }
+    } else {
+      console.log("Show not found.");
+    }
+  } catch (error) {
+    console.error("Error updating episode field:", error);
+  }
+};
+
+const addNewEpisode = async (
+  episodeId,
+  episodeName,
+  episodeRating,
+  episodeTags,
+  episodeNotes
+) => {
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const newEpisode = createEpisode(
+        episodeId,
+        episodeName,
+        episodeRating,
+        episodeTags,
+        episodeNotes
+      );
+
+      userData.tv_shows.push(newEpisode);
+
+      await updateDoc(docRef, { user_data: userData });
+      console.log("New episode added successfully.");
+    } else {
+      console.log("Show not found.");
+    }
+  } catch (error) {
+    console.error("Error adding new episode:", error);
+  }
+};
+
+const getEpisode = async (episodeId) => {
   try {
     // Retrieve the user's document reference
     const docRef = doc(db, "users", userUid);
@@ -258,25 +328,40 @@ const getMovieTags = async (movieId) => {
       const userData = docSnap.data().user_data;
 
       // Find the movie by searching for the movie ID
-      const movie = userData.movies.find((movie) => movie.movie_id === movieId);
+      const episode = userData.tv_shows.find(
+        (episode) => episode.episode_id === episodeId
+      );
 
-      if (movie && Array.isArray(movie.tags)) {
-        return movie.tags; // Return the tags if found
+      if (episode) {
+        console.log("episode found");
+        console.log(episode.episode_tags);
+        return episode; // Return the movie if found
+      } else {
+        console.log("episode not found.");
+        return null; // Return null if the movie is not found
       }
+    } else {
+      console.log("User document not found.");
+      return null; // Return null if the user document is not found
     }
   } catch (error) {
-    console.error("Error getting movie tags:", error);
+    console.error("Error getting episode:", error);
+    return null; // Return null if there's an error
   }
-  return []; // Return an empty array if tags are not found
 };
 
 export {
+  //authentification
   signInWithGoogle,
   logout,
   db,
   auth,
+  //movies
   getMovie,
-  getMovieTags,
   updateUserMovieField,
   addNewMovie,
+  //episodes
+  updateEpisodeField,
+  addNewEpisode,
+  getEpisode,
 };

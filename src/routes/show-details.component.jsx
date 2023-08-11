@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const DisplayEpisodes = () => {
   const location = useLocation();
-  const showId = location.state?.showId || null;
+  const show = location.state?.show || null;
 
   const [seasons, setSeasons] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,9 +14,9 @@ const DisplayEpisodes = () => {
 
   const navigate = useNavigate();
 
-  const HandleButtonClick = (showId, seasonNumber) => {
+  const HandleButtonClick = (show, seasonNumber) => {
     // Use the navigate function to navigate to the "/display-episodes" route
-    navigate('/display-episodes', { state: { showId, seasonNumber } });
+    navigate('/display-episodes', { state: { show, seasonNumber } });
   };
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const DisplayEpisodes = () => {
     const fetchSeasons = async () => {
       try {
         const response = await fetch(
-          `https://api.themoviedb.org/3/tv/${showId.id}?api_key=${apiKey}&language=en-US&append_to_response=seasons`
+          `https://api.themoviedb.org/3/tv/${show.id}?api_key=${apiKey}&language=en-US&append_to_response=seasons`
         );
         const data = await response.json();
 
@@ -41,9 +41,9 @@ const DisplayEpisodes = () => {
       }
     };
 
-    if (showId) { fetchSeasons();} 
+    if (show) { fetchSeasons();} 
     else {setLoading(false);}
-  }, [showId]);
+  }, [show]);
 
   if (loading) {return <div>Loading...</div>;}
 
@@ -54,19 +54,19 @@ const DisplayEpisodes = () => {
       <div className="flex bg-base-300 shadow-xl">
         <figure className = "flex-shrink-0">
           <img
-            src={`https://image.tmdb.org/t/p/w500${showId.poster_path}`}
-            alt={`${showId.name}`}
+            src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
+            alt={`${show.name}`}
             className="h-96 w-auto object-contain"
             // style={{ width: '500px', height: 'auto' }} 
             />
         </figure>
         <div className="card-body max-w-full">
-          <h2 className="font-bold text-3xl">{`${showId.name}`}</h2>
+          <h2 className="font-bold text-3xl">{`${show.name}`}</h2>
           <p className="text-xl">{seasons.filter(season => season.season_number > 0).length} Seasons - {seasons.reduce((total, season) => (season.season_number > 0 ? 
             total + season.episode_count : total), 0)} Episodes</p>
-          <p className="italic text-xl">Rating: {showId.vote_average}/10</p>
-          <p className="italic text-xl">Released: {showId.first_air_date}</p> 
-          <p className="text-xl">{showId.overview}</p>
+          <p className="italic text-xl">Rating: {show.vote_average}/10</p>
+          <p className="italic text-xl">Released: {show.first_air_date}</p> 
+          <p className="text-xl">{show.overview}</p>
           <div className="card-actions justify-end">
           </div>
         </div>
@@ -77,7 +77,7 @@ const DisplayEpisodes = () => {
     season.season_number > 0 && (
           <div className="bg-base-200 w-9/12 " key={season.id}>
            <button 
-        onClick={() => HandleButtonClick(showId, season.season_number)}>
+        onClick={() => HandleButtonClick(show, season.season_number)}>
             <div className="collapse-title text-xl font-small">
                <figure className = "float-left items-center justify-center">
                 <img  

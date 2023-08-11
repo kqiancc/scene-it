@@ -8,9 +8,9 @@ const Card = () => {
 
   const navigate = useNavigate();
 
-  const HandleButtonClick = (showId) => {
+  const HandleButtonClick = (show) => {
     // Use the navigate function to navigate to the "/display-episodes" route
-    navigate('/show-details', { state: { showId } });
+    navigate('/show-details', { state: { show } });
   };
 
   useEffect(() => {

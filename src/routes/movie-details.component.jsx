@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { doc, updateDoc, getDoc } from 'firebase/firestore';
-import { db, getMovie, addNewMovie, getMovieTags, updateUserMovieField } from '../firebase/firebase'; // Import your addNewMovie function
+import { getMovie, addNewMovie, updateUserMovieField } from '../firebase/firebase'; // Import your addNewMovie function
 import { getAuth } from 'firebase/auth'; // Import Firebase's authentication module
 
 const MovieDetails = () => {
@@ -44,8 +43,8 @@ const MovieDetails = () => {
           //check if movie already exists
           if (existingMovie){
             const old_tags = existingMovie.movie_tags
-            const new_tags = [...old_tags, userInput]
-            updateUserMovieField(movie.id,"movie_tags",new_tags)
+            const new_tags = [...old_tags || [], userInput]
+            updateUserMovieField(movie.id,"movie_tags", new_tags)
 
           } else { //save movie and tag to firestore
             addNewMovie(
@@ -86,7 +85,7 @@ const MovieDetails = () => {
               movie.id,
               movie.title,
               movie.vote_average,
-              null, 
+              [], 
               [userNotes]
             );
           }

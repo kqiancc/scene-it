@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react';
+import { getEpisode, addNewEpisode, updateEpisodeField } from '../firebase/firebase'; // Import your addNewMovie function
+import { getAuth } from 'firebase/auth'; // Import Firebase's authentication module
+
 
 const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
   const [userInput, setUserInput] = useState('');
@@ -19,12 +22,34 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
     setUserInput(event.target.value);
   };
 
-  const handleInputKeyPress = (event) => {
+  const handleInputKeyPress = async (event) => {
     if (event.key === 'Enter') {
       const newTags = userInput.split(',').map((tag) => tag.trim());
       setTags((prevTags) => [...prevTags, ...newTags]);
       onTagsChange([...tags, ...newTags]);
-      setUserInput('');
+     
+    //saving tags to firestore
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user){
+      const existingEpisode = await getEpisode(episodeData.id);
+
+      //check if episode already exists
+      if (existingEpisode){
+        const old_tags = existingEpisode.episode_tags
+        const new_tags = [...old_tags , userInput]
+        updateEpisodeField(episodeData.id, "episode_tags", new_tags)
+
+      } else { //save episode and tag to firestore
+        addNewEpisode(
+          episodeData.id,
+          episodeData.name,
+          episodeData.vote_average,
+          [userInput], 
+          []
+        );
+        setUserInput('');
+      }}
     }
   };
 
@@ -35,7 +60,10 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
     }
   };
 
-  const handleNotesKeyPress = (event) => {
+  //Error adding new episode: FirebaseError:
+  //Function updateDoc() called with invalid data. 
+  //Unsupported field value: undefined 
+  const handleNotesKeyPress = async (event) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       const newNotes = userNotes.split('\n').map((note) => note.trim());
@@ -43,6 +71,30 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
       if (newNotes.length > 0) {
         onNotesChange(newNotes);
         setNotesDisplay((prevNotes) => [...prevNotes, ...newNotes]);
+
+          //saving note to firestore
+          const auth = getAuth();
+          const user = auth.currentUser;
+          if (user){
+            const existingEpisode = await getEpisode(episodeData.id)
+  
+            //check if movie already exists
+            if (existingEpisode){
+              updateEpisodeField(episodeData.id,"episode_notes", userNotes)
+  
+            } else { //save movie and note to firestore
+              addNewEpisode(
+                episodeData.id,
+                episodeData.title,
+                episodeData.vote_average,
+                [], 
+                [userNotes]
+              );
+            }
+          }
+
+
+
         setUserNotes('');
       }
     }
