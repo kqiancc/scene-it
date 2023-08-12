@@ -71,7 +71,7 @@ const DisplayEpisodes = () => {
   }
 
   return (
-    <div>
+    <div className = "flex flex-col items-center">
       <h1 className="font-bold text-5xl text-center p-5">Season {seasonNumber}</h1>
       <div />
       {episodes.map((episode) => (

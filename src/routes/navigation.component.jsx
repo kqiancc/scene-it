@@ -1,5 +1,7 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { Outlet, Link } from "react-router-dom";
+import { themeChange } from "theme-change";
+import ThemePicker from "../components/theme-picker";
 import { BsFillPersonFill } from "react-icons/bs";
 import {
   RiGithubLine,
@@ -9,8 +11,10 @@ import {
 } from "react-icons/ri";
 import { logout } from "../firebase/firebase";
 
-
 const Navigation = ({ user }) => {
+  useEffect(() => {
+    themeChange(false);
+  }, []);
 
   return (
     <Fragment>
@@ -31,8 +35,9 @@ const Navigation = ({ user }) => {
               >
                 favorites
               </Link>
+              <ThemePicker /> {/*TODO: make it not round and also make it work*/}
+             
             </div>
-  
 
             {user ? (
               <div className="absolute right-0 pr-5 pt-3 ">
@@ -61,10 +66,7 @@ const Navigation = ({ user }) => {
               </div>
             ) : (
               <Link to="/login">
-                <button
-                  className="absolute right-0 pr-5 pt-3 "
-                  tabIndex={-1}
-                >
+                <button className="absolute right-0 pr-5 pt-3 " tabIndex={-1}>
                   <RiUser3Line className="w-5 h-5" />
                 </button>
               </Link>

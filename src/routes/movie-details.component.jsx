@@ -5,7 +5,7 @@ import { getAuth } from 'firebase/auth'; // Import Firebase's authentication mod
 
 const MovieDetails = () => {
   const location = useLocation();
-  const movie = location.state?.movie || null;
+  const movie = location.state?.item || null;
   const [userInput, setUserInput] = useState('');
   const [userNotes, setUserNotes] = useState('');
   const [tags, setTags] = useState(() => {
