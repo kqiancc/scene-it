@@ -1,19 +1,22 @@
-import { useState, useEffect } from 'react';
-import { getEpisode, addNewEpisode, updateEpisodeField } from '../firebase/firebase'; // Import your addNewMovie function
-import { getAuth } from 'firebase/auth'; // Import Firebase's authentication module
-
+import { useState, useEffect } from "react";
+import {
+  getEpisode,
+  addNewEpisode,
+  updateEpisodeField,
+} from "../firebase/firebase"; // Import your addNewMovie function
+import { getAuth } from "firebase/auth"; // Import Firebase's authentication module
 
 const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
-  const [userInput, setUserInput] = useState('');
+  const [userInput, setUserInput] = useState("");
   const [tags, setTags] = useState([]);
-  const [userNotes, setUserNotes] = useState('');
+  const [userNotes, setUserNotes] = useState("");
   const [notesDisplay, setNotesDisplay] = useState([]);
 
   useEffect(() => {
     if (episodeData) {
-      setUserInput('');
+      setUserInput("");
       setTags(episodeData.tags);
-      setUserNotes(episodeData.notes.join('\n'));
+      setUserNotes(episodeData.notes.join("\n"));
       setNotesDisplay(episodeData.notes);
     }
   }, [episodeData]);
@@ -23,33 +26,35 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
   };
 
   const handleInputKeyPress = async (event) => {
-    if (event.key === 'Enter') {
-      const newTags = userInput.split(',').map((tag) => tag.trim());
+    if (event.key === "Enter") {
+      const newTags = userInput.split(",").map((tag) => tag.trim());
       setTags((prevTags) => [...prevTags, ...newTags]);
       onTagsChange([...tags, ...newTags]);
-     
-    //saving tags to firestore
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (user){
-      const existingEpisode = await getEpisode(episodeData.id);
+      console.log(newTags);
 
-      //check if episode already exists
-      if (existingEpisode){
-        const old_tags = existingEpisode.episode_tags
-        const new_tags = [...old_tags , userInput]
-        updateEpisodeField(episodeData.id, "episode_tags", new_tags)
+      //saving tags to firestore
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        const existingEpisode = await getEpisode(episodeData.id);
 
-      } else { //save episode and tag to firestore
-        addNewEpisode(
-          episodeData.id,
-          episodeData.name,
-          episodeData.vote_average,
-          [userInput], 
-          []
-        );
-        setUserInput('');
-      }}
+        //check if episode already exists
+        if (existingEpisode) {
+          const old_tags = existingEpisode.episode_tags;
+          const new_tags = [...old_tags, userInput];
+          updateEpisodeField(episodeData.id, "episode_tags", new_tags);
+        } else {
+          //save episode and tag to firestore
+          addNewEpisode(
+            episodeData.id,
+            episodeData.name,
+            episodeData.vote_average,
+            [userInput],
+            []
+          );
+          setUserInput("");
+        }
+      }
     }
   };
 
@@ -61,48 +66,44 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
   };
 
   //Error adding new episode: FirebaseError:
-  //Function updateDoc() called with invalid data. 
-  //Unsupported field value: undefined 
+  //Function updateDoc() called with invalid data.
+  //Unsupported field value: undefined
   const handleNotesKeyPress = async (event) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      const newNotes = userNotes.split('\n').map((note) => note.trim());
+    if (event.key === "Enter") {
+      const newNotes = userNotes.split("\n").map((note) => note.trim());
 
       if (newNotes.length > 0) {
         onNotesChange(newNotes);
         setNotesDisplay((prevNotes) => [...prevNotes, ...newNotes]);
 
-          //saving note to firestore
-          const auth = getAuth();
-          const user = auth.currentUser;
-          if (user){
-            const existingEpisode = await getEpisode(episodeData.id)
-  
-            //check if movie already exists
-            if (existingEpisode){
-              updateEpisodeField(episodeData.id,"episode_notes", userNotes)
-  
-            } else { //save movie and note to firestore
-              addNewEpisode(
-                episodeData.id,
-                episodeData.title,
-                episodeData.vote_average,
-                [], 
-                [userNotes]
-              );
-            }
+        //saving note to firestore
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (user) {
+          const existingEpisode = await getEpisode(episodeData.id);
+
+          //check if movie already exists
+          if (existingEpisode) {
+            updateEpisodeField(episodeData.id, "episode_notes", userNotes);
+          } else {
+            //save episode and tag to firestore
+            addNewEpisode(
+              episodeData.id,
+              episodeData.name,
+              episodeData.vote_average,
+              [],
+              [userNotes]
+            );
+            setUserNotes("");
           }
-
-
-
-        setUserNotes('');
+        }
       }
     }
   };
 
   return (
     <div>
-      <div className="grid h-10 card base-200 rounded-box place-items-left">
+      <div className="grid h-10 card bg-base-200 rounded-box place-items-left">
         <div className="place-items-center">
           <input
             type="text"
@@ -127,7 +128,7 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
 
       <div className="divider"></div>
 
-      <div className="grid card bg-base-100 rounded-box place-items-left">
+      <div className="grid card bg-base-200 rounded-box place-items-left">
         <div className="place-items-center">
           <input
             type="text"
@@ -136,17 +137,20 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
             onKeyPress={handleNotesKeyPress}
             placeholder="Personal notes"
             className="input input-bordered input-primary w-full max-w-xs"
-            style={{ overflowWrap: 'break-word', minHeight: '40px' }}
+            style={{ overflowWrap: "break-word", minHeight: "40px" }}
           />
           <div className="text-xs mt-1 text-gray-500">
             {userNotes.length} / 300 characters
           </div>
-          
         </div>
       </div>
 
       {notesDisplay.length > 0 && (
-        <div className={`tag-container mt-2 ${notesDisplay.length > 1 ? 'flex-wrap' : ''}`}>
+        <div
+          className={`tag-container mt-2 ${
+            notesDisplay.length > 1 ? "flex-wrap" : ""
+          }`}
+        >
           {notesDisplay.map((note, index) => (
             <div key={index} className="badge badge-secondary mx-1">
               {note}

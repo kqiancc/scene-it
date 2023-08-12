@@ -84,6 +84,8 @@ const createTVShow = (tv_id, tv_name, tv_seasons) => {
 const INITIAL_DOC = {
   tv_shows: [],
   movies: [],
+  favorites: [],
+  watch_list: [],
 };
 
 ///////////////////////// AUTH /////////////////////////////////////
