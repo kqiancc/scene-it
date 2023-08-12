@@ -3,7 +3,7 @@ import  {signInWithGoogle} from './firebase';
 
 const GoogleLogIn = () => {
 	return (
-		<div className='flex flex-col'>
+		<div className='flex flex-col items-center'>
 			<div>
 				<button
 					type='submit'
