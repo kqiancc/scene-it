@@ -16,6 +16,17 @@ module.exports = {
       animation: {
         wiggle: "wiggle 1s ease-in-out infinite",
         blink: "blink 1s ease-in-out infinite",
+        shrink: "shrink 0.5s ease-in-out forwards",
+        grow: "grow 0.5s ease-in-out forwards",
+      },
+      fontSize: {
+        "10xl": "10rem",
+        "11xl": "11rem",
+        "12xl": "12rem",
+        "13xl": "13rem",
+        "14xl": "14rem",
+        "15xl": "15rem",
+        // Add more custom sizes as needed
       },
     },
 
