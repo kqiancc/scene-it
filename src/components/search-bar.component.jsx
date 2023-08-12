@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+import TypingAnimation from "./typing";
+import { gsap } from "gsap";
+import { TextPlugin } from "gsap/TextPlugin";
 
 const SearchBar = () => {
   const [items, setItems] = useState([]);
@@ -13,6 +16,22 @@ const SearchBar = () => {
   };
 
   useEffect(() => {
+    if (isFocused) {
+      // Shrinking animation for the input text when focused
+      gsap.fromTo(
+        ".shrink-text",
+        { fontSize: "11rem" },
+        { fontSize: "6rem", duration: 1, ease: "power2.easeIn" }
+      );
+    } else {
+      // Growing animation for the div text when not focused
+      gsap.fromTo(
+        ".grow-text",
+        { fontSize: "6rem" },
+        { fontSize: "11rem", duration: 1, ease: "power2.easeOut" }
+      );
+    }
+
     const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25";
     const tvUrl = `https://api.themoviedb.org/3/search/tv?query=${searchTerm}&api_key=${apiKey}`;
     const movieUrl = `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&api_key=${apiKey}`;
@@ -29,7 +48,7 @@ const SearchBar = () => {
         setItems(combinedResults);
       })
       .catch((err) => console.error("Error fetching data:", err));
-  }, [searchTerm]);
+  }, [isFocused, searchTerm]);
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
@@ -39,15 +58,13 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div
-        className="flex flex-col items-center"
-      >
+    <div className='flex flex-col items-center'>
+      <div className='flex flex-col items-center'>
         {isFocused ? (
           <input
-            type="text"
-            placeholder=""
-            className="animate-shrink text-8xl text-center font-bold text-primary max-w-full input input-ghost h-fit focus:outline-none placeholder-primary"
+            type='text'
+            placeholder=''
+            className='shrink-text text-6xl text-center font-bold text-primary max-w-full input input-ghost h-fit focus:outline-none placeholder-primary'
             value={searchTerm}
             onChange={handleInputChange}
             onBlur={() => setIsFocused(false)}
@@ -55,19 +72,25 @@ const SearchBar = () => {
           />
         ) : (
           <div
-            className="animate-grow text-15xl text-center font-bold text-primary cursor-pointer mt-28"
+            className='grow-text text-11xl text-center font-bold text-primary cursor-pointer'
             onClick={handleDivClick}
           >
-            {searchTerm ? searchTerm: <div>Search Media<span className="animate-blink font-thin">|</span></div>}
+            {searchTerm ? (
+              searchTerm
+            ) : (
+              <div>
+                <TypingAnimation />
+              </div>
+            )}
           </div>
         )}
       </div>
-      <div className="flex flex-wrap justify-center w-full container mx-auto">
+      <div className='flex flex-wrap justify-center w-full container mx-auto'>
         {Array.isArray(items) && items.length > 0 ? (
           items.map((item) => (
-            <div key={item.id} className="carousel carousel-center w-1/6 p-2">
+            <div key={item.id} className='carousel carousel-center w-1/6 p-2'>
               <button onClick={() => HandleButtonClick(item, item.type)}>
-                <div className="relative">
+                <div className='relative'>
                   {item.poster_path ? (
                     <img
                       alt={`${
@@ -76,14 +99,14 @@ const SearchBar = () => {
                           : "Movie Poster for"
                       } ${item.name || item.title}`}
                       src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                      className="w-full h-96 object-cover rounded"
+                      className='w-full h-96 object-cover rounded'
                     />
                   ) : (
-                    <div className="flex justify-center items-center w-full h-96 bg-base-100 rounded text-2xl text-base-content">
+                    <div className='flex justify-center items-center w-full h-96 bg-base-100 rounded text-2xl text-base-content'>
                       No Poster Image Currently Found
                     </div>
                   )}
-                  <div className="absolute bottom-0 left-0 w-full p-2 bg-black bg-opacity-60 text-white text-sm font-semibold">
+                  <div className='absolute bottom-0 left-0 w-full p-2 bg-black bg-opacity-60 text-white text-sm font-semibold'>
                     {item.name || item.title}
                   </div>
                 </div>

@@ -1,9 +1,11 @@
-const Saved = () => {
+import TypingAnimation from "../components/typing";
 
-    return (
-      <div >
-     should this just be saved stuff?
-        </div>
-        );}
-    
-        export default Saved;
+const Saved = () => {
+  return (
+    <div>
+      <TypingAnimation />
+    </div>
+  );
+};
+
+export default Saved;
