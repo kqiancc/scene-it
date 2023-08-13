@@ -3,11 +3,11 @@ import  {signInWithGoogle} from './firebase';
 
 const GoogleLogIn = () => {
 	return (
-		<div className='flex flex-col items-center'>
+		<div className='flex flex-col'>
 			<div>
 				<button
 					type='submit'
-					className='btn btn-wide btn-primary'
+					className='btn btn-wide btn-secondary'
 					onClick={signInWithGoogle}
 				>
 					<RiGoogleFill className='w-5 h-5' />

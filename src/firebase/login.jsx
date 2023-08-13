@@ -4,7 +4,7 @@ import Spinner from './spinner';
 
 const Login = ({ user, loading, error }) => {
 	return (
-		<div className='flex items-center h-screen justify-center'>
+		<div className='flex relative items-center h-screen justify-center'>
 			{user && <Navigate to='/' />}
 			{loading ? <Spinner /> : <GoogleLogIn />}
 		</div>

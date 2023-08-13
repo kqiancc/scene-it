@@ -2,7 +2,7 @@ import { Fragment, useEffect } from "react";
 import { Outlet, Link } from "react-router-dom";
 import { themeChange } from "theme-change";
 import ThemePicker from "../components/theme-picker";
-import { BsFillPersonFill } from "react-icons/bs";
+import { FiSettings } from "react-icons/fi";
 import {
   RiGithubLine,
   RiUser3Line,
@@ -51,8 +51,8 @@ const Navigation = ({ user }) => {
                   >
                     <li>
                       <Link to="/account" tabIndex={-1}>
-                        <RiBarChart2Line className="w-5 h-5" />
-                        stats
+                        <FiSettings className="w-5 h-5" />
+                        settings
                       </Link>
                     </li>
                     <li>
