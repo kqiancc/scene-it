@@ -5,8 +5,9 @@ import {
   updateEpisodeField,
 } from "../firebase/firebase"; // Import your addNewMovie function
 import { getAuth } from "firebase/auth"; // Import Firebase's authentication module
+import {TiDeleteOutline} from "react-icons/ti";
 
-const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
+const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
   const [userInput, setUserInput] = useState("");
   const [tags, setTags] = useState([]);
   const [userNotes, setUserNotes] = useState("");
@@ -65,9 +66,7 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
     }
   };
 
-  //Error adding new episode: FirebaseError:
-  //Function updateDoc() called with invalid data.
-  //Unsupported field value: undefined
+
   const handleNotesKeyPress = async (event) => {
     if (event.key === "Enter") {
       const newNotes = userNotes.split("\n").map((note) => note.trim());
@@ -111,7 +110,7 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
             onChange={handleInputChange}
             onKeyPress={handleInputKeyPress}
             placeholder="Personal tags"
-            className="input input-bordered input-info w-full max-w-xs"
+            className="input input-bordered input-primary w-full max-w-xs"
           />
         </div>
       </div>
@@ -121,6 +120,10 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
           {tags.map((tag, index) => (
             <div key={index} className="badge badge-secondary mx-1">
               {tag}
+              <TiDeleteOutline
+              onClick={() => onTagDelete(episodeData.id, tag)}
+            >   
+            </TiDeleteOutline>
             </div>
           ))}
         </div>
