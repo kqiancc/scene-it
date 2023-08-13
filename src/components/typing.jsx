@@ -5,7 +5,9 @@ import { TextPlugin } from "gsap/TextPlugin";
 gsap.registerPlugin(TextPlugin);
 
 const TypingAnimation = () => {
-  const [words, setWords] = useState(["Movies", "TV"]);
+  const [words, setWords] = useState([]);
+  //cant set these default words in the words or else its choppy
+  const defaultWords = ["Movies", "TV"];
 
   useEffect(() => {
     const options = {
@@ -26,7 +28,7 @@ const TypingAnimation = () => {
         const extractedWords = response.results
           .map((movie) => `"${movie.original_title}"`) // Adding double quotes around each word
           .filter((word) => word.length <= 12); // Adjusted the length to account for the quotes
-        setWords([...words, ...extractedWords]); // Append the extracted words to the default ones
+        setWords([...defaultWords, ...extractedWords]); // Append the extracted words to the default ones
       })
       .catch((err) => console.error(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
