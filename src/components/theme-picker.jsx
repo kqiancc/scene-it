@@ -1,7 +1,7 @@
 const ThemePicker = () => {
 	return (
 		<div>
-			<button className = "item-join btn">
+			<button className = "join-item btn">
 				<select
 					className='select select-xs w-full max-w-xs scrollbar'
 					data-choose-theme

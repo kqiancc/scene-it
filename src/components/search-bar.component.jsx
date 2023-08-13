@@ -54,8 +54,7 @@ const SearchBar = () => {
             autoFocus
           />
         ) : (
-          <div
-            className="animate-grow text-15xl text-center font-bold text-primary cursor-pointer mt-28"
+          <div className = "animate-grow text-15xl text-center font-bold text-primary cursor-pointer mt-28"
             onClick={handleDivClick}
           >
             {searchTerm ? searchTerm: <div>Search Media<span className="animate-blink font-thin">|</span></div>}

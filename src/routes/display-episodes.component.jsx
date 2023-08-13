@@ -26,6 +26,12 @@ const DisplayEpisodes = () => {
           setEpisodes(
             data.episodes.map((episode) => ({
               ...episode,
+              isHeartClicked:
+                JSON.parse(
+                  localStorage.getItem(
+                    `isHeartClicked_${show.id}_${seasonNumber}_${episode.id}`
+                  )
+                ) || false,
               tags:
                 JSON.parse(
                   localStorage.getItem(
@@ -90,6 +96,21 @@ const DisplayEpisodes = () => {
     return <div>{error}</div>;
   }
 
+  const handleHeartClick = (episodeId) => {
+    setEpisodes((prevEpisodes) =>
+      prevEpisodes.map((episode) => {
+        if (episode.id === episodeId) {
+          const newHeartState = !episode.isHeartClicked;
+          localStorage.setItem(
+            `isHeartClicked_${show.id}_${seasonNumber}_${episodeId}`,
+            JSON.stringify(newHeartState)
+          );
+          return { ...episode, isHeartClicked: newHeartState };
+        }
+        return episode;
+      })
+    );
+  };
 
   return (
     <div className="flex flex-col items-center">
@@ -120,13 +141,16 @@ const DisplayEpisodes = () => {
               </h1>
               <h1 className="italic">Aired: {episode.air_date} </h1>
               <p>{episode.overview}</p>
-              <div className="card-actions justify-end">
-              </div>
+              <div className="card-actions justify-end"></div>
             </div>
           </div>
           <div className="collapse-content">
-          <Heart isHeartClicked={isHeartClicked} setIsHeartClicked={setIsHeartClicked} className = "absolute right=0"  />
-          <div className = "divider"/>
+            <Heart
+              episodeId={episode.id}
+              isHeartClicked={episode.isHeartClicked}
+              handleHeartClick={handleHeartClick}
+            />
+            <div className="divider" />
             <Notes
               episodeData={episode}
               onTagsChange={(newTags) => handleTagsChange(episode.id, newTags)}
@@ -134,7 +158,6 @@ const DisplayEpisodes = () => {
                 handleNotesChange(episode.id, newNotes)
               }
             />
-            
           </div>
         </div>
       ))}

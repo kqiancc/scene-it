@@ -52,7 +52,7 @@ const TVDetails = () => {
   return (
     <div className = "flex flex-col items-center">
       <div className="flex bg-base-300 shadow-xl">
-        <figure className = "flex-shrink-0">
+        <figure className = "flex-shrink-0 ">
           <img
             src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
             alt={`${show.name}`}
