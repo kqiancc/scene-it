@@ -51,7 +51,7 @@ const TVDetails = () => {
 
   return (
     <div className = "flex flex-col items-center">
-      <div className="flex bg-base-300 shadow-xl">
+      <div className="flex bg-base-300 shadow-xl w-10/12 rounded-xl ">
         <figure className = "flex-shrink-0 ">
           <img
             src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
