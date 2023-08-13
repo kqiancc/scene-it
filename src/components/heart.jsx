@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
-
 
 const Heart = ({ episodeId, isHeartClicked, handleHeartClick }) => {
     return (

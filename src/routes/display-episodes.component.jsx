@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Notes from "../components/notes.component";
 import Heart from "../components/heart";
+import {addNewFav} from "../firebase/firebase"
 
 const DisplayEpisodes = () => {
   const location = useLocation();
@@ -104,10 +105,17 @@ const DisplayEpisodes = () => {
           localStorage.setItem(
             `isHeartClicked_${show.id}_${seasonNumber}_${episodeId}`,
             JSON.stringify(newHeartState)
+
+          );
+          addNewFav(
+            episode.id,
+            episode.name,
+            episode.vote_average,
           );
           return { ...episode, isHeartClicked: newHeartState };
         }
         return episode;
+        
       })
     );
   };

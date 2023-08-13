@@ -65,9 +65,7 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
     }
   };
 
-  //Error adding new episode: FirebaseError:
-  //Function updateDoc() called with invalid data.
-  //Unsupported field value: undefined
+
   const handleNotesKeyPress = async (event) => {
     if (event.key === "Enter") {
       const newNotes = userNotes.split("\n").map((note) => note.trim());
