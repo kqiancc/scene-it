@@ -1,5 +1,4 @@
 import { Navigate } from 'react-router-dom';
-import { useState, useEffect, useMemo } from 'react';
 
 const Account = ({ user }) => {
 

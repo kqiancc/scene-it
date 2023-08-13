@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Notes from "../components/notes.component";
 import Heart from "../components/heart";
-import {toggleEpFav} from "../firebase/firebase"
+import {toggleEpFav, deleteTagFromEpisode} from "../firebase/firebase"
 
 const DisplayEpisodes = () => {
   const location = useLocation();
@@ -75,6 +75,20 @@ const DisplayEpisodes = () => {
       `tags_${show.id}_${seasonNumber}_${episodeId}`,
       JSON.stringify(newTags)
     );
+  };
+
+  const handleTagDelete = (episodeId, tagToDelete) => {
+    setEpisodes((prevEpisodes) =>
+      prevEpisodes.map((episode) =>
+        episode.id === episodeId
+          ? { ...episode, tags: episode.tags.filter((tag) => tag !== tagToDelete) }
+          : episode
+      )
+    );
+    deleteTagFromEpisode(episodeId, tagToDelete);
+
+    const updatedTags = episodes.find((episode) => episode.id === episodeId)?.tags || [];
+    localStorage.setItem(`tags_${show.id}_${seasonNumber}_${episodeId}`, JSON.stringify(updatedTags));
   };
 
   const handleNotesChange = (episodeId, newNotes) => {
@@ -163,8 +177,8 @@ const DisplayEpisodes = () => {
               episodeData={episode}
               onTagsChange={(newTags) => handleTagsChange(episode.id, newTags)}
               onNotesChange={(newNotes) =>
-                handleNotesChange(episode.id, newNotes)
-              }
+                handleNotesChange(episode.id, newNotes)}
+                onTagDelete={(episodeId, tagToDelete) => handleTagDelete(episodeId, tagToDelete)} 
             />
           </div>
         </div>

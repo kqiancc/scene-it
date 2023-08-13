@@ -330,6 +330,42 @@ const updateEpisodeField = async (episodeId, fieldToUpdate, newValue) => {
   }
 };
 
+const deleteTagFromEpisode = async (episodeId, tagToDelete) => {
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const episodeIndex = userData.tv_shows.findIndex(
+        (episode) => episode.episode_id === episodeId
+      );
+
+      if (episodeIndex !== -1) {
+        // Find the tags array for the specific episode
+        const tags = userData.tv_shows[episodeIndex].episode_tags;
+
+        // Remove the tag to delete from the tags array
+        const updatedTags = tags.filter((tag) => tag !== tagToDelete);
+
+        // Update the tags field with the updatedTags array
+        userData.tv_shows[episodeIndex].episode_tags = updatedTags;
+
+        // Update the user data in Firebase
+        await updateDoc(docRef, { user_data: userData });
+
+        console.log("Tag deleted successfully.");
+      } else {
+        console.log("Episode not found.");
+      }
+    } else {
+      console.log("User not found.");
+    }
+  } catch (error) {
+    console.error("Error deleting tag:", error);
+  }
+};
+
 const addNewEpisode = async (
   episodeId,
   episodeName,
@@ -413,4 +449,5 @@ export {
   getEpisode,
   //favorites
   toggleEpFav,
+  deleteTagFromEpisode,
 };

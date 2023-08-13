@@ -5,8 +5,9 @@ import {
   updateEpisodeField,
 } from "../firebase/firebase"; // Import your addNewMovie function
 import { getAuth } from "firebase/auth"; // Import Firebase's authentication module
+import {TiDeleteOutline} from "react-icons/ti";
 
-const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
+const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
   const [userInput, setUserInput] = useState("");
   const [tags, setTags] = useState([]);
   const [userNotes, setUserNotes] = useState("");
@@ -119,6 +120,10 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
           {tags.map((tag, index) => (
             <div key={index} className="badge badge-secondary mx-1">
               {tag}
+              <TiDeleteOutline
+              onClick={() => onTagDelete(episodeData.id, tag)}
+            >   
+            </TiDeleteOutline>
             </div>
           ))}
         </div>
