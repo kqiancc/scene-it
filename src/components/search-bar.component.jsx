@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import TypingAnimation from "./typing";
 import { gsap } from "gsap";
-import { TextPlugin } from "gsap/TextPlugin";
 
 const SearchBar = () => {
   const [items, setItems] = useState([]);
