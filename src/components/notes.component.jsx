@@ -109,7 +109,7 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
             onChange={handleInputChange}
             onKeyPress={handleInputKeyPress}
             placeholder="Personal tags"
-            className="input input-bordered input-info w-full max-w-xs"
+            className="input input-bordered input-primary w-full max-w-xs"
           />
         </div>
       </div>

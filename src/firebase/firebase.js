@@ -66,14 +66,6 @@ const createEpisode = (
   };
 };
 
-const createFav = (media_id, media_name, episode_rating) => {
-  return {
-    media_id,
-    media_name,
-    episode_rating,
-  };
-};
-
 const createSeason = (seasonNumber, season_episodes) => {
   return {
     season_number: seasonNumber,
@@ -159,36 +151,47 @@ const logout = () => {
 };
 
 ////////////////////////// FAVORITES ///////////////////////////////////
-const addNewFav = async (
-  //onlly works for shows rn
-  mediaId,
-  mediaName,
-  mediaRating
+const toggleEpFav = async (
+  //for episodes
+  episodeId,
+  episodeName,
+  episodeRating,
+  isFavorited
 ) => {
   try {
-    // Retrieve the user's document reference
     const docRef = doc(db, "users", userUid);
-
-    // Get the user's document snapshot
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       const userData = docSnap.data().user_data;
 
-      // Create a new movie object
-      const newFav = createFav(mediaId, mediaName, mediaRating);
+      // Check if the episode is already favorited
+      const existingFavIndex = userData.favorites.findIndex(
+        (fav) => fav.mediaId === episodeId
+      );
 
-      // Add the new movie to the movies array
-      userData.favorites.push(newFav);
+      if (isFavorited && existingFavIndex === -1) {
+        // Add to favorites
+        const newFav = {
+          mediaId: episodeId,
+          mediaName: episodeName,
+          mediaRating: episodeRating,
+        };
+        userData.favorites.push(newFav);
+        console.log("New fav added successfully.");
+      } else if (!isFavorited && existingFavIndex !== -1) {
+        // Remove from favorites
+        userData.favorites.splice(existingFavIndex, 1);
+        console.log("Fav removed successfully.");
+      }
 
       // Update the user's document with the modified user_data
       await updateDoc(docRef, { user_data: userData });
-      console.log("New fav added successfully.");
     } else {
       console.log("User document not found.");
     }
   } catch (error) {
-    console.error("Error adding new fav:", error);
+    console.error("Error toggling fav:", error);
   }
 };
 
@@ -409,5 +412,5 @@ export {
   addNewEpisode,
   getEpisode,
   //favorites
-  addNewFav,
+  toggleEpFav,
 };
