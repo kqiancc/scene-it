@@ -4,9 +4,9 @@ import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 
-const DisplayEpisodes = () => {
+const TVDetails = () => {
   const location = useLocation();
-  const show = location.state?.show || null;
+  const show = location.state?.item || null;
 
   const [seasons, setSeasons] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,9 +50,9 @@ const DisplayEpisodes = () => {
   if (error) {return <div>{error}</div>;}
 
   return (
-    <div>
+    <div className = "flex flex-col items-center">
       <div className="flex bg-base-300 shadow-xl">
-        <figure className = "flex-shrink-0">
+        <figure className = "flex-shrink-0 ">
           <img
             src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
             alt={`${show.name}`}
@@ -106,5 +106,5 @@ const DisplayEpisodes = () => {
   );
 };
 
-export default DisplayEpisodes;
+export default TVDetails;
 

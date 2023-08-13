@@ -1,5 +1,7 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { Outlet, Link } from "react-router-dom";
+import { themeChange } from "theme-change";
+import ThemePicker from "../components/theme-picker";
 import { BsFillPersonFill } from "react-icons/bs";
 import {
   RiGithubLine,
@@ -9,13 +11,15 @@ import {
 } from "react-icons/ri";
 import { logout } from "../firebase/firebase";
 
-
 const Navigation = ({ user }) => {
+  useEffect(() => {
+    themeChange(false);
+  }, []);
 
   return (
     <Fragment>
       <div className="App">
-        <div class="navbar bg-base-100">
+        <div>
           <div class="flex-1">
             <Link class="btn btn-ghost normal-case text-xl" to="/">
               RAJE.TV
@@ -31,18 +35,19 @@ const Navigation = ({ user }) => {
               >
                 favorites
               </Link>
+              <ThemePicker /> {/*TODO: make it not round and also make it work*/}
+             
             </div>
-  
 
             {user ? (
-              <div className="absolute right-0 pr-5 pt-3 ">
+              <div className="absolute top-5 right-5">
                 <div className="dropdown dropdown-bottom dropdown-end ">
                   <button tabIndex={-1}>
                     <RiUser3Line className="w-5 h-5" />
                   </button>
                   <ul
                     tabIndex={-1}
-                    className="dropdown-content menu p-2 shadow bg-primary rounded-box w-32"
+                    className="dropdown-content menu p-2 shadow bg-secondary rounded-box w-32"
                   >
                     <li>
                       <Link to="/account" tabIndex={-1}>
@@ -61,10 +66,7 @@ const Navigation = ({ user }) => {
               </div>
             ) : (
               <Link to="/login">
-                <button
-                  className="absolute right-0 pr-5 pt-3 "
-                  tabIndex={-1}
-                >
+                <button className="absolute top-5 right-5" tabIndex={-1}>
                   <RiUser3Line className="w-5 h-5" />
                 </button>
               </Link>
@@ -72,7 +74,6 @@ const Navigation = ({ user }) => {
           </div>
         </div>
       </div>
-
       <Outlet />
     </Fragment>
   );

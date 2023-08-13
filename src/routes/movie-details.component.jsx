@@ -5,7 +5,7 @@ import { getAuth } from 'firebase/auth'; // Import Firebase's authentication mod
 
 const MovieDetails = () => {
   const location = useLocation();
-  const movie = location.state?.movie || null;
+  const movie = location.state?.item || null;
   const [userInput, setUserInput] = useState('');
   const [userNotes, setUserNotes] = useState('');
   const [tags, setTags] = useState(() => {
@@ -86,7 +86,7 @@ const MovieDetails = () => {
               movie.title,
               movie.vote_average,
               [], 
-              [userNotes]
+              [userNotes],
             );
           }
         }
@@ -108,26 +108,27 @@ const MovieDetails = () => {
   }, [movie]);
 
   return (
-    <div>
-      <div className="card card-side bg-base-100 shadow-xl">
-        <figure>
+    <div className ="bg-base-200 w-9/12">
+      <div className="bg-base-200 shadow-xl">
+        <figure className = "float-left items-center justify-center">
           <img
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
             alt={movie.title}
+            className="h-96 w-auto object-contain"
           />
         </figure>
         <div className="card-body">
           <h2 className="card-title">{movie.title}</h2>
           <p>{movie.overview}</p>
-          <p>Released: {movie.release_date}</p>
           <p>Rating: {movie.vote_average}/10</p>
+          <p>Released: {movie.release_date}</p>
           <div className="card-actions justify-end">
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col w-full">
-        <div className="grid h-10 card base-200 rounded-box place-items-left">
+      <div className="flex flex-col w-full bg-base-200">
+        <div className="grid h-10 card bg-base-200 rounded-box place-items-left">
           <div className="place-items-center">
             <input
               type="text"
@@ -137,7 +138,7 @@ const MovieDetails = () => {
               placeholder="Personal tags"
               className="input input-bordered input-info w-full max-w-xs"
             />
-            <div className="divider divider-horizontal"></div>
+            <div className="divider divider-horizontal bg-base-200"></div>
             <div className="tag-container">
               {/* Display tags from the first input box */}
               {tags.map((tag, index) => (
@@ -146,16 +147,16 @@ const MovieDetails = () => {
                 </div>
               ))}
             </div>
-            <div className="grid h-10 flex-grow card base-200 rounded-box place-items-center">
+            <div className="grid h-10 flex-grow card bg-base-200 rounded-box place-items-center">
               {/* Empty container for the tags */}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="divider"></div>
+      <div className="divider bg-base-200"></div>
 
-      <div className="grid h-10 card bg-base-100 rounded-box place-items-left">
+      <div className="grid h-10 card bg-base-200 rounded-box place-items-left">
         <input
           type="text"
           value={userNotes}
