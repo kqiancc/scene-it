@@ -1,37 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase/firebase';
+import {getFavorites} from '../firebase/firebase';
 
 const FavoritesPage = ({ userUid }) => {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getFavorites = async () => {
-      try {
-        const docRef = doc(db, "users", userUid);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const userData = docSnap.data().users;
-          const favorites = userData.favorites;
-          if (favorites) {
-            console.log("Favorites found");
-            return favorites;
-          } else {
-            console.log("No favorites found.");
-            return [];
-          }
-        } else {
-          console.log("User document not found.");
-          return [];
-        }
-      } catch (error) {
-        console.error("Error getting favorites:", error);
-        return [];
-      }
-    };
-
+    
     const fetchFavorites = async () => {
       const favorites = await getFavorites();
       setFavorites(favorites);

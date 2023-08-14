@@ -153,9 +153,10 @@ const logout = () => {
 ////////////////////////// FAVORITES ///////////////////////////////////
 const toggleEpFav = async (
   //for episodes
+  showId,
+  seasonNumber,
   episodeId,
   episodeName,
-  episodeRating,
   isFavorited
 ) => {
   try {
@@ -173,9 +174,10 @@ const toggleEpFav = async (
       if (isFavorited && existingFavIndex === -1) {
         // Add to favorites
         const newFav = {
-          mediaId: episodeId,
-          mediaName: episodeName,
-          mediaRating: episodeRating,
+          showId: showId,
+          seasonNumber: seasonNumber,
+          episodeId: episodeId,
+          episodeName: episodeName,
         };
         userData.favorites.push(newFav);
         console.log("New fav added successfully.");
@@ -192,6 +194,32 @@ const toggleEpFav = async (
     }
   } catch (error) {
     console.error("Error toggling fav:", error);
+  }
+};
+
+const getFavorites = async () => {
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const favorites = userData.favorites;
+      console.log(favorites);
+      if (favorites) {
+        console.log("Favorites found");
+        return favorites;
+      } else {
+        console.log("No favorites found.");
+        return [];
+      }
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting favorites:", error);
+    return [];
   }
 };
 
@@ -445,9 +473,11 @@ export {
   addNewMovie,
   //episodes
   updateEpisodeField,
+  deleteTagFromEpisode,
   addNewEpisode,
   getEpisode,
   //favorites
   toggleEpFav,
-  deleteTagFromEpisode,
+  getFavorites,
+  //tags
 };

@@ -1,8 +1,10 @@
+import Filters from "../components/filters";
+
 const Saved = () => {
 
     return (
       <div >
-     should this just be saved stuff?
+    <Filters/>
         </div>
         );}
     
