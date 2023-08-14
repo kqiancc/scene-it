@@ -242,6 +242,8 @@ const DisplayEpisodes = (userUid) => {
           </div>
           <div className="collapse-content">
             <Heart
+              showId =  {show.id}
+              seasonNumber = {seasonNumber} 
               episodeId={episode.id}
               isHeartClicked={episode.isHeartClicked}
               handleHeartClick={handleHeartClick}
