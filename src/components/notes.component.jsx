@@ -5,7 +5,7 @@ import {
   updateEpisodeField,
 } from "../firebase/firebase"; // Import your addNewMovie function
 import { getAuth } from "firebase/auth"; // Import Firebase's authentication module
-import {RiCloseLine} from "react-icons/ri";
+import { RiCloseLine } from "react-icons/ri";
 
 const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
   const [userInput, setUserInput] = useState("");
@@ -66,35 +66,32 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
     }
   };
 
-
-  const handleNotesKeyPress = async (event) => {
-    if (event.key === "Enter") {
-      const newNotes = userNotes.split("\n").map((note) => note.trim());
-
-      if (newNotes.length > 0) {
-        onNotesChange(newNotes);
-        setNotesDisplay((prevNotes) => [...prevNotes, ...newNotes]);
-
-        //saving note to firestore
-        const auth = getAuth();
-        const user = auth.currentUser;
-        if (user) {
-          const existingEpisode = await getEpisode(episodeData.id);
-
-          //check if movie already exists
-          if (existingEpisode) {
-            updateEpisodeField(episodeData.id, "episode_notes", userNotes);
-          } else {
-            //save episode and tag to firestore
-            addNewEpisode(
-              episodeData.id,
-              episodeData.name,
-              episodeData.vote_average,
-              [],
-              [userNotes]
-            );
-            setUserNotes("");
-          }
+  const handleNotesBlur = async () => {
+    const newNotes = userNotes.split("\n").map((note) => note.trim());
+  
+    if (newNotes.length > 0) {
+      onNotesChange(newNotes);
+      setNotesDisplay((prevNotes) => [...prevNotes, ...newNotes]);
+  
+      // Saving note to Firestore
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        const existingEpisode = await getEpisode(episodeData.id);
+  
+        // Check if movie already exists
+        if (existingEpisode) {
+          updateEpisodeField(episodeData.id, "episode_notes", userNotes);
+        } else {
+          // Save episode and tag to Firestore
+          addNewEpisode(
+            episodeData.id,
+            episodeData.name,
+            episodeData.vote_average,
+            [],
+            [userNotes]
+          );
+          setUserNotes("");
         }
       }
     }
@@ -121,9 +118,8 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
             <div key={index} className="badge badge-secondary mx-1">
               {tag}
               <RiCloseLine
-              onClick={() => onTagDelete(episodeData.id, tag)}
-            >   
-            </RiCloseLine>
+                onClick={() => onTagDelete(episodeData.id, tag)}
+              ></RiCloseLine>
             </div>
           ))}
         </div>
@@ -132,35 +128,31 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
       <div className="divider"></div>
 
       <div className="grid card bg-base-200 rounded-box place-items-left">
-  <div className="place-items-center ">
-    <textarea 
-      value={userNotes}
-      onChange={handleNotesInputChange}
-      onKeyPress={handleNotesKeyPress}
-      placeholder="Notes"
-      className="input input-ghost input-primary w-1/2 h-28 focus:outline-none"
-      style={{
-        overflowWrap: "break-word",
-      }}
-      rows={3} // Initial number of visible lines
-    />
-    <div className="text-xs mt-1 text-base-content">
-      {userNotes.length} / 2000 characters
-    </div>
-  </div>
-</div>
+        <div className="place-items-center ">
+          <textarea
+            value={userNotes}
+            onChange={handleNotesInputChange}
+            onBlur={handleNotesBlur} 
+            placeholder="Notes"
+            className="input input-ghost input-primary w-1/2 h-28 focus:outline-none"
+            style={{
+              overflowWrap: "break-word",
+            }}
+            rows={3} // Initial number of visible lines
+          />
+          <div className="text-xs mt-1 text-base-content">
+            {userNotes.length} / 2000 characters
+          </div>
+        </div>
+      </div>
 
-{notesDisplay.length > 0 && (
-  <div
-    className={`tag-container mt-2 ${
-      notesDisplay.length > 1 ? "flex-wrap" : ""
-    }`}
-  >
-
-    
-  </div>
-)}
-
+      {notesDisplay.length > 0 && (
+        <div
+          className={`tag-container mt-2 ${
+            notesDisplay.length > 1 ? "flex-wrap" : ""
+          }`}
+        ></div>
+      )}
     </div>
   );
 };
