@@ -51,13 +51,12 @@ const TVDetails = () => {
 
   return (
     <div className = "flex flex-col items-center">
-      <div className="flex bg-base-300 shadow-xl">
-        <figure className = "flex-shrink-0 ">
-          <img
+      <div className="flex bg-base-300 shadow-xl w-10/12 rounded-xl">
+        <figure className="collapse-title items-center">
+          <img className = "rounded"
             src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
             alt={`${show.name}`}
-            className="h-96 w-auto object-contain"
-            // style={{ width: '500px', height: 'auto' }} 
+            style={{ width: '300px', height: 'auto' }} 
             />
         </figure>
         <div className="card-body max-w-full">
@@ -75,12 +74,12 @@ const TVDetails = () => {
      
   {seasons.map((season) => (
     season.season_number > 0 && (
-          <div className="bg-base-200 w-9/12 " key={season.id}>
+          <div className="flex bg-base-200 shadow-xl w-9/12 rounded-lg" key={season.id}>
            <button 
         onClick={() => HandleButtonClick(show, season.season_number)}>
-            <div className="collapse-title text-xl font-small">
-               <figure className = "float-left items-center justify-center">
-                <img  
+            <div className="collapse-title text-xl">
+               <figure className = "float-left items-center justify-center ">
+                <img className = "rounded"
                src={`https://image.tmdb.org/t/p/w500${season.poster_path}`}
                alt={`Episode ${season.episode_number} - ${season.name}`}
                style={{ width: '175px', height: 'auto' }} 

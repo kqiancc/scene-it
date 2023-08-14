@@ -5,7 +5,7 @@ import {
   updateEpisodeField,
 } from "../firebase/firebase"; // Import your addNewMovie function
 import { getAuth } from "firebase/auth"; // Import Firebase's authentication module
-import {TiDeleteOutline} from "react-icons/ti";
+import {RiCloseLine} from "react-icons/ri";
 
 const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
   const [userInput, setUserInput] = useState("");
@@ -61,7 +61,7 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
 
   const handleNotesInputChange = (event) => {
     const inputValue = event.target.value;
-    if (inputValue.length < 300) {
+    if (inputValue.length <= 2000) {
       setUserNotes(inputValue);
     }
   };
@@ -109,8 +109,8 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
             value={userInput}
             onChange={handleInputChange}
             onKeyPress={handleInputKeyPress}
-            placeholder="Personal tags"
-            className="input input-bordered input-primary w-full max-w-xs"
+            placeholder="Tags"
+            className="input input-ghost input-primary w-full max-w-xs focus:outline-none"
           />
         </div>
       </div>
@@ -120,10 +120,10 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
           {tags.map((tag, index) => (
             <div key={index} className="badge badge-secondary mx-1">
               {tag}
-              <TiDeleteOutline
+              <RiCloseLine
               onClick={() => onTagDelete(episodeData.id, tag)}
             >   
-            </TiDeleteOutline>
+            </RiCloseLine>
             </div>
           ))}
         </div>
@@ -132,35 +132,35 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
       <div className="divider"></div>
 
       <div className="grid card bg-base-200 rounded-box place-items-left">
-        <div className="place-items-center">
-          <input
-            type="text"
-            value={userNotes}
-            onChange={handleNotesInputChange}
-            onKeyPress={handleNotesKeyPress}
-            placeholder="Personal notes"
-            className="input input-bordered input-primary w-full max-w-xs"
-            style={{ overflowWrap: "break-word", minHeight: "40px" }}
-          />
-          <div className="text-xs mt-1 text-gray-500">
-            {userNotes.length} / 300 characters
-          </div>
-        </div>
-      </div>
+  <div className="place-items-center ">
+    <textarea 
+      value={userNotes}
+      onChange={handleNotesInputChange}
+      onKeyPress={handleNotesKeyPress}
+      placeholder="Notes"
+      className="input input-ghost input-primary w-1/2 h-28 focus:outline-none"
+      style={{
+        overflowWrap: "break-word",
+      }}
+      rows={3} // Initial number of visible lines
+    />
+    <div className="text-xs mt-1 text-base-content">
+      {userNotes.length} / 2000 characters
+    </div>
+  </div>
+</div>
 
-      {notesDisplay.length > 0 && (
-        <div
-          className={`tag-container mt-2 ${
-            notesDisplay.length > 1 ? "flex-wrap" : ""
-          }`}
-        >
-          {notesDisplay.map((note, index) => (
-            <div key={index} className="badge badge-secondary mx-1">
-              {note}
-            </div>
-          ))}
-        </div>
-      )}
+{notesDisplay.length > 0 && (
+  <div
+    className={`tag-container mt-2 ${
+      notesDisplay.length > 1 ? "flex-wrap" : ""
+    }`}
+  >
+
+    
+  </div>
+)}
+
     </div>
   );
 };

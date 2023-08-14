@@ -145,10 +145,10 @@ const DisplayEpisodes = () => {
           className="collapse collapse-plus bg-base-200 w-9/12 "
           key={episode.id}
         >
-          <input type="radio" name="my-accordion-3" />
-          <div className="collapse-title text-xl font-small">
+          <input type="radio" name="my-accordion-3 flex flex-row items-center" />
+          <div className="collapse-title text-xl"> 
             <figure className="float-left">
-              <img
+              <img className = "rounded-lg"
                 src={`https://image.tmdb.org/t/p/w500${episode.still_path}`}
                 alt={`Episode ${episode.episode_number} - ${episode.name}`}
                 style={{ width: "300px", height: "auto" }}
