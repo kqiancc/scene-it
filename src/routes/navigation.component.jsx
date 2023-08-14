@@ -38,7 +38,7 @@ const Navigation = ({ user }) => {
                 aria-label="favorites"
               >
                 <RiHeartLine/>
-                favs
+                favorites
               </Link>
               <ThemePicker />{" "}
               <ForwardButton/>

@@ -73,17 +73,17 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
       onNotesChange(newNotes);
       setNotesDisplay((prevNotes) => [...prevNotes, ...newNotes]);
   
-      // Saving note to Firestore
+      //saving note to firestore
       const auth = getAuth();
       const user = auth.currentUser;
       if (user) {
         const existingEpisode = await getEpisode(episodeData.id);
   
-        // Check if movie already exists
+        //check if movie already exists
         if (existingEpisode) {
           updateEpisodeField(episodeData.id, "episode_notes", userNotes);
         } else {
-          // Save episode and tag to Firestore
+          //save episode and tag to Firestore
           addNewEpisode(
             episodeData.id,
             episodeData.name,
