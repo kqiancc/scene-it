@@ -1,15 +1,17 @@
 import { Fragment, useEffect } from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import { themeChange } from "theme-change";
 import ThemePicker from "../components/theme-picker";
-import { FiSettings } from "react-icons/fi";
 import {
-  RiGithubLine,
   RiUser3Line,
   RiLogoutBoxLine,
-  RiBarChart2Line,
-} from "react-icons/ri";
+  RiHeartLine,
+  RiSettings2Line,
+  RiDownload2Line,
+  } from "react-icons/ri";
 import { logout } from "../firebase/firebase";
+import ForwardButton from "../components/forwardbutton";
+import BackButton from "../components/backbutton";
 
 const Navigation = ({ user }) => {
   useEffect(() => {
@@ -21,11 +23,13 @@ const Navigation = ({ user }) => {
       <div className="App">
         <div>
           <div class="flex-1">
-            <Link class="btn btn-ghost normal-case text-xl" to="/">
+            <Link class="btn btn-ghost normal-case h-20 text-xl" to="/">
               RAJE.TV
             </Link>
             <div className="join">
+              <BackButton/>
               <Link className="join-item btn" to="/saved" aria-label="recents">
+                <RiDownload2Line/>
                 saved
               </Link>
               <Link
@@ -33,17 +37,18 @@ const Navigation = ({ user }) => {
                 to="/favorites"
                 aria-label="favorites"
               >
-                favorites
+                <RiHeartLine/>
+                favs
               </Link>
-              <ThemePicker /> {/*TODO: make it not round and also make it work*/}
-             
+              <ThemePicker />{" "}
+              <ForwardButton/>
             </div>
 
             {user ? (
               <div className="absolute top-5 right-5">
                 <div className="dropdown dropdown-bottom dropdown-end ">
                   <button tabIndex={-1}>
-                    <RiUser3Line className="w-5 h-5" />
+                    <RiUser3Line className="w-5 h-10" />
                   </button>
                   <ul
                     tabIndex={-1}
@@ -51,7 +56,7 @@ const Navigation = ({ user }) => {
                   >
                     <li>
                       <Link to="/account" tabIndex={-1}>
-                        <FiSettings className="w-5 h-5" />
+                        <RiSettings2Line className="w-5 h-5" />
                         settings
                       </Link>
                     </li>
@@ -67,7 +72,7 @@ const Navigation = ({ user }) => {
             ) : (
               <Link to="/login">
                 <button className="absolute top-5 right-5" tabIndex={-1}>
-                  <RiUser3Line className="w-5 h-5" />
+                  <RiUser3Line className="w-5 h-10" />
                 </button>
               </Link>
             )}

@@ -13,7 +13,7 @@ const FavoritesPage = ({ userUid }) => {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          const userData = docSnap.data().user_data;
+          const userData = docSnap.data().users;
           const favorites = userData.favorites;
           if (favorites) {
             console.log("Favorites found");

@@ -1,4 +1,4 @@
-import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { RiHeartLine, RiHeartFill } from 'react-icons/ri';
 
 const Heart = ({ episodeId, isHeartClicked, handleHeartClick }) => {
     return (
@@ -9,9 +9,9 @@ const Heart = ({ episodeId, isHeartClicked, handleHeartClick }) => {
             onClick={() => handleHeartClick(episodeId)}
           >
             {isHeartClicked ? (
-              <AiFillHeart className="h-8 w-8 text-primary" />
+              <RiHeartFill className="h-8 w-8 text-primary" />
             ) : (
-              <AiOutlineHeart className="h-8 w-8 text-primary" />
+              <RiHeartLine className="h-8 w-8 text-primary" />
             )}
           </button>
         </div>
