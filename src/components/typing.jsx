@@ -15,7 +15,7 @@ const TypingAnimation = () => {
       headers: {
         accept: "application/json",
         Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMGMxOTk4OWQ2MWVhOWRhZTFjMDk0OWU3MWFhODVhNSIsInN1YiI6IjY0ZDc0MzFhZDEwMGI2MDBmZjBhYmUzYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.sgt8MZeI9yC3kHbV4zdlU5TeT7kT3RIyI6LsbHuR2D4",
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxYjJlZmIxZGZhNjEyM2JkZDk1NjliMDk1OWMwZGEyNSIsInN1YiI6IjY0YjVlZDMwMGJiMDc2MDEyZDU5NGMwNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.-ZSXaPPFy5CGFC5CCMz0b4Tbrrgtq9lJU02M2vsL7ck",
       },
     };
 

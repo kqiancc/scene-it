@@ -47,6 +47,7 @@ const SearchBar = () => {
         setItems(combinedResults);
       })
       .catch((err) => console.error("Error fetching data:", err));
+    console.log(`isFocused state has changed to: ${isFocused}`);
   }, [isFocused, searchTerm]);
 
   const handleInputChange = (event) => {
