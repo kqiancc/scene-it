@@ -80,7 +80,7 @@ const SearchBar = () => {
           <input
             type='text'
             placeholder=''
-            className='shrink-text text-6xl text-center font-bold text-primary max-w-full input input-ghost h-fit focus:outline-none placeholder-primary'
+            className='shrink-text text-6xl text-center font-bold max-w-full input input-ghost h-fit focus:outline-none placeholder-primary'
             value={searchTerm}
             onChange={handleInputChange}
             onBlur={handleBlur}
@@ -123,7 +123,7 @@ const SearchBar = () => {
                       No Poster Image Currently Found
                     </div>
                   )}
-                  <div className='absolute bottom-0 left-0 w-full p-2 bg-black bg-opacity-60 text-white text-sm font-semibold'>
+                  <div className='absolute bottom-0 left-0 w-full p-2 bg-base-100 bg-opacity-60 text-base-content text-sm font-semibold'>
                     {item.name || item.title}
                   </div>
                 </div>
