@@ -461,6 +461,32 @@ const getEpisode = async (episodeId) => {
   }
 };
 
+const getEpisodes = async () => {
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const favorites = userData.tv_shows;
+      console.log(favorites);
+      if (favorites) {
+        console.log("Favorites found");
+        return favorites;
+      } else {
+        console.log("No favorites found.");
+        return [];
+      }
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting favorites:", error);
+    return [];
+  }
+};
+
 export {
   //authentification
   signInWithGoogle,
@@ -476,6 +502,7 @@ export {
   deleteTagFromEpisode,
   addNewEpisode,
   getEpisode,
+  getEpisodes,
   //favorites
   toggleEpFav,
   getFavorites,
