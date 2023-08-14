@@ -35,14 +35,8 @@ const TypingAnimation = () => {
   }, []);
 
   console.log(words);
-  useEffect(() => {
-    // Growing animation for the "Search" text (no repeat)
-    gsap.fromTo(
-      ".grow-text",
-      { fontSize: "6rem" },
-      { fontSize: "12rem", duration: 1, ease: "power2.easeOut" }
-    );
 
+  useEffect(() => {
     gsap.to(".cursor", {
       opacity: 0,
       ease: "power2.inOut",
@@ -62,7 +56,7 @@ const TypingAnimation = () => {
 
   return (
     <div className='flex items-center text-primary'>
-      <h1 className='grow-text relative font-bold overflow-hidden whitespace-nowrap'>
+      <h1 className='relative font-bold overflow-hidden whitespace-nowrap'>
         <span className='inline-block'>Search</span>&nbsp;
         {/* Added class for targeting */}
         <span className='text'></span>

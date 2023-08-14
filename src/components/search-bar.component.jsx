@@ -7,12 +7,32 @@ const SearchBar = () => {
   const [items, setItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const [focusDelayTimer, setFocusDelayTimer] = useState(null);
 
   const navigate = useNavigate();
 
   const HandleButtonClick = (item, type) => {
     navigate(`/${type}-details`, { state: { item } });
   };
+
+  useEffect(() => {
+    const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25";
+    const tvUrl = `https://api.themoviedb.org/3/search/tv?query=${searchTerm}&api_key=${apiKey}`;
+    const movieUrl = `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&api_key=${apiKey}`;
+
+    const fetchTvShows = fetch(tvUrl).then((res) => res.json());
+    const fetchMovies = fetch(movieUrl).then((res) => res.json());
+
+    Promise.all([fetchTvShows, fetchMovies])
+      .then(([tvData, movieData]) => {
+        const combinedResults = [
+          ...tvData.results.map((show) => ({ ...show, type: "tv" })),
+          ...movieData.results.map((movie) => ({ ...movie, type: "movie" })),
+        ];
+        setItems(combinedResults);
+      })
+      .catch((err) => console.error("Error fetching data:", err));
+  }, [searchTerm]);
 
   useEffect(() => {
     if (isFocused) {
@@ -30,31 +50,27 @@ const SearchBar = () => {
         { fontSize: "11rem", duration: 1, ease: "power2.easeOut" }
       );
     }
-
-    const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25";
-    const tvUrl = `https://api.themoviedb.org/3/search/tv?query=${searchTerm}&api_key=${apiKey}`;
-    const movieUrl = `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&api_key=${apiKey}`;
-
-    const fetchTvShows = fetch(tvUrl).then((res) => res.json());
-    const fetchMovies = fetch(movieUrl).then((res) => res.json());
-
-    Promise.all([fetchTvShows, fetchMovies])
-      .then(([tvData, movieData]) => {
-        const combinedResults = [
-          ...tvData.results.map((show) => ({ ...show, type: "tv" })),
-          ...movieData.results.map((movie) => ({ ...movie, type: "movie" })),
-        ];
-        setItems(combinedResults);
-      })
-      .catch((err) => console.error("Error fetching data:", err));
-    console.log(`isFocused state has changed to: ${isFocused}`);
-  }, [isFocused, searchTerm]);
+  }, [isFocused]);
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
   };
   const handleDivClick = () => {
     setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    const timer = setTimeout(() => {
+      setIsFocused(false);
+    }, 125); // 1-second delay before losing focus
+    setFocusDelayTimer(timer);
+  };
+
+  const handleFocus = () => {
+    if (focusDelayTimer) {
+      clearTimeout(focusDelayTimer);
+      setFocusDelayTimer(null);
+    }
   };
 
   return (
@@ -67,7 +83,8 @@ const SearchBar = () => {
             className='shrink-text text-6xl text-center font-bold text-primary max-w-full input input-ghost h-fit focus:outline-none placeholder-primary'
             value={searchTerm}
             onChange={handleInputChange}
-            onBlur={() => setIsFocused(false)}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
             autoFocus
           />
         ) : (
