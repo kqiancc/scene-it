@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "firebase": "^10.1.0",
     "firebaseui": "^6.1.0",
+    "gsap": "^3.12.2",
     "jwt-decode": "^3.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -5,7 +5,9 @@ const Saved = ({ episodes }) => {
   const [filterTags, setFilterTags] = useState([]);
 
   const handleFilterChange = (event) => {
-    const newFilterTags = event.target.value.split(",").map((tag) => tag.trim());
+    const newFilterTags = event.target.value
+      .split(",")
+      .map((tag) => tag.trim());
     setFilterTags(newFilterTags);
 
     if (newFilterTags.length === 0) {
@@ -21,8 +23,8 @@ const Saved = ({ episodes }) => {
   return (
     <div>
       <input
-        type="text"
-        placeholder="Enter tags to filter episodes"
+        type='text'
+        placeholder='Enter tags to filter episodes'
         value={filterTags.join(", ")}
         onChange={handleFilterChange}
       />
@@ -30,7 +32,7 @@ const Saved = ({ episodes }) => {
       <div>
         {filteredEpisodes.map((episode) => (
           <div key={episode.id}>
-            {//prolly api stuff yall }
+            {/* prolly api stuff yall */}
             <p>{episode.name}</p>
           </div>
         ))}

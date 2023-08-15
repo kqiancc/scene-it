@@ -26,7 +26,6 @@ module.exports = {
         "13xl": "13rem",
         "14xl": "14rem",
         "15xl": "15rem",
-        // Add more custom sizes as needed
       },
     },
 

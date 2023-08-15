@@ -18,18 +18,18 @@ code {
 
 @keyframes shrink {
   0% {
-    font-size: 15rem;
+    font-size: 11rem;
   }
   100% {
-    font-size: 8rem;
+    font-size: 6rem;
   }
 }
 
 @keyframes grow {
   0% {
-    font-size: 8rem;
+    font-size: 6rem;
   }
   100% {
-    font-size: 15rem;
+    font-size: 11rem;
   }
 }

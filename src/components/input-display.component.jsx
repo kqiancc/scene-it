@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const InputDisplay = () => {
-  const [userInput, setUserInput] = useState('');
+  const [userInput, setUserInput] = useState("");
 
   const handleInputChange = (event) => {
     setUserInput(event.target.value);
@@ -11,10 +11,10 @@ const InputDisplay = () => {
     <div>
       <h1>User Input Display</h1>
       <input
-        type="text"
+        type='text'
         value={userInput}
         onChange={handleInputChange}
-        placeholder="Type something..."
+        placeholder='Type something...'
       />
       <p>You typed: {userInput}</p>
     </div>
