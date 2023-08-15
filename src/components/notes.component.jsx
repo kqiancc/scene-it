@@ -17,7 +17,7 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
     if (episodeData) {
       setUserInput("");
       setTags(episodeData.tags);
-      setUserNotes(episodeData.notes.join("\n"));
+      setUserNotes(episodeData.notes);
       setNotesDisplay(episodeData.notes);
     }
   }, [episodeData]);
@@ -49,9 +49,10 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
           addNewEpisode(
             episodeData.id,
             episodeData.name,
-            episodeData.vote_average,
+            episodeData.episode_number,
             [userInput],
-            []
+            [],
+            null
           );
           setUserInput("");
         }
@@ -87,7 +88,7 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
           addNewEpisode(
             episodeData.id,
             episodeData.name,
-            episodeData.vote_average,
+            episodeData.episode_number,
             [],
             [userNotes]
           );

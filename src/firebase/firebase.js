@@ -16,6 +16,8 @@ import {
   doc,
   setDoc,
   updateDoc,
+  collection,
+  getDocs,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -53,16 +55,18 @@ const createMovie = (
 const createEpisode = (
   episode_id,
   episode_name,
-  episode_rating,
+  episode_number,
   episode_tags,
-  episode_notes
+  episode_notes,
+  is_heart_clicked
 ) => {
   return {
     episode_id,
     episode_name,
-    episode_rating,
+    episode_number,
     episode_tags,
     episode_notes,
+    is_heart_clicked,
   };
 };
 
@@ -107,24 +111,6 @@ const signInWithGoogle = async () => {
     } else {
       // Existing user, add new movie to the movies array
       const userData = docSnap.data().user_data;
-      // const newMovie = createMovie(
-      //   "13903",
-      //   "Movie Name",
-      //   "4.0",
-      //   ["Action", "Romance"],
-      //   ["Exciting new film!", "A do not watch!"]
-      // );
-      // userData.movies.push(newMovie);
-
-      // // Add a new episode
-      // const newEpisode = createEpisode(
-      //   "episodeId123",
-      //   "Episode Title",
-      //   "3.5",
-      //   ["Drama", "Mystery"],
-      //   ["Interesting episode!", "A must-watch!"]
-      // );
-      // userData.episodes.push(newEpisode);
 
       await updateDoc(docRef, { user_data: userData });
     }
@@ -157,6 +143,7 @@ const toggleEpFav = async (
   seasonNumber,
   episodeId,
   episodeName,
+  episodeNumber,
   isFavorited
 ) => {
   try {
@@ -168,7 +155,7 @@ const toggleEpFav = async (
 
       // Check if the episode is already favorited
       const existingFavIndex = userData.favorites.findIndex(
-        (fav) => fav.mediaId === episodeId
+        (fav) => fav.episodeId === episodeId
       );
 
       if (isFavorited && existingFavIndex === -1) {
@@ -178,6 +165,7 @@ const toggleEpFav = async (
           seasonNumber: seasonNumber,
           episodeId: episodeId,
           episodeName: episodeName,
+          episodeNumber: episodeNumber,
         };
         userData.favorites.push(newFav);
         console.log("New fav added successfully.");
@@ -205,6 +193,32 @@ const getFavorites = async () => {
     if (docSnap.exists()) {
       const userData = docSnap.data().user_data;
       const favorites = userData.favorites;
+      console.log(favorites);
+      if (favorites) {
+        console.log("Favorites found");
+        return favorites;
+      } else {
+        console.log("No favorites found.");
+        return [];
+      }
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting favorites:", error);
+    return [];
+  }
+};
+
+const getFavEpisodes = async () => {
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const favorites = userData.tv_shows;
       console.log(favorites);
       if (favorites) {
         console.log("Favorites found");
@@ -397,9 +411,10 @@ const deleteTagFromEpisode = async (episodeId, tagToDelete) => {
 const addNewEpisode = async (
   episodeId,
   episodeName,
-  episodeRating,
+  episodeNumber,
   episodeTags,
-  episodeNotes
+  episodeNotes,
+  isHeartClicked
 ) => {
   try {
     const docRef = doc(db, "users", userUid);
@@ -410,9 +425,10 @@ const addNewEpisode = async (
       const newEpisode = createEpisode(
         episodeId,
         episodeName,
-        episodeRating,
+        episodeNumber,
         episodeTags,
-        episodeNotes
+        episodeNotes,
+        isHeartClicked
       );
 
       userData.tv_shows.push(newEpisode);
@@ -445,7 +461,7 @@ const getEpisode = async (episodeId) => {
 
       if (episode) {
         console.log("episode found");
-        console.log(episode.episode_tags);
+
         return episode; // Return the movie if found
       } else {
         console.log("episode not found.");
@@ -458,32 +474,6 @@ const getEpisode = async (episodeId) => {
   } catch (error) {
     console.error("Error getting episode:", error);
     return null; // Return null if there's an error
-  }
-};
-
-const getEpisodes = async () => {
-  try {
-    const docRef = doc(db, "users", userUid);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const userData = docSnap.data().user_data;
-      const favorites = userData.tv_shows;
-      console.log(favorites);
-      if (favorites) {
-        console.log("Favorites found");
-        return favorites;
-      } else {
-        console.log("No favorites found.");
-        return [];
-      }
-    } else {
-      console.log("User document not found.");
-      return [];
-    }
-  } catch (error) {
-    console.error("Error getting favorites:", error);
-    return [];
   }
 };
 
@@ -502,9 +492,9 @@ export {
   deleteTagFromEpisode,
   addNewEpisode,
   getEpisode,
-  getEpisodes,
   //favorites
   toggleEpFav,
+  getFavEpisodes,
   getFavorites,
   //tags
 };

@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Notes from "../components/notes.component";
 import Heart from "../components/heart";
-import {toggleEpFav, deleteTagFromEpisode,} from "../firebase/firebase";
+import {toggleEpFav, deleteTagFromEpisode, getEpisode} from "../firebase/firebase";
 import {db} from "../firebase/firebase";
-
 
 const DisplayEpisodes = (userUid) => {
   const location = useLocation();
@@ -17,119 +16,42 @@ const DisplayEpisodes = (userUid) => {
 
   useEffect(() => {
     const fetchEpisodes = async () => {
-      try {
-        const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25";
-        const response = await fetch(
-          `https://api.themoviedb.org/3/tv/${show.id}/season/${seasonNumber}?api_key=${apiKey}&language=en-US`
-        );
-        const data = await response.json();
+        try {
+            const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25";
+            const response = await fetch(
+                `https://api.themoviedb.org/3/tv/${show.id}/season/${seasonNumber}?api_key=${apiKey}&language=en-US`
+            );
+            const data = await response.json();
 
-        if (data.episodes) {
-          setEpisodes(
-            data.episodes.map((episode) => ({
-              ...episode,
-              isHeartClicked:
-                JSON.parse(
-                  localStorage.getItem(
-                    `isHeartClicked_${show.id}_${seasonNumber}_${episode.id}`
-                  )
-                ) || false,
-              tags:
-                JSON.parse(
-                  localStorage.getItem(
-                    `tags_${show.id}_${seasonNumber}_${episode.id}`
-                  )
-                ) || [],
-              notes:
-                JSON.parse(
-                  localStorage.getItem(
-                    `notes_${show.id}_${seasonNumber}_${episode.id}`
-                  )
-                ) || [],
-            }))
-          );
-          setLoading(false);
-        } else {
-          setError("Episodes data not found.");
-          setLoading(false);
+            if (data.episodes) {
+                const episodesWithUserData = await Promise.all(data.episodes.map(async (episode) => {
+                    const userEpisodeData = await getEpisode(episode.id);
+                    console.log(episode.episode_tags);
+                    return {
+                        ...episode,
+                        isHeartClicked: userEpisodeData?.is_heart_clicked || false,
+                        tags: userEpisodeData?.episode_tags || [],
+                        notes: userEpisodeData?.episode_notes || []
+                    };
+                }));
+                setEpisodes(episodesWithUserData);
+                setLoading(false);
+            } else {
+                setError("Episodes data not found.");
+                setLoading(false);
+            }
+        } catch (error) {
+            setError("Error fetching data.");
+            setLoading(false);
         }
-      } catch (error) {
-        setError("Error fetching data.");
-        setLoading(false);
-      }
     };
 
     if (show) {
-      fetchEpisodes();
+        fetchEpisodes();
     } else {
-      setLoading(false);
+        setLoading(false);
     }
-  }, [show, seasonNumber]);
-
-  //IGNORE THIS, WORKING ON GETTING DATA TO FETCH FROM FIREBASE, NOT LOCALSTORAGE
-  // useEffect(() => {
-  //   const fetchEpisodes = async () => {
-  //     try {
-  //       const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25";
-  //       const response = await fetch(
-  //         `https://api.themoviedb.org/3/tv/${show.id}/season/${seasonNumber}?api_key=${apiKey}&language=en-US`
-  //       );
-  //       const data = await response.json();
-  
-  //       if (data.tv_shows) {
-  //         const episodesWithExtras = await Promise.all(
-  //           data.tv_shows.map(async (episode) => {
-  //             const episodeRef = db
-  //               .collection(`shows/${show.id}/seasons/${seasonNumber}/episodes`)
-  //               .doc(episode.id.toString());
-  
-  //             const episodeExtras = await episodeRef.get();
-  
-  //             return {
-  //               ...episode,
-  //               isHeartClicked: episodeExtras.data()?.isHeartClicked || false,
-  //               tags: episodeExtras.data()?.episode_tags || [],
-  //               notes: episodeExtras.data()?.episode_notes || [],
-  //             };
-  //           })
-  //         );
-  
-  //         setEpisodes(episodesWithExtras);
-  //         setLoading(false);
-  //       } else {
-  //         setError("Episodes data not found.");
-  //         setLoading(false);
-  //       }
-  //     } catch (error) {
-  //       setError("Error fetching data.");
-  //       setLoading(false);
-  //     }
-  //   };
-  
-  //   if (show) {
-  //     fetchEpisodes();
-  //   } else {
-  //     setLoading(false);
-  //   }
-  // }, [show, seasonNumber]);
-  
-  
-  // const handleTagsChange = (episodeId, newTags) => {
-  //   const episodeRef = db
-  //     .collection(`shows/${show.id}/seasons/${seasonNumber}/episodes`)
-  //     .doc(episodeId.toString());
-  
-  //   episodeRef.update({
-  //     tags: newTags,
-  //   });
-  
-  //   setEpisodes((prevEpisodes) =>
-  //     prevEpisodes.map((episode) =>
-  //       episode.id === episodeId ? { ...episode, tags: newTags } : episode
-  //     )
-  //   );
-  // };
-  
+}, [show, seasonNumber, userUid]); // Added userUid as a dependency
 
 
   const handleTagsChange = (episodeId, newTags) => {
@@ -137,10 +59,6 @@ const DisplayEpisodes = (userUid) => {
       prevEpisodes.map((episode) =>
         episode.id === episodeId ? { ...episode, tags: newTags } : episode
       )
-    );
-    localStorage.setItem(
-      `tags_${show.id}_${seasonNumber}_${episodeId}`,
-      JSON.stringify(newTags)
     );
   };
 
@@ -155,7 +73,6 @@ const DisplayEpisodes = (userUid) => {
     deleteTagFromEpisode(episodeId, tagToDelete);
 
     const updatedTags = episodes.find((episode) => episode.id === episodeId)?.tags || [];
-    localStorage.setItem(`tags_${show.id}_${seasonNumber}_${episodeId}`, JSON.stringify(updatedTags));
   };
 
   const handleNotesChange = (episodeId, newNotes) => {
@@ -163,10 +80,6 @@ const DisplayEpisodes = (userUid) => {
       prevEpisodes.map((episode) =>
         episode.id === episodeId ? { ...episode, notes: newNotes } : episode
       )
-    );
-    localStorage.setItem(
-      `notes_${show.id}_${seasonNumber}_${episodeId}`,
-      JSON.stringify(newNotes)
     );
   };
 
@@ -183,15 +96,12 @@ const DisplayEpisodes = (userUid) => {
       prevEpisodes.map((episode) => {
         if (episode.id === episodeId) {
           const newHeartState = !episode.isHeartClicked;
-          localStorage.setItem(
-            `isHeartClicked_${show.id}_${seasonNumber}_${episodeId}`,
-            JSON.stringify(newHeartState)
-          );
           toggleEpFav(
             show.id,
             seasonNumber,
             episode.id,
             episode.name,
+            episode.episode_number,
             newHeartState
           );
           return { ...episode, isHeartClicked: newHeartState };
@@ -242,9 +152,11 @@ const DisplayEpisodes = (userUid) => {
           </div>
           <div className="collapse-content">
             <Heart
-              showId =  {show.id}
+              showId = {show.id}
               seasonNumber = {seasonNumber} 
               episodeId={episode.id}
+              episodeNumber= {episode.episode_number}
+              episodeName = {episode.name}
               isHeartClicked={episode.isHeartClicked}
               handleHeartClick={handleHeartClick}
             />
