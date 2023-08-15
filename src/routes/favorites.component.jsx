@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getFavorites, getFavEpisodes } from '../firebase/firebase';
+import Spinner from '../firebase/spinner';
 
 const FavoritesPage = ({ userUid }) => {
   const [favorites, setFavorites] = useState([]);
@@ -22,9 +23,24 @@ const FavoritesPage = ({ userUid }) => {
             (episode) => episode.episode_id === favorite.episodeId
           );
 
+          let showName = ''; // Initialize the showName variable
+
+          try {
+            const showResponse = await fetch(
+              `https://api.themoviedb.org/3/tv/${favorite.showId}?api_key=${apiKey}&language=en-US`
+            );
+            const showData = await showResponse.json();
+            showName = showData.name; // Get the show name from the API response
+          } catch (error) {
+            console.error('Error fetching show details:', error);
+          }
+
+
+
           return {
             ...favorite,
             episode: episodeDetails,
+            showName: showName,
             tags: matchingEpisode && matchingEpisode.episode_tags ? matchingEpisode.episode_tags : [],
             notes: matchingEpisode && matchingEpisode.episode_notes ? matchingEpisode.episode_notes : [],
           };
@@ -39,7 +55,7 @@ const FavoritesPage = ({ userUid }) => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   return (
@@ -63,8 +79,11 @@ const FavoritesPage = ({ userUid }) => {
               )}
             </figure>
             <div className="card-body select-text">
+            <h3 className="font-bold text-3xl"> 
+                {favorite.showName} - Season {favorite.seasonNumber}
+            </h3>
               <h2 className="font-bold text-2xl">
-                S{favorite.seasonNumber} - Episode {favorite.episode.episode_number}: {favorite.episode.name}
+                Episode {favorite.episode.episode_number}: {favorite.episode.name}
               </h2>
               <h1 className="italic">
                 {favorite.episode.vote_average}/10 - {favorite.episode.runtime} minutes

@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import Notes from "../components/notes.component";
 import Heart from "../components/heart";
 import {toggleEpFav, deleteTagFromEpisode, getEpisode} from "../firebase/firebase";
-import {db} from "../firebase/firebase";
+import Spinner from "../firebase/spinner";
 
 const DisplayEpisodes = (userUid) => {
   const location = useLocation();
@@ -84,7 +84,7 @@ const DisplayEpisodes = (userUid) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner/>;
   }
 
   if (error) {
