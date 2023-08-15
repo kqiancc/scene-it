@@ -62,69 +62,77 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
 
   const handleNotesInputChange = (event) => {
     const inputValue = event.target.value;
-    if (inputValue.length <= 2000) {
-      setUserNotes(inputValue);
-    }
+    setUserNotes(inputValue);
   };
 
   const handleNotesBlur = async () => {
-    const newNotes = userNotes.split("\n").map((note) => note.trim());
-  
-    if (newNotes.length > 0) {
-      onNotesChange(newNotes);
-      setNotesDisplay((prevNotes) => [...prevNotes, ...newNotes]);
-  
-      //saving note to firestore
-      const auth = getAuth();
-      const user = auth.currentUser;
-      if (user) {
-        const existingEpisode = await getEpisode(episodeData.id);
-  
-        //check if movie already exists
-        if (existingEpisode) {
-          updateEpisodeField(episodeData.id, "episode_notes", userNotes);
-        } else {
-          //save episode and tag to Firestore
-          addNewEpisode(
-            episodeData.id,
-            episodeData.name,
-            episodeData.episode_number,
-            [],
-            [userNotes]
-          );
-          setUserNotes("");
-        }
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const existingEpisode = await getEpisode(episodeData.id);
+
+    console.log(userNotes);
+    if (userNotes.length <= 0 && !existingEpisode) {
+      return;
+    }
+    console.log(userNotes.length);
+    // const newNotes = userNotes.split("\n").map((note) => note.trim());
+    const newNotes = userNotes;
+
+    console.log("new notes", newNotes);
+
+    onNotesChange(newNotes);
+    setNotesDisplay((prevNotes) => [...prevNotes, ...newNotes]);
+    if (user) {
+      //check if movie already exists
+      if (existingEpisode) {
+        updateEpisodeField(episodeData.id, "episode_notes", userNotes);
+      } else {
+        //save episode and tag to Firestore
+        console.log("im here!");
+        addNewEpisode(
+          episodeData.id,
+          episodeData.name,
+          episodeData.episode_number,
+          [],
+          [userNotes],
+          null
+        );
       }
     }
   };
 
   return (
     <div>
-      <div className="grid h-10 card bg-base-200 rounded-box place-items-left">
-        <div className="place-items-center">
-          <input
-            type="text"
-            value={userInput}
-            onChange={handleInputChange}
-            onKeyPress={handleInputKeyPress}
-            placeholder="Tags"
-            className="input input-ghost input-primary w-full max-w-xs focus:outline-none"
-          />
+      <div className="grid h-10 card bg-base-200 rounded-box">
+        <div className="flex items-center space-x-2">
+          <div className="place-items-center">
+            <input
+              type="text"
+              value={userInput}
+              onChange={handleInputChange}
+              onKeyPress={handleInputKeyPress}
+              placeholder="Tags"
+              className="w-full max-w-xs input input-ghost input-primary focus:outline-none"
+            />
+          </div>
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 tag-container">
+              {tags.map((tag, index) => (
+                <div
+                  key={index}
+                  class="badge badge-lg badge-secondary gap-2 text-base-100"
+                >
+                  <RiCloseLine
+                    class="inline-block w-4 h-4 stroke-current"
+                    onClick={() => onTagDelete(episodeData.id, tag)}
+                  />
+                  {tag}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
-
-      {tags.length > 0 && (
-        <div className="tag-container flex flex-wrap mt-2">
-          {tags.map((tag, index) => (
-            <div key={index} className="badge badge-secondary mx-1">
-              {tag}
-              <RiCloseLine
-                onClick={() => onTagDelete(episodeData.id, tag)}
-              ></RiCloseLine>
-            </div>
-          ))}
-        </div>
-      )}
 
       <div className="divider"></div>
 
@@ -133,17 +141,14 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
           <textarea
             value={userNotes}
             onChange={handleNotesInputChange}
-            onBlur={handleNotesBlur} 
+            onBlur={handleNotesBlur}
             placeholder="Notes"
-            className="input input-ghost input-primary w-1/2 h-28 focus:outline-none"
+            className="w-1/2 input input-ghost input-primary h-28 focus:outline-none"
             style={{
               overflowWrap: "break-word",
             }}
             rows={3} // Initial number of visible lines
           />
-          <div className="text-xs mt-1 text-base-content">
-            {userNotes.length} / 2000 characters
-          </div>
         </div>
       </div>
 

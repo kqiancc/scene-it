@@ -93,6 +93,7 @@ const FavoritesPage = ({ userUid }) => {
               <div className="card-actions justify-end"></div>
               </div>
               </div>
+              {/*all the notes stuff should go here */}
               <div className="collapse-content">
               <div>
                 Tags: {favorite.tags}
