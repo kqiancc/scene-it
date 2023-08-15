@@ -157,6 +157,7 @@ const toggleEpFav = async (
   seasonNumber,
   episodeId,
   episodeName,
+  episodeNumber,
   isFavorited
 ) => {
   try {
@@ -178,6 +179,7 @@ const toggleEpFav = async (
           seasonNumber: seasonNumber,
           episodeId: episodeId,
           episodeName: episodeName,
+          episodeNumber: episodeNumber,
         };
         userData.favorites.push(newFav);
         console.log("New fav added successfully.");
@@ -395,6 +397,7 @@ const deleteTagFromEpisode = async (episodeId, tagToDelete) => {
 };
 
 const addNewEpisode = async (
+  //ADD EPISODE_NUMBER
   episodeId,
   episodeName,
   episodeRating,

@@ -1,6 +1,6 @@
 import { RiHeartLine, RiHeartFill } from 'react-icons/ri';
 
-const Heart = ({ showId, seasonNumber, episodeId, isHeartClicked, handleHeartClick }) => {
+const Heart = ({ showId, seasonNumber, episodeId, episodeNumber, isHeartClicked, handleHeartClick }) => {
     return (
       <div>
         <div className="rating gap-1">

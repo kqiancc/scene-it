@@ -126,6 +126,7 @@ const DisplayEpisodes = (userUid) => {
             seasonNumber,
             episode.id,
             episode.name,
+            episode.episode_number,
             newHeartState
           );
           return { ...episode, isHeartClicked: newHeartState };
@@ -179,6 +180,7 @@ const DisplayEpisodes = (userUid) => {
               showId =  {show.id}
               seasonNumber = {seasonNumber} 
               episodeId={episode.id}
+              episodeNumber= {episode.episode_number}
               isHeartClicked={episode.isHeartClicked}
               handleHeartClick={handleHeartClick}
             />
