@@ -196,6 +196,7 @@ const getFavorites = async () => {
       console.log(favorites);
       if (favorites) {
         console.log("Favorites found");
+        console.log(favorites);
         return favorites;
       } else {
         console.log("No favorites found.");
@@ -221,7 +222,7 @@ const getFavEpisodes = async () => {
       const favorites = userData.tv_shows;
       console.log(favorites);
       if (favorites) {
-        console.log("Favorites found");
+        console.log("Favorite episodes found");
         return favorites;
       } else {
         console.log("No favorites found.");

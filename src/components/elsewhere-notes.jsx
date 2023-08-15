@@ -7,7 +7,7 @@ import {
 import { getAuth } from "firebase/auth"; // Import Firebase's authentication module
 import { RiCloseLine } from "react-icons/ri";
 
-const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
+const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
   const [userInput, setUserInput] = useState("");
   const [tags, setTags] = useState([]);
   const [userNotes, setUserNotes] = useState("");
@@ -47,9 +47,9 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
         } else {
           //save episode and tag to firestore
           addNewEpisode(
-            episodeData.id,
-            episodeData.name,
-            episodeData.episode_number,
+            episodeData.episodeId,
+            episodeData.episodeName,
+            episodeData.episodeNumber,
             [userInput],
             [],
             null
@@ -68,7 +68,9 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
   const handleNotesBlur = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
+    console.log("hello", episodeData.id)
     const existingEpisode = await getEpisode(episodeData.id);
+    
 
     console.log(userNotes);
     if (userNotes.length <= 0 && !existingEpisode) {
@@ -89,11 +91,11 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
       } else {
         //save episode and tag to Firestore
         console.log("im here!");
-        console.log(episodeData)
+        console.log(episodeData.episodeId)
         addNewEpisode(
-          episodeData.id,
-          episodeData.name,
-          episodeData.episode_number,
+            episodeData.episodeId,
+            episodeData.episodeName,
+            episodeData.episodeNumber,
           [],
           [userNotes],
           null
@@ -164,4 +166,4 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
   );
 };
 
-export default Notes;
+export default ElsewhereNotes;
