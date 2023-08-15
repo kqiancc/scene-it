@@ -66,72 +66,6 @@ const DisplayEpisodes = (userUid) => {
     }
   }, [show, seasonNumber]);
 
-  //IGNORE THIS, WORKING ON GETTING DATA TO FETCH FROM FIREBASE, NOT LOCALSTORAGE
-  // useEffect(() => {
-  //   const fetchEpisodes = async () => {
-  //     try {
-  //       const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25";
-  //       const response = await fetch(
-  //         `https://api.themoviedb.org/3/tv/${show.id}/season/${seasonNumber}?api_key=${apiKey}&language=en-US`
-  //       );
-  //       const data = await response.json();
-  
-  //       if (data.tv_shows) {
-  //         const episodesWithExtras = await Promise.all(
-  //           data.tv_shows.map(async (episode) => {
-  //             const episodeRef = db
-  //               .collection(`shows/${show.id}/seasons/${seasonNumber}/episodes`)
-  //               .doc(episode.id.toString());
-  
-  //             const episodeExtras = await episodeRef.get();
-  
-  //             return {
-  //               ...episode,
-  //               isHeartClicked: episodeExtras.data()?.isHeartClicked || false,
-  //               tags: episodeExtras.data()?.episode_tags || [],
-  //               notes: episodeExtras.data()?.episode_notes || [],
-  //             };
-  //           })
-  //         );
-  
-  //         setEpisodes(episodesWithExtras);
-  //         setLoading(false);
-  //       } else {
-  //         setError("Episodes data not found.");
-  //         setLoading(false);
-  //       }
-  //     } catch (error) {
-  //       setError("Error fetching data.");
-  //       setLoading(false);
-  //     }
-  //   };
-  
-  //   if (show) {
-  //     fetchEpisodes();
-  //   } else {
-  //     setLoading(false);
-  //   }
-  // }, [show, seasonNumber]);
-  
-  
-  // const handleTagsChange = (episodeId, newTags) => {
-  //   const episodeRef = db
-  //     .collection(`shows/${show.id}/seasons/${seasonNumber}/episodes`)
-  //     .doc(episodeId.toString());
-  
-  //   episodeRef.update({
-  //     tags: newTags,
-  //   });
-  
-  //   setEpisodes((prevEpisodes) =>
-  //     prevEpisodes.map((episode) =>
-  //       episode.id === episodeId ? { ...episode, tags: newTags } : episode
-  //     )
-  //   );
-  // };
-  
-
-
   const handleTagsChange = (episodeId, newTags) => {
     setEpisodes((prevEpisodes) =>
       prevEpisodes.map((episode) =>
@@ -264,3 +198,69 @@ const DisplayEpisodes = (userUid) => {
 };
 
 export default DisplayEpisodes;
+
+
+  //IGNORE THIS, WORKING ON GETTING DATA TO FETCH FROM FIREBASE, NOT LOCALSTORAGE
+  // useEffect(() => {
+  //   const fetchEpisodes = async () => {
+  //     try {
+  //       const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25";
+  //       const response = await fetch(
+  //         `https://api.themoviedb.org/3/tv/${show.id}/season/${seasonNumber}?api_key=${apiKey}&language=en-US`
+  //       );
+  //       const data = await response.json();
+  
+  //       if (data.tv_shows) {
+  //         const episodesWithExtras = await Promise.all(
+  //           data.tv_shows.map(async (episode) => {
+  //             const episodeRef = db
+  //               .collection(`shows/${show.id}/seasons/${seasonNumber}/episodes`)
+  //               .doc(episode.id.toString());
+  
+  //             const episodeExtras = await episodeRef.get();
+  
+  //             return {
+  //               ...episode,
+  //               isHeartClicked: episodeExtras.data()?.isHeartClicked || false,
+  //               tags: episodeExtras.data()?.episode_tags || [],
+  //               notes: episodeExtras.data()?.episode_notes || [],
+  //             };
+  //           })
+  //         );
+  
+  //         setEpisodes(episodesWithExtras);
+  //         setLoading(false);
+  //       } else {
+  //         setError("Episodes data not found.");
+  //         setLoading(false);
+  //       }
+  //     } catch (error) {
+  //       setError("Error fetching data.");
+  //       setLoading(false);
+  //     }
+  //   };
+  
+  //   if (show) {
+  //     fetchEpisodes();
+  //   } else {
+  //     setLoading(false);
+  //   }
+  // }, [show, seasonNumber]);
+  
+  
+  // const handleTagsChange = (episodeId, newTags) => {
+  //   const episodeRef = db
+  //     .collection(`shows/${show.id}/seasons/${seasonNumber}/episodes`)
+  //     .doc(episodeId.toString());
+  
+  //   episodeRef.update({
+  //     tags: newTags,
+  //   });
+  
+  //   setEpisodes((prevEpisodes) =>
+  //     prevEpisodes.map((episode) =>
+  //       episode.id === episodeId ? { ...episode, tags: newTags } : episode
+  //     )
+  //   );
+  // };
+  

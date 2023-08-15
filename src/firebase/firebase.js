@@ -168,7 +168,7 @@ const toggleEpFav = async (
 
       // Check if the episode is already favorited
       const existingFavIndex = userData.favorites.findIndex(
-        (fav) => fav.mediaId === episodeId
+        (fav) => fav.episodeId === episodeId
       );
 
       if (isFavorited && existingFavIndex === -1) {
