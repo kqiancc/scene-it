@@ -30,7 +30,7 @@ const Saved = ({ episodes }) => {
       <div>
         {filteredEpisodes.map((episode) => (
           <div key={episode.id}>
-            {/* Display episode details here */}
+            {//prolly api stuff yall }
             <p>{episode.name}</p>
           </div>
         ))}
