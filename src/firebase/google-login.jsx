@@ -7,7 +7,7 @@ const GoogleLogIn = () => {
 			<div>
 				<button
 					type='submit'
-					className='btn btn-wide btn-primary'
+					className='btn btn-wide btn-secondary'
 					onClick={signInWithGoogle}
 				>
 					<RiGoogleFill className='w-5 h-5' />

@@ -1,15 +1,6 @@
 import { Navigate } from 'react-router-dom';
-import { useState, useEffect, useMemo } from 'react';
-// import AccountGameStats from './account-gamestats';
-// import Button from '../button/button';
-// import { acc, sum, wpm, cps, getBests } from './statsHelpers';
-// import Spinner from '../spinner/spinner';
 
 const Account = ({ user }) => {
-	const [mode, setMode] = useState('all');
-	const [stats, setStats] = useState(false);
-
-
 
 	return user ? (
 		<div className='flex flex-col items-center h-screen py-40 overflow-y-auto scrollbar'>

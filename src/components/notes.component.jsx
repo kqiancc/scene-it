@@ -5,8 +5,9 @@ import {
   updateEpisodeField,
 } from "../firebase/firebase"; // Import your addNewMovie function
 import { getAuth } from "firebase/auth"; // Import Firebase's authentication module
+import { RiCloseLine } from "react-icons/ri";
 
-const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
+const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
   const [userInput, setUserInput] = useState("");
   const [tags, setTags] = useState([]);
   const [userNotes, setUserNotes] = useState("");
@@ -60,42 +61,37 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
 
   const handleNotesInputChange = (event) => {
     const inputValue = event.target.value;
-    if (inputValue.length < 300) {
+    if (inputValue.length <= 2000) {
       setUserNotes(inputValue);
     }
   };
 
-  //Error adding new episode: FirebaseError:
-  //Function updateDoc() called with invalid data.
-  //Unsupported field value: undefined
-  const handleNotesKeyPress = async (event) => {
-    if (event.key === "Enter") {
-      const newNotes = userNotes.split("\n").map((note) => note.trim());
-
-      if (newNotes.length > 0) {
-        onNotesChange(newNotes);
-        setNotesDisplay((prevNotes) => [...prevNotes, ...newNotes]);
-
-        //saving note to firestore
-        const auth = getAuth();
-        const user = auth.currentUser;
-        if (user) {
-          const existingEpisode = await getEpisode(episodeData.id);
-
-          //check if movie already exists
-          if (existingEpisode) {
-            updateEpisodeField(episodeData.id, "episode_notes", userNotes);
-          } else {
-            //save episode and tag to firestore
-            addNewEpisode(
-              episodeData.id,
-              episodeData.name,
-              episodeData.vote_average,
-              [],
-              [userNotes]
-            );
-            setUserNotes("");
-          }
+  const handleNotesBlur = async () => {
+    const newNotes = userNotes.split("\n").map((note) => note.trim());
+  
+    if (newNotes.length > 0) {
+      onNotesChange(newNotes);
+      setNotesDisplay((prevNotes) => [...prevNotes, ...newNotes]);
+  
+      //saving note to firestore
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        const existingEpisode = await getEpisode(episodeData.id);
+  
+        //check if movie already exists
+        if (existingEpisode) {
+          updateEpisodeField(episodeData.id, "episode_notes", userNotes);
+        } else {
+          //save episode and tag to Firestore
+          addNewEpisode(
+            episodeData.id,
+            episodeData.name,
+            episodeData.vote_average,
+            [],
+            [userNotes]
+          );
+          setUserNotes("");
         }
       }
     }
@@ -110,8 +106,8 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
             value={userInput}
             onChange={handleInputChange}
             onKeyPress={handleInputKeyPress}
-            placeholder="Personal tags"
-            className="input input-bordered input-info w-full max-w-xs"
+            placeholder="Tags"
+            className="input input-ghost input-primary w-full max-w-xs focus:outline-none"
           />
         </div>
       </div>
@@ -121,6 +117,9 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
           {tags.map((tag, index) => (
             <div key={index} className="badge badge-secondary mx-1">
               {tag}
+              <RiCloseLine
+                onClick={() => onTagDelete(episodeData.id, tag)}
+              ></RiCloseLine>
             </div>
           ))}
         </div>
@@ -129,18 +128,20 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
       <div className="divider"></div>
 
       <div className="grid card bg-base-200 rounded-box place-items-left">
-        <div className="place-items-center">
-          <input
-            type="text"
+        <div className="place-items-center ">
+          <textarea
             value={userNotes}
             onChange={handleNotesInputChange}
-            onKeyPress={handleNotesKeyPress}
-            placeholder="Personal notes"
-            className="input input-bordered input-primary w-full max-w-xs"
-            style={{ overflowWrap: "break-word", minHeight: "40px" }}
+            onBlur={handleNotesBlur} 
+            placeholder="Notes"
+            className="input input-ghost input-primary w-1/2 h-28 focus:outline-none"
+            style={{
+              overflowWrap: "break-word",
+            }}
+            rows={3} // Initial number of visible lines
           />
-          <div className="text-xs mt-1 text-gray-500">
-            {userNotes.length} / 300 characters
+          <div className="text-xs mt-1 text-base-content">
+            {userNotes.length} / 2000 characters
           </div>
         </div>
       </div>
@@ -150,13 +151,7 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange }) => {
           className={`tag-container mt-2 ${
             notesDisplay.length > 1 ? "flex-wrap" : ""
           }`}
-        >
-          {notesDisplay.map((note, index) => (
-            <div key={index} className="badge badge-secondary mx-1">
-              {note}
-            </div>
-          ))}
-        </div>
+        ></div>
       )}
     </div>
   );
