@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import Notes from "../components/notes.component";
 import Heart from "../components/heart";
 import {toggleEpFav, deleteTagFromEpisode, getEpisode} from "../firebase/firebase";
-import {db} from "../firebase/firebase";
+import Spinner from "../firebase/spinner";
 
 const DisplayEpisodes = (userUid) => {
   const location = useLocation();
@@ -84,7 +84,7 @@ const DisplayEpisodes = (userUid) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner/>;
   }
 
   if (error) {
@@ -114,17 +114,17 @@ const DisplayEpisodes = (userUid) => {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="font-bold text-5xl text-center p-5 h-28">
+      <h1 className="p-5 text-5xl font-bold text-center h-28">
         Season {seasonNumber}
       </h1>
       <div />
       {episodes.map((episode) => (
         <div
-          className="collapse collapse-plus bg-base-200 w-9/12 "
+          className="w-9/12 collapse collapse-plus bg-base-200 "
           key={episode.id}
         >
            <input type="checkbox" name="my-accordion-3 flex flex-row items-center" />
-          <div className="collapse-title text-xl"> 
+          <div className="text-xl collapse-title"> 
             <figure className="float-left">
             {episode.still_path ? (
               <img className = "rounded-lg"
@@ -133,13 +133,13 @@ const DisplayEpisodes = (userUid) => {
                 style={{ width: "300px", height: "auto" }}
               />
               ) : (
-                <div style={{ width: "300px", height: "175px" }} className="flex justify-center items-center w-full h-96 bg-base-100 rounded text-2xl text-base-content text-center">
+                <div style={{ width: "300px", height: "175px" }} className="flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-100 text-base-content">
                   No Poster Image Currently Found
                 </div>
               )}
             </figure>
-            <div className="card-body select-text">
-              <h2 className="font-bold text-2xl">
+            <div className="select-text card-body">
+              <h2 className="text-2xl font-bold">
                 Episode {episode.episode_number}: {episode.name}
               </h2>
               <h1 className="italic">
@@ -147,7 +147,7 @@ const DisplayEpisodes = (userUid) => {
               </h1>
               <h1 className="italic">Aired: {episode.air_date} </h1>
               <p>{episode.overview}</p>
-              <div className="card-actions justify-end"></div>
+              <div className="justify-end card-actions"></div>
             </div>
           </div>
           <div className="collapse-content">

@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-
+import Spinner from '../firebase/spinner';
 
 const TVDetails = () => {
   const location = useLocation();
@@ -45,7 +45,7 @@ const TVDetails = () => {
     else {setLoading(false);}
   }, [show]);
 
-  if (loading) {return <div>Loading...</div>;}
+  if (loading) {return <Spinner/>;}
 
   if (error) {return <div>{error}</div>;}
 

@@ -8,7 +8,9 @@ import {
   RiHeartLine,
   RiSettings2Line,
   RiDownload2Line,
-  } from "react-icons/ri";
+  RiPlayList2Line,
+  RiPolaroidLine,
+} from "react-icons/ri";
 import { logout } from "../firebase/firebase";
 import ForwardButton from "../components/forwardbutton";
 import BackButton from "../components/backbutton";
@@ -22,14 +24,15 @@ const Navigation = ({ user }) => {
     <Fragment>
       <div className="App">
         <div>
-          <div class="flex-1">
+          <div class="flex items-center space-x-4">
             <Link class="btn btn-ghost normal-case h-20 text-xl" to="/">
-              RAJE.TV
+              <RiPolaroidLine className="w-10 h-10" />
             </Link>
             <div className="join">
-              <BackButton/>
+              <BackButton />
+              <ForwardButton />
               <Link className="join-item btn" to="/saved" aria-label="recents">
-                <RiDownload2Line/>
+                <RiDownload2Line />
                 saved
               </Link>
               <Link
@@ -37,11 +40,17 @@ const Navigation = ({ user }) => {
                 to="/favorites"
                 aria-label="favorites"
               >
-                <RiHeartLine/>
+                <RiHeartLine />
                 favorites
               </Link>
-              <ThemePicker />{" "}
-              <ForwardButton/>
+              <Link
+              className = "join-item btn"
+              to="/to-watch"
+              aria-label = "to-watch">
+                <RiPlayList2Line/>
+                to watch
+              </Link>
+              <ThemePicker />
             </div>
 
             {user ? (
