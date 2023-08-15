@@ -89,7 +89,7 @@ const SearchBar = () => {
           />
         ) : (
           <div
-            className='grow-text text-11xl text-center font-bold text-primary cursor-pointer'
+            className='grow-text text-11xl text-center font-bold text-secondary cursor-pointer'
             onClick={handleDivClick}
           >
             {searchTerm ? (
@@ -119,11 +119,11 @@ const SearchBar = () => {
                       className='w-full h-96 object-cover rounded'
                     />
                   ) : (
-                    <div className='flex justify-center items-center w-full h-96 bg-base-100 rounded text-2xl text-base-content'>
+                    <div className='flex justify-center items-center w-full h-96 bg-base-200 rounded text-2xl text-base-content'>
                       No Poster Image Currently Found
                     </div>
                   )}
-                  <div className='absolute bottom-0 left-0 w-full p-2 bg-base-100 bg-opacity-60 text-base-content text-sm font-semibold'>
+                  <div className='absolute bottom-0 w-full p-2 bg-base-300 bg-opacity-70 text-base-content text-sm font-semibold'>
                     {item.name || item.title}
                   </div>
                 </div>

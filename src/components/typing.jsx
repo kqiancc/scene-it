@@ -59,9 +59,8 @@ const TypingAnimation = () => {
     <div className='flex items-center '>
       <h1 className='relative font-bold overflow-hidden whitespace-nowrap'>
         <span className='inline-block text-primary'>Search</span>&nbsp;
-        {/* Added class for targeting */}
         <span className='text text-secondary'></span>
-        <span className='cursor text-secondary'>|</span>
+        <span className='cursor text-primary'>|</span>
       </h1>
     </div>
   );
