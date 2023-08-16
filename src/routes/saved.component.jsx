@@ -40,8 +40,10 @@ const Saved = () => {
           </div>
           <div className="drawer-side">
             <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
-            <ul className="h-full p-4 menu w-80 bg-base-200 text-base-content">
-              <h3 className="mb-2 font-bold">Filter Tags</h3>
+            <ul className="menu p-4 w-80 h-full bg-base-200 text-base-content">
+              <h3 className="font-bold mb-2">Filter Tags</h3>
+          //  <ul className="h-full p-4 menu w-80 bg-base-200 text-base-content">
+            //  <h3 className="mb-2 font-bold">Filter Tags</h3>
               {/* Display existing filter tags */}
               {filterTags.map((tag, index) => (
                 <button
