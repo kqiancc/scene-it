@@ -63,12 +63,12 @@ const Saved = () => {
                   {tag}
                 </button>
               ))}
-              {/* Sidebar content here */}
+              {}
             </ul>
           </div>
         </div>
       </div>
-      {/* Pass filterTags and enteredTags as props to DisplayEpisodes */}
+      {/}
       <DisplayEpisodes filterTags={filterTags} enteredTags={enteredTags} />
     </div>
   );
