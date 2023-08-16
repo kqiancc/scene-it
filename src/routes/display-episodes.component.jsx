@@ -148,12 +148,12 @@ const DisplayEpisodes = (userUid) => {
             </div>
           </div>
           <div className="collapse-content">
-            <Heart
-              showId={episode.showId}
-              seasonNumber={seasonNumber}
+           <Heart
+              showId = {show.id} /*showId doesnt exist within episode*/
+              seasonNumber = {seasonNumber} 
               episodeId={episode.id}
-              episodeNumber={episode.episode_number}
-              episodeName={episode.name}
+              episodeNumber= {episode.episode_number}
+              episodeName = {episode.name}
               isHeartClicked={episode.isHeartClicked}
               handleHeartClick={handleHeartClick}
             />
@@ -161,8 +161,10 @@ const DisplayEpisodes = (userUid) => {
             <Notes
               episodeData={episode}
               onTagsChange={(newTags) => handleTagsChange(episode.id, newTags)}
-              onNotesChange={(newNotes) => handleNotesChange(episode.id, newNotes)}
-              onTagDelete={(tagToDelete) => handleTagDelete(episode.id, tagToDelete)}
+              onNotesChange={(newNotes) =>
+                handleNotesChange(episode.id, newNotes)}
+                /*dont change the parameters of ontagdelete or else the tags wont delete*/
+                onTagDelete={(episodeId, tagToDelete) => handleTagDelete(episodeId, tagToDelete)} 
             />
           </div>
         </div>
