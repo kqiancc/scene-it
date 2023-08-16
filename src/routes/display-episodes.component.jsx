@@ -71,8 +71,6 @@ const DisplayEpisodes = (userUid) => {
       )
     );
     deleteTagFromEpisode(episodeId, tagToDelete);
-
-    const updatedTags = episodes.find((episode) => episode.id === episodeId)?.tags || [];
   };
 
   const handleNotesChange = (episodeId, newNotes) => {

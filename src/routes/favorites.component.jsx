@@ -61,8 +61,7 @@ const FavoritesPage = ({ userUid }) => {
   if (loading) {
     return <Spinner />;
   }
-
-  //TESTING STUFF
+  
   const handleTagsChange = (episodeId, newTags) => {
     setFavorites((prevFavorites) =>
       prevFavorites.map((favorite) =>
@@ -74,14 +73,13 @@ const FavoritesPage = ({ userUid }) => {
   const handleTagDelete = (episodeId, tagToDelete) => {
     setFavorites((prevFavorites) =>
       prevFavorites.map((favorite) =>
-        favorite.episode.id === episodeId
-          ? { ...favorite, episode: { ...favorite.episode, tags: favorite.episode.tags.filter((tag) => tag !== tagToDelete) }}
+        favorite.episode.episodeId === episodeId
+          ? { ...favorite, tags: favorite.episode.tags.filter((tag) => tag !== tagToDelete) }
           : favorite
       )
     );
-    deleteTagFromEpisode(episodeId, tagToDelete);
   
-    const updatedTags = favorites.find((favorite) => favorite.episode.id === episodeId)?.episode.tags || [];
+    deleteTagFromEpisode(episodeId, tagToDelete);
   };
   
   const handleNotesChange = (episodeId, newNotes) => {
@@ -163,28 +161,22 @@ const FavoritesPage = ({ userUid }) => {
               <div className="collapse-content">
               
               <Heart
-              showId = {favorite.showId}
-              seasonNumber = {favorite.seasonNumber} 
-              episodeId={favorite.episode.episode_id}
-              episodeNumber= {favorite.episode.episode_number}
-              episodeName = {favorite.episode.episode_name}
+              showId = {favorite.episode.showId}
+              seasonNumber = {favorite.episode. seasonNumber} 
+              episodeId={favorite.episode.episodeId}
+              episodeNumber= {favorite.episode.episodeNumber}
+              episodeName = {favorite.episode.episodeName}
               isHeartClicked={favorite.episode.is_heart_clicked}
               handleHeartClick={handleHeartClick}
             />
             <div className="divider" />
             <ElsewhereNotes
               episodeData={favorite}
-              onTagsChange={(newTags) => handleTagsChange(favorite.episode.episode_number, newTags)}
+              onTagsChange={(newTags) => handleTagsChange(favorite.episode.episodeId, newTags)}
               onNotesChange={(newNotes) =>
                 handleNotesChange(favorite.episode.episodeId, newNotes)}
-                onTagDelete={(episodeId, tagToDelete) => handleTagDelete(favorite.episode, tagToDelete)} 
+              onTagDelete={(episodeId, tagToDelete) => handleTagDelete(episodeId, tagToDelete)} 
             />
-              <div>
-                Tags: {favorite.tags}
-              </div>
-              <div>
-                Notes: {favorite.notes}
-              </div>
             </div>
            
           </div>

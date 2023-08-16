@@ -54,7 +54,6 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
             [],
             null
           );
-          setUserInput("");
         }
       }
     }
