@@ -1,29 +1,16 @@
 import React, { useState } from "react";
 
-const Filters = ({ episodes, setFilteredEpisodes }) => {
-  const [filterTags, setFilterTags] = useState("");
+const Filters = ({ onFilterChange, notesTags, enteredTags }) => {
+  const [filterTags, setFilterTags] = useState([]);
 
-  const handleFilterTagsChange = (event) => {
-    setFilterTags(event.target.value);
-  };
-
-  const handleApplyFilter = () => {
-    if (filterTags.trim() === "") {
-      setFilteredEpisodes(episodes);
-      return;
+  const handleFilterTagsChange = () => {
+    const newTags = [...filterTags];
+    if (enteredTags.trim() !== "") {
+      newTags.push(enteredTags.trim());
     }
-
-    const filtered = episodes.filter((episode) =>
-      episode.tags.some((tag) =>
-        tag.toLowerCase().includes(filterTags.toLowerCase())
-      )
-    );
-    setFilteredEpisodes(filtered);
-  };
-
-  const handleClearFilter = () => {
-    setFilterTags("");
-    setFilteredEpisodes(episodes);
+    newTags.push(...notesTags);
+    setFilterTags(newTags);
+    onFilterChange(newTags); 
   };
 
   return (
@@ -31,30 +18,46 @@ const Filters = ({ episodes, setFilteredEpisodes }) => {
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content">
         <label htmlFor="my-drawer-4" className="drawer-button btn btn-primary">
-          filters
+          Filters
         </label>
       </div>
       <div className="drawer-side">
         <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
         <ul className="menu p-4 w-80 h-full bg-base-200 text-base-content">
+          <div>
+            {}
+            <button
+              onClick={handleFilterTagsChange}
+              className="btn btn-primary mt-2"
+            >
+              Apply Filters
+            </button>
+          </div>
+          {}
+          {filterTags.map((tag, index) => (
+            <div key={index} className="mb-2">
+              <input
+                type="checkbox"
+                id={`checkbox-${index}`}
+                checked={filterTags.includes(tag)}
+                onChange={() => {
+                  if (filterTags.includes(tag)) {
+                    setFilterTags((prevTags) => prevTags.filter((t) => t !== tag));
+                  } else {
+                    setFilterTags((prevTags) => [...prevTags, tag]);
+                  }
+                }}
+              />
+              <label htmlFor={`checkbox-${index}`} className="ml-2">
+                {tag}
+              </label>
+            </div>
+          ))}
           <li>
-            <input
-              type="text"
-              value={filterTags}
-              onChange={handleFilterTagsChange}
-              placeholder="Tag Keyword"
-              className="input input-bordered mb-2"
-            />
+            <a></a>
           </li>
           <li>
-            <button onClick={handleApplyFilter} className="btn btn-primary">
-              Apply Filter
-            </button>
-          </li>
-          <li>
-            <button onClick={handleClearFilter} className="btn btn-secondary">
-              Clear Filter
-            </button>
+            <a></a>
           </li>
         </ul>
       </div>
