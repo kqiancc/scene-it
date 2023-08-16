@@ -9,8 +9,8 @@ import {
   RiSettings2Line,
   RiDownload2Line,
   RiPlayList2Line,
-  RiPolaroidLine,
-} from "react-icons/ri";
+  } from "react-icons/ri";
+import {PiTelevision} from "react-icons/pi";
 import { logout } from "../firebase/firebase";
 import ForwardButton from "../components/forwardbutton";
 import BackButton from "../components/backbutton";
@@ -26,7 +26,7 @@ const Navigation = ({ user }) => {
         <div>
           <div class="flex items-center space-x-4">
             <Link class="btn btn-ghost normal-case h-20 text-xl" to="/">
-              <RiPolaroidLine className="w-10 h-10" />
+              <PiTelevision className="w-10 h-10" />
             </Link>
             <div className="join">
               <BackButton />
@@ -61,7 +61,7 @@ const Navigation = ({ user }) => {
                   </button>
                   <ul
                     tabIndex={-1}
-                    className="dropdown-content menu p-2 shadow bg-secondary rounded-box w-32"
+                    className="w-32 p-2 shadow dropdown-content menu bg-secondary rounded-box"
                   >
                     <li>
                       <Link to="/account" tabIndex={-1}>
