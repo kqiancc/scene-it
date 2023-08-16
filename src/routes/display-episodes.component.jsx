@@ -118,17 +118,19 @@ const DisplayEpisodes = (userUid) => {
       </h1>
       <div />
       {episodes.map((episode) => (
-        <div className="w-9/12 collapse collapse-plus bg-base-200" key={episode.id}>
-          <input type="checkbox" name="my-accordion-3 flex flex-row items-center" />
-          <div className="text-xl collapse-title">
-            <figure className="float-left">
-              {episode.still_path ? (
-                <img
-                  className="rounded-lg"
-                  src={`https://image.tmdb.org/t/p/w500${episode.still_path}`}
-                  alt={`Episode ${episode.episode_number} - ${episode.name}`}
-                  style={{ width: "300px", height: "auto" }}
-                />
+        <div
+          className="w-9/12 collapse collapse-plus bg-base-200 "
+          key={episode.id}
+        >
+        <input type="checkbox" name="my-accordion-3 flex flex-row items-center" />
+          <div className="flex items-center text-xl collapse-title"> 
+            <figure className="flex-shrink-0 float-left m-4">
+            {episode.still_path ? (
+              <img className = "rounded-lg"
+                src={`https://image.tmdb.org/t/p/w500${episode.still_path}`}
+                alt={`Episode ${episode.episode_number} - ${episode.name}`}
+                style={{ width: "300px", height: "auto" }}
+              />
               ) : (
                 <div style={{ width: "300px", height: "175px" }} className="flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-100 text-base-content">
                   No Poster Image Currently Found
@@ -148,7 +150,7 @@ const DisplayEpisodes = (userUid) => {
             </div>
           </div>
           <div className="collapse-content">
-           <Heart
+            <Heart
               showId = {show.id} /*showId doesnt exist within episode*/
               seasonNumber = {seasonNumber} 
               episodeId={episode.id}
