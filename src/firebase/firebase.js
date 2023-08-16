@@ -106,6 +106,7 @@ const INITIAL_DOC = {
   movies: [],
   favorites: [],
   watch_list: [],
+  tags: [],
 };
 
 ///////////////////////// AUTH /////////////////////////////////////
