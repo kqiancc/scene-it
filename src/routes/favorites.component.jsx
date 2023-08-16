@@ -128,8 +128,8 @@ const FavoritesPage = ({ userUid }) => {
       {favorites.map((favorite, index) => (
         <div key={index} className="w-9/12 collapse collapse-plus bg-base-200 ">
           <input type="checkbox" name="my-accordion-3 flex flex-row items-center"/>
-          <div className="text-xl collapse-title">
-            <figure className="float-left">
+          <div className="flex items-center text-xl collapse-title"> 
+            <figure className="flex-shrink-0 float-left m-4">
               {favorite.episode.still_path ? (
                 <img className="rounded-lg"
                   src={`https://image.tmdb.org/t/p/w500${favorite.episode.still_path}`}
