@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import DisplayEpisodes from "./display-episodes.component"; // Adjust the import path based on your project structure
-
+import DisplayEpisodes from "./display-episodes.component"; 
+import Notes from "../components/notes.component.jsx"; 
 const Saved = () => {
   const [filterTags, setFilterTags] = useState([]);
   const [enteredTags, setEnteredTags] = useState(""); // New state for entered tags
@@ -36,12 +36,13 @@ const Saved = () => {
               placeholder="Enter tags"
               className="w-full max-w-xs input input-ghost input-primary focus:outline-none"
             /> */}
+            
           </div>
           <div className="drawer-side">
             <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
             <ul className="menu p-4 w-80 h-full bg-base-200 text-base-content">
               <h3 className="font-bold mb-2">Filter Tags</h3>
-              {}
+              {/* Display existing filter tags */}
               {filterTags.map((tag, index) => (
                 <button
                   key={index}
@@ -51,6 +52,12 @@ const Saved = () => {
                     setFilterTags(updatedTags);
                   }}
                 >
+                  <DisplayEpisodes
+        filterTags={filterTags}
+        setFilterTags={setFilterTags}
+        enteredTags={enteredTags}
+        setEnteredTags={setEnteredTags}
+      />
                   {tag}
                 </button>
               ))}
@@ -59,7 +66,7 @@ const Saved = () => {
           </div>
         </div>
       </div>
-      {}
+      {/* Pass filterTags and enteredTags as props to DisplayEpisodes */}
       <DisplayEpisodes filterTags={filterTags} enteredTags={enteredTags} />
     </div>
   );
