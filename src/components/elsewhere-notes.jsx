@@ -32,18 +32,18 @@ const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete 
       setTags((prevTags) => [...prevTags, ...newTags]);
       onTagsChange([...tags, ...newTags]);
       console.log(newTags);
-
+      setUserInput("");
       //saving tags to firestore
       const auth = getAuth();
       const user = auth.currentUser;
       if (user) {
-        const existingEpisode = await getEpisode(episodeData.id);
+        const existingEpisode = await getEpisode(episodeData.episodeId);
 
         //check if episode already exists
         if (existingEpisode) {
           const old_tags = existingEpisode.episode_tags;
           const new_tags = [...old_tags, userInput];
-          updateEpisodeField(episodeData.id, "episode_tags", new_tags);
+          updateEpisodeField(episodeData.episodeId, "episode_tags", new_tags);
         } else {
           //save episode and tag to firestore
           addNewEpisode(
@@ -54,7 +54,6 @@ const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete 
             [],
             null
           );
-          setUserInput("");
         }
       }
     }
@@ -68,8 +67,8 @@ const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete 
   const handleNotesBlur = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
-    console.log("hello", episodeData.id)
-    const existingEpisode = await getEpisode(episodeData.id);
+    console.log("hello", episodeData.episodeId)
+    const existingEpisode = await getEpisode(episodeData.episodeId);
     
 
     console.log(userNotes);
@@ -87,7 +86,7 @@ const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete 
     if (user) {
       //check if movie already exists
       if (existingEpisode) {
-        updateEpisodeField(episodeData.id, "episode_notes", userNotes);
+        updateEpisodeField(episodeData.episodeId, "episode_notes", userNotes);
       } else {
         //save episode and tag to Firestore
         console.log("im here!");
@@ -127,7 +126,7 @@ const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete 
                 >
                   <RiCloseLine
                     class="inline-block w-4 h-4 stroke-current"
-                    onClick={() => onTagDelete(episodeData.id, tag)}
+                    onClick={() => onTagDelete(episodeData.episodeId, tag)}
                   />
                   {tag}
                 </div>

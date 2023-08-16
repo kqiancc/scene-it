@@ -70,6 +70,22 @@ const createEpisode = (
   };
 };
 
+const createFavEpisode = (
+  showId,
+  seasonNumber,
+  episodeId,
+  episodeName,
+  episodeNumber
+) => {
+  return {
+    showId,
+    seasonNumber,
+    episodeId,
+    episodeName,
+    episodeNumber,
+  };
+};
+
 const createSeason = (seasonNumber, season_episodes) => {
   return {
     season_number: seasonNumber,
@@ -160,13 +176,13 @@ const toggleEpFav = async (
 
       if (isFavorited && existingFavIndex === -1) {
         // Add to favorites
-        const newFav = {
-          showId: showId,
-          seasonNumber: seasonNumber,
-          episodeId: episodeId,
-          episodeName: episodeName,
-          episodeNumber: episodeNumber,
-        };
+        const newFav = createFavEpisode(
+          showId,
+          seasonNumber,
+          episodeId,
+          episodeName,
+          episodeNumber
+        );
         userData.favorites.push(newFav);
         console.log("New fav added successfully.");
       } else if (!isFavorited && existingFavIndex !== -1) {
@@ -363,7 +379,7 @@ const updateEpisodeField = async (episodeId, fieldToUpdate, newValue) => {
         await updateDoc(docRef, { user_data: userData });
         console.log("Episode field updated successfully.");
       } else {
-        console.log("Episode not found.");
+        console.log("hola, Episode not found.");
       }
     } else {
       console.log("Show not found.");
@@ -465,7 +481,7 @@ const getEpisode = async (episodeId) => {
 
         return episode; // Return the movie if found
       } else {
-        console.log("episode not found.");
+        console.log("hi, episode not found.");
         return null; // Return null if the movie is not found
       }
     } else {
