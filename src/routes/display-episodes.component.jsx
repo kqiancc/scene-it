@@ -52,7 +52,7 @@ const DisplayEpisodes = (userUid) => {
     } else {
         setLoading(false);
     }
-}, [show, seasonNumber, userUid]); // Added userUid as a dependency
+}, [show, seasonNumber, userUid]);
 
 
   const handleTagsChange = (episodeId, newTags) => {
@@ -61,9 +61,11 @@ const DisplayEpisodes = (userUid) => {
         episode.id === episodeId ? { ...episode, tags: newTags } : episode
       )
     );
+    
   };
 
   const handleTagDelete = (episodeId, tagToDelete) => {
+    console.log('this worky', episodeId, tagToDelete)
     setEpisodes((prevEpisodes) =>
       prevEpisodes.map((episode) =>
         episode.id === episodeId
@@ -165,8 +167,8 @@ const DisplayEpisodes = (userUid) => {
               onTagsChange={(newTags) => handleTagsChange(episode.id, newTags)}
               onNotesChange={(newNotes) =>
                 handleNotesChange(episode.id, newNotes)}
-                /*dont change the parameters of ontagdelete or else the tags wont delete*/
-                onTagDelete={(episodeId, tagToDelete) => handleTagDelete(episodeId, tagToDelete)} 
+              /*dont change the parameters of ontagdelete or else the tags wont delete*/
+              onTagDelete={(episodeId, tagToDelete) => handleTagDelete(episodeId, tagToDelete)} 
             />
           </div>
         </div>
