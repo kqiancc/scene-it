@@ -74,7 +74,7 @@ const handleTagDelete = async (episodeId, tagToDelete) => {
     // 1. Update the UI immediately
     setTaggedEpisodes((prevTaggedEpisodes) =>
       prevTaggedEpisodes.map((taggedEpisode) =>
-        taggedEpisode.episode.episodeId === episodeId
+        taggedEpisode.episode.episode_id === episodeId
           ? {
               ...taggedEpisode,
               tags: taggedEpisode.episode.tags.filter((tag) => tag !== tagToDelete),
@@ -107,16 +107,15 @@ const handleNotesChange = (episodeId, newNotes) => {
 const handleHeartClick = (episodeId) => {
     setTaggedEpisodes((prevTaggedEpisodes) =>
       prevTaggedEpisodes.map((taggedEpisode) => {
-        if (taggedEpisode.episode.episodeId === episodeId) {
+        if (taggedEpisode.episode.episode_id === episodeId) {
           const newHeartState = !taggedEpisode.episode.isHeartClicked;  
           toggleEpFav(
-            taggedEpisode.showId,
-            taggedEpisode.seasonNumber,
-            taggedEpisode.episode.episodeId,
-            taggedEpisode.episode.episodeName,
-            taggedEpisode.episode.episodeNumber,
-            newHeartState
-            
+            taggedEpisode.episode.show_id,
+            taggedEpisode.episode.season_number,
+            taggedEpisode.episode.episode_id,
+            taggedEpisode.episode.episode_name,
+            taggedEpisode.episode.episode_number,
+            newHeartState  
           );
           return {
             ...taggedEpisode,
@@ -167,7 +166,7 @@ const handleHeartClick = (episodeId) => {
                  </figure>
                  <div className="select-text card-body">
                    <h3 className="text-3xl font-bold">
-                     {taggedEpisode.showName} - Season {taggedEpisode.seasonNumber}
+                     {taggedEpisode.showName} - Season {taggedEpisode.season_number}
                    </h3>
                    <h2 className="text-2xl font-bold">
                      Episode {taggedEpisode.episode.episode_number}:{" "}
@@ -185,12 +184,12 @@ const handleHeartClick = (episodeId) => {
                {/*TESTING NEW STUFF */}
                <div className="collapse-content">
                  <Heart
-                   showId={taggedEpisode.episode.showId}
-                   seasonNumber={taggedEpisode.episode.seasonNumber}
-                   episodeId={taggedEpisode.episode.episodeId}
-                   episodeNumber={taggedEpisode.episode.episodeNumber}
-                   episodeName={taggedEpisode.episode.episodeName}
-                   isHeartClicked={taggedEpisode.episode.isHeartClicked}
+                   showId={taggedEpisode.episode.show_id}
+                   seasonNumber={taggedEpisode.episode.season_number}
+                   episodeId={taggedEpisode.episode.episode_id}
+                   episodeNumber={taggedEpisode.episode.episode_number}
+                   episodeName={taggedEpisode.episode.episode_name}
+                   isHeartClicked={taggedEpisode.episode.is_heart_clicked}
                    handleHeartClick={handleHeartClick}
                  />
                  <div className="divider" />
