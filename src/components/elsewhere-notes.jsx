@@ -27,11 +27,12 @@ const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete 
   };
 
   const handleInputKeyPress = async (event) => {
+    console.log(userInput, 'before')
     if (event.key === "Enter") {
       const newTags = userInput.split(",").map((tag) => tag.trim());
       setTags((prevTags) => [...prevTags, ...newTags]);
       onTagsChange([...tags, ...newTags]);
-      console.log(newTags);
+      console.log(userInput);
       setUserInput("");
       //saving tags to firestore
       const auth = getAuth();
@@ -67,7 +68,6 @@ const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete 
   const handleNotesBlur = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
-    console.log("hello", episodeData.episodeId)
     const existingEpisode = await getEpisode(episodeData.episodeId);
     
 

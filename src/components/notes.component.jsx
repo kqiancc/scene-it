@@ -27,11 +27,12 @@ const Notes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
   };
 
   const handleInputKeyPress = async (event) => {
+    console.log(userInput, 'before')
     if (event.key === "Enter") {
       const newTags = userInput.split(",").map((tag) => tag.trim());
       setTags((prevTags) => [...prevTags, ...newTags]);
       onTagsChange([...tags, ...newTags]);
-      console.log(newTags);
+      console.log(userInput);
 
       //saving tags to firestore
       const auth = getAuth();
