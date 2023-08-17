@@ -7,7 +7,12 @@ import {
 import { getAuth } from "firebase/auth"; // Import Firebase's authentication module
 import { RiCloseLine } from "react-icons/ri";
 
-const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
+const SavedNotes = ({
+  episodeData,
+  onTagsChange,
+  onNotesChange,
+  onTagDelete,
+}) => {
   const [userInput, setUserInput] = useState("");
   const [tags, setTags] = useState([]);
   const [userNotes, setUserNotes] = useState("");
@@ -16,9 +21,9 @@ const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete 
   useEffect(() => {
     if (episodeData) {
       setUserInput("");
-      setTags(episodeData.tags);
-      setUserNotes(episodeData.notes);
-      setNotesDisplay(episodeData.notes);
+      setTags(episodeData.episode_tags);
+      setUserNotes(episodeData.episode_notes); // use empty string as default
+      setNotesDisplay(episodeData.episode_notes); // use empty array as default
     }
   }, [episodeData]);
 
@@ -27,7 +32,7 @@ const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete 
   };
 
   const handleInputKeyPress = async (event) => {
-    console.log(userInput, 'before')
+    console.log(userInput, "before");
     if (event.key === "Enter") {
       const newTags = userInput.split(",").map((tag) => tag.trim());
       setTags((prevTags) => [...prevTags, ...newTags]);
@@ -53,7 +58,9 @@ const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete 
             episodeData.episodeNumber,
             [userInput],
             [],
-            null
+            null,
+            episodeData.showId,
+            episodeData.seasonNumber
           );
         }
       }
@@ -69,7 +76,6 @@ const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete 
     const auth = getAuth();
     const user = auth.currentUser;
     const existingEpisode = await getEpisode(episodeData.episodeId);
-    
 
     console.log(userNotes);
     if (userNotes.length <= 0 && !existingEpisode) {
@@ -90,14 +96,16 @@ const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete 
       } else {
         //save episode and tag to Firestore
         console.log("im here!");
-        console.log(episodeData.episodeId)
+        console.log(episodeData.episodeId);
         addNewEpisode(
-            episodeData.episodeId,
-            episodeData.episodeName,
-            episodeData.episodeNumber,
+          episodeData.episodeId,
+          episodeData.episodeName,
+          episodeData.episodeNumber,
           [],
           [userNotes],
-          null
+          null,
+          episodeData.showId,
+          episodeData.seasonNumber
         );
       }
     }
@@ -165,4 +173,4 @@ const ElsewhereNotes = ({ episodeData, onTagsChange, onNotesChange, onTagDelete 
   );
 };
 
-export default ElsewhereNotes;
+export default SavedNotes;

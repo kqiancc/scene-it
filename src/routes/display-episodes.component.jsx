@@ -163,6 +163,7 @@ const DisplayEpisodes = (userUid) => {
             />
             <div className="divider" />
             <Notes
+            showId = {show.id}
               episodeData={episode}
               onTagsChange={(newTags) => handleTagsChange(episode.id, newTags)}
               onNotesChange={(newNotes) =>

@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { getFavorites, getFavEpisodes } from "../firebase/firebase";
 import Spinner from "../firebase/spinner";
-import ElsewhereNotes from "../components/elsewhere-notes";
+import ElsewhereNotes from "../components/favorites-notes";
 import Heart from "../components/heart";
 import {
   toggleEpFav,
   deleteTagFromEpisode,
 } from "../firebase/firebase";
+//race condition for heart thingy
+//set a state for the heart in this file
+//set use effect to update with that too
+//make sure that the data is gotten first before updating, so refer back to the delete tags
 
 const FavoritesPage = ({ userUid }) => {
   const [favorites, setFavorites] = useState([]);
@@ -32,7 +36,9 @@ const FavoritesPage = ({ userUid }) => {
 
           const matchingEpisode = episodesData.find(
             (episode) => episode.episode_id === favorite.episodeId
+            
           );
+         
 
           let showName = ""; // Initialize the showName variable using let
 
@@ -124,6 +130,7 @@ const FavoritesPage = ({ userUid }) => {
       prevFavorites.map((favorite) => {
         if (favorite.episode.episodeId === episodeId) {
           const newHeartState = !favorite.episode.isHeartClicked;
+          console.log("HSLDFJSDL", newHeartState);
           toggleEpFav(
             favorite.showId,
             favorite.seasonNumber,
