@@ -170,7 +170,7 @@ const toggleEpFav = async (
   try {
     const docRef = doc(db, "users", userUid);
     const docSnap = await getDoc(docRef);
-
+    console.log("hi");
     if (docSnap.exists()) {
       const userData = docSnap.data().user_data;
 

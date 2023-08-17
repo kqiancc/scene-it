@@ -43,24 +43,24 @@ const SavedNotes = ({
       const auth = getAuth();
       const user = auth.currentUser;
       if (user) {
-        const existingEpisode = await getEpisode(episodeData.episodeId);
+        const existingEpisode = await getEpisode(episodeData.episode_id);
 
         //check if episode already exists
         if (existingEpisode) {
           const old_tags = existingEpisode.episode_tags;
           const new_tags = [...old_tags, userInput];
-          updateEpisodeField(episodeData.episodeId, "episode_tags", new_tags);
+          updateEpisodeField(episodeData.episode_id, "episode_tags", new_tags);
         } else {
           //save episode and tag to firestore
           addNewEpisode(
-            episodeData.episodeId,
-            episodeData.episodeName,
-            episodeData.episodeNumber,
+            episodeData.episode_id,
+            episodeData.episode_name,
+            episodeData.episode_number,
             [userInput],
             [],
             null,
-            episodeData.showId,
-            episodeData.seasonNumber
+            episodeData.show_id,
+            episodeData.season_number
           );
         }
       }
@@ -75,7 +75,7 @@ const SavedNotes = ({
   const handleNotesBlur = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
-    const existingEpisode = await getEpisode(episodeData.episodeId);
+    const existingEpisode = await getEpisode(episodeData.episode_id);
 
     console.log(userNotes);
     if (userNotes.length <= 0 && !existingEpisode) {
@@ -92,20 +92,20 @@ const SavedNotes = ({
     if (user) {
       //check if movie already exists
       if (existingEpisode) {
-        updateEpisodeField(episodeData.episodeId, "episode_notes", userNotes);
+        updateEpisodeField(episodeData.episode_id, "episode_notes", userNotes);
       } else {
         //save episode and tag to Firestore
         console.log("im here!");
-        console.log(episodeData.episodeId);
+        console.log(episodeData.episode_id);
         addNewEpisode(
-          episodeData.episodeId,
-          episodeData.episodeName,
-          episodeData.episodeNumber,
+          episodeData.episode_id,
+          episodeData.episode_name,
+          episodeData.episode_number,
           [],
           [userNotes],
           null,
-          episodeData.showId,
-          episodeData.seasonNumber
+          episodeData.show_id,
+          episodeData.season_number,
         );
       }
     }
@@ -134,7 +134,7 @@ const SavedNotes = ({
                 >
                   <RiCloseLine
                     class="inline-block w-4 h-4 stroke-current"
-                    onClick={() => onTagDelete(episodeData.episodeId, tag)}
+                    onClick={() => onTagDelete(episodeData.episode_id, tag)}
                   />
                   {tag}
                 </div>

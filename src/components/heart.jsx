@@ -4,6 +4,7 @@ import {getEpisode, addNewEpisode, updateEpisodeField} from '../firebase/firebas
 const Heart = ({ showId, seasonNumber, episodeId, episodeNumber, episodeName, isHeartClicked, handleHeartClick }) => {
   
   const checkAndAddOrUpdateEpisode = async (newHeartState) => {
+   console.log(episodeId)
     const episode = await getEpisode(episodeId); // Assuming you've already implemented the getEpisode function
 
     if (!episode) {
