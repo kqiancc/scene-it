@@ -7,7 +7,12 @@ import {
 import { getAuth } from "firebase/auth"; // Import Firebase's authentication module
 import { RiCloseLine } from "react-icons/ri";
 
-const Notes = ({ showId, episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
+const ElsewhereNotes = ({
+  episodeData,
+  onTagsChange,
+  onNotesChange,
+  onTagDelete,
+}) => {
   const [userInput, setUserInput] = useState("");
   const [tags, setTags] = useState([]);
   const [userNotes, setUserNotes] = useState("");
@@ -27,35 +32,35 @@ const Notes = ({ showId, episodeData, onTagsChange, onNotesChange, onTagDelete }
   };
 
   const handleInputKeyPress = async (event) => {
-    console.log(userInput, 'before')
+    console.log(userInput, "before");
     if (event.key === "Enter") {
       const newTags = userInput.split(",").map((tag) => tag.trim());
       setTags((prevTags) => [...prevTags, ...newTags]);
       onTagsChange([...tags, ...newTags]);
       console.log(userInput);
-
+      setUserInput("");
       //saving tags to firestore
       const auth = getAuth();
       const user = auth.currentUser;
       if (user) {
-        const existingEpisode = await getEpisode(episodeData.id);
+        const existingEpisode = await getEpisode(episodeData.episodeId);
 
         //check if episode already exists
         if (existingEpisode) {
           const old_tags = existingEpisode.episode_tags;
           const new_tags = [...old_tags, userInput];
-          updateEpisodeField(episodeData.id, "episode_tags", new_tags);
+          updateEpisodeField(episodeData.episodeId, "episode_tags", new_tags);
         } else {
           //save episode and tag to firestore
           addNewEpisode(
-            episodeData.id,
-            episodeData.name,
-            episodeData.episode_number,
+            episodeData.episodeId,
+            episodeData.episodeName,
+            episodeData.episodeNumber,
             [userInput],
             [],
             null,
-            showId,
-            episodeData.season_number,
+            episodeData.showId,
+            episodeData.seasonNumber
           );
         }
       }
@@ -70,7 +75,7 @@ const Notes = ({ showId, episodeData, onTagsChange, onNotesChange, onTagDelete }
   const handleNotesBlur = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
-    const existingEpisode = await getEpisode(episodeData.id);
+    const existingEpisode = await getEpisode(episodeData.episodeId);
 
     console.log(userNotes);
     if (userNotes.length <= 0 && !existingEpisode) {
@@ -87,20 +92,20 @@ const Notes = ({ showId, episodeData, onTagsChange, onNotesChange, onTagDelete }
     if (user) {
       //check if movie already exists
       if (existingEpisode) {
-        updateEpisodeField(episodeData.id, "episode_notes", userNotes);
+        updateEpisodeField(episodeData.episodeId, "episode_notes", userNotes);
       } else {
         //save episode and tag to Firestore
         console.log("im here!");
-        console.log(episodeData)
+        console.log(episodeData.episodeId);
         addNewEpisode(
-          episodeData.id,
-          episodeData.name,
-          episodeData.episode_number,
+          episodeData.episodeId,
+          episodeData.episodeName,
+          episodeData.episodeNumber,
           [],
           [userNotes],
           null,
-          showId,
-          episodeData.season_number,
+          episodeData.showId,
+          episodeData.seasonNumber
         );
       }
     }
@@ -129,7 +134,7 @@ const Notes = ({ showId, episodeData, onTagsChange, onNotesChange, onTagDelete }
                 >
                   <RiCloseLine
                     class="inline-block w-4 h-4 stroke-current"
-                    onClick={() => onTagDelete(episodeData.id, tag)}
+                    onClick={() => onTagDelete(episodeData.episodeId, tag)}
                   />
                   {tag}
                 </div>
@@ -168,4 +173,4 @@ const Notes = ({ showId, episodeData, onTagsChange, onNotesChange, onTagDelete }
   );
 };
 
-export default Notes;
+export default ElsewhereNotes;

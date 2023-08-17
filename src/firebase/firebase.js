@@ -58,7 +58,9 @@ const createEpisode = (
   episode_number,
   episode_tags,
   episode_notes,
-  is_heart_clicked
+  is_heart_clicked,
+  show_id,
+  season_number
 ) => {
   return {
     episode_id,
@@ -67,6 +69,8 @@ const createEpisode = (
     episode_tags,
     episode_notes,
     is_heart_clicked,
+    show_id,
+    season_number,
   };
 };
 
@@ -432,7 +436,9 @@ const addNewEpisode = async (
   episodeNumber,
   episodeTags,
   episodeNotes,
-  isHeartClicked
+  isHeartClicked,
+  showId,
+  seasonNumber
 ) => {
   try {
     const docRef = doc(db, "users", userUid);
@@ -446,7 +452,9 @@ const addNewEpisode = async (
         episodeNumber,
         episodeTags,
         episodeNotes,
-        isHeartClicked
+        isHeartClicked,
+        showId,
+        seasonNumber
       );
 
       userData.tv_shows.push(newEpisode);
@@ -495,6 +503,40 @@ const getEpisode = async (episodeId) => {
   }
 };
 
+//////////////////////////SAVED//////////////////////////////////
+
+const getTVShowsWithTags = async () => {
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const tvShows = userData.tv_shows || [];
+      console.log(userData.tv_shows);
+
+      const tvShowsWithTags = tvShows.filter((episode) => {
+        return episode.episode_tags && episode.episode_tags.length > 0;
+      });
+
+      console.log(tvShowsWithTags);
+      if (tvShowsWithTags.length > 0) {
+        console.log("TV Shows with episode tags found");
+        return tvShowsWithTags;
+      } else {
+        console.log("No TV Shows with episode tags found.");
+        return [];
+      }
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting TV Shows with episode tags:", error);
+    return [];
+  }
+};
+
 export {
   //authentification
   signInWithGoogle,
@@ -514,5 +556,6 @@ export {
   toggleEpFav,
   getFavEpisodes,
   getFavorites,
-  //tags
+  //saved
+  getTVShowsWithTags,
 };
