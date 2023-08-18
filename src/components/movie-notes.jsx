@@ -11,12 +11,11 @@ const MovieNotes = ({ movieId, movieData, onTagsChange, onNotesChange, onTagDele
 
   useEffect(() => {
     if (movieData) {
-      
+      console.log("Tags:", movieData.tags);
       setUserInput("");
-      console.log("Tags:", movieData.movie_tags);
-      setTags(movieData.tags || []); // Set the initial state of tags
-      setUserNotes(movieData.notes || "");
-      setNotesDisplay(movieData.notes || []);
+      setTags(movieData.movie_tags || []); // Set the initial state of tags
+      setUserNotes(movieData.movie_notes || "");
+      setNotesDisplay(movieData.movie_notes || []);
     }
   }, [movieData]);
   
@@ -30,7 +29,7 @@ const MovieNotes = ({ movieId, movieData, onTagsChange, onNotesChange, onTagDele
       const newTags = userInput.split(",").map((tag) => tag.trim());
       setTags((prevTags) => [...prevTags, ...newTags]);
       onTagsChange([...tags, ...newTags]);
-
+      setUserInput("");
       const auth = getAuth();
       const user = auth.currentUser;
       if (user) {
@@ -85,8 +84,8 @@ const MovieNotes = ({ movieId, movieData, onTagsChange, onNotesChange, onTagDele
   };
 
   return (
-    <div>
-      <div className="grid h-10 card bg-base-200 rounded-box">
+    <div className = "bg-base-300 rounded-box">
+      <div className="grid h-10 card bg-base-300 rounded-box">
         <div className="flex items-center space-x-2">
           <div className="place-items-center">
             <input
@@ -119,7 +118,7 @@ const MovieNotes = ({ movieId, movieData, onTagsChange, onNotesChange, onTagDele
 
       <div className="divider"></div>
 
-      <div className="grid card bg-base-200 rounded-box place-items-left">
+      <div className="grid card bg-base-300 rounded-box place-items-left">
         <div className="place-items-center ">
           <textarea
             value={userNotes}

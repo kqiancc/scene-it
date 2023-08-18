@@ -191,11 +191,13 @@ const toggleEpFav = async (
         userData.favorites.push(newFav);
         console.log("New fav added successfully.");
       } else if (!isFavorited && existingFavIndex !== -1) {
+        console.log(existingFavIndex);
         // Remove from favorites
         userData.favorites.splice(existingFavIndex, 1);
         console.log("Fav removed successfully.");
       }
-
+      console.log(userData);
+      console.log(docRef);
       // Update the user's document with the modified user_data
       await updateDoc(docRef, { user_data: userData });
     } else {
@@ -626,6 +628,38 @@ const getTVShowsWithTags = async () => {
   }
 };
 
+const getMoviesWithTags = async () => {
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const movies = userData.movies || []; // Assuming movies are stored in the 'movies' array
+      console.log(userData.movies);
+
+      const moviesWithTags = movies.filter((movie) => {
+        return movie.movie_tags && movie.movie_tags.length > 0;
+      });
+
+      console.log(moviesWithTags);
+      if (moviesWithTags.length > 0) {
+        console.log("Movies with tags found");
+        return moviesWithTags;
+      } else {
+        console.log("No movies with tags found.");
+        return [];
+      }
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting movies with tags:", error);
+    return [];
+  }
+};
+
 export {
   //authentification
   signInWithGoogle,
@@ -649,4 +683,5 @@ export {
   toggleMovieFav,
   //saved
   getTVShowsWithTags,
+  getMoviesWithTags,
 };

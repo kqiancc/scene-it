@@ -18,34 +18,34 @@ const MovieDetails = ({userUid}) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25";
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${apiKey}&language=en-US`
-        );
-        const data = await response.json();
-    
-        if (data) {
-          const userMovieData = await getMovie(movie.id);
-          const movieWithUserData = {
-            ...data,
-            isHeartClicked: userMovieData?.is_heart_clicked || false,
-            tags: userMovieData?.movie_tags || [],
-            notes: userMovieData?.movie_notes || [],
-          };
-          setMovies([movieWithUserData]);
-          setLoading(false);
-        } else {
-          setError("Movie data not found.");
-          setLoading(false);
-        }
-      } catch (error) {
-        setError("Error fetching data.");
-        setLoading(false);
-      }
-    };
-    
+   const fetchMovies = async () => {
+  try {
+    const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25";
+    const response = await fetch(
+      `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${apiKey}&language=en-US`
+    );
+    const data = await response.json();
+
+    if (data) {
+      const userMovieData = await getMovie(movie.id);
+      const movieWithUserData = {
+        ...data,
+        isHeartClicked: userMovieData?.is_heart_clicked || false,
+        tags: userMovieData?.movie_tags || [],
+        notes: userMovieData?.movie_notes || [],
+      };
+      setMovies([movieWithUserData]);
+      setLoading(false);
+    } else {
+      setError("Movie data not found.");
+      setLoading(false);
+    }
+  } catch (error) {
+    setError("Error fetching data.");
+    setLoading(false);
+  }
+};
+
 
     if (movie) {
       fetchMovies();
@@ -117,7 +117,7 @@ const MovieDetails = ({userUid}) => {
           ) : (
             <div
               style={{ width: "300px", height: "450px" }}
-              className="flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-100 text-base-content"
+              className="flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-300 text-base-content"
             >
               No Poster Image Currently Found
             </div>
@@ -133,7 +133,7 @@ const MovieDetails = ({userUid}) => {
           <div className="justify-end card-actions"></div>
         </div>
       </div>
-      <div>
+      <div className="w-10/12">
         <MovieNotes
           movieId={movie.id}
           movieData={movie}

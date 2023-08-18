@@ -6,7 +6,6 @@ import {
   RiUser3Line,
   RiLogoutBoxLine,
   RiHeartLine,
-  RiSettings2Line,
   RiDownload2Line,
   RiPlayList2Line,
   } from "react-icons/ri";
@@ -63,13 +62,10 @@ const Navigation = ({ user }) => {
                     tabIndex={-1}
                     className="w-32 p-2 shadow dropdown-content menu bg-secondary rounded-box"
                   >
-                    <li>
-                      <Link to="/account" tabIndex={-1}>
-                        <RiSettings2Line className="w-5 h-5" />
-                        settings
-                      </Link>
+                    <li className = "m-1 text-center">
+                      {user.displayName}
                     </li>
-                    <li>
+                    <li className = "m-1 text-center">
                       <button onClick={logout}>
                         <RiLogoutBoxLine className="w-5 h-5" />
                         logout
