@@ -143,7 +143,7 @@ const FavoritesPage = ({ user }) => {
       <h1 className='p-5 text-5xl font-bold text-center h-28'>Favorites</h1>
       {console.log("JIODASJDIOAJDOIASJ", favorites)}
       {favorites.length === 0 ? (
-        <div className='mt-4 text-xl'>No saved shows found</div>
+        <div className='mt-4 text-xl'>No favorited episodes found</div>
       ) : (
         favorites.map((favorite, index) => (
           <div

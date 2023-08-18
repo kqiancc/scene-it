@@ -150,7 +150,7 @@ const TaggedEpisodesPage = ({ user }) => {
     <div className='flex flex-col items-center'>
       <h1 className='p-5 text-5xl font-bold text-center h-28'>Saved</h1>
       {taggedEpisodes.length === 0 ? (
-        <div className='mt-4 text-xl'>No saved shows found</div>
+        <div className='mt-4 text-xl'>No saved episodes found </div>
       ) : (
         taggedEpisodes.map((taggedEpisode, index) => (
           <div
