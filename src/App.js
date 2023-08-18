@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./routes/home.component";
 import Navigation from "./routes/navigation.component";
 import TVDetails from "./routes/tv-details.component";
@@ -16,19 +16,19 @@ const App = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigation user={user} />}>
+      <Route path='/' element={<Navigation user={user} />}>
         <Route index element={<Home />} />
-        <Route path="home" element={<Home user={user} />} />
-        <Route path="saved" element={<Saved user={user} />} />
-        <Route path="tv-details" element={<TVDetails />} />
+        <Route path='home' element={<Home user={user} />} />
+        <Route path='saved' element={<Saved user={user} />} />
+        <Route path='tv-details' element={<TVDetails />} />
         <Route
-          path="display-episodes"
+          path='display-episodes'
           element={<DisplayEpisodes user={user} />}
         />
-        <Route path="favorites" element={<Favorites user={user} />} />
-        <Route path="movie-details" element={<MovieDetails user={user} />} />
+        <Route path='favorites' element={<Favorites user={user} />} />
+        <Route path='movie-details' element={<MovieDetails user={user} />} />
         <Route
-          path="login"
+          path='login'
           element={<Login user={user} loading={loading} error={error} />}
         />
       </Route>

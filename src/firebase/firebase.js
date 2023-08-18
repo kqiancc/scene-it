@@ -16,8 +16,6 @@ import {
   doc,
   setDoc,
   updateDoc,
-  collection,
-  getDocs,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -87,21 +85,6 @@ const createFavMovie = (movieId, movieName) => {
   return {
     movieId,
     movieName,
-  };
-};
-
-const createSeason = (seasonNumber, season_episodes) => {
-  return {
-    season_number: seasonNumber,
-    season_episodes,
-  };
-};
-
-const createTVShow = (tv_id, tv_name, tv_seasons) => {
-  return {
-    tv_id,
-    tv_name,
-    tv_seasons,
   };
 };
 

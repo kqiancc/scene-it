@@ -1,9 +1,9 @@
 import SearchBar from "../components/search-bar.component";
 
-const Home = () => {
+const Home = ({ user }) => {
   return (
-    <div className = "flex flex-col items-center">
-       <SearchBar/>
+    <div className='flex flex-col items-center'>
+      <SearchBar />
     </div>
   );
 };
