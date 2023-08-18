@@ -65,6 +65,19 @@ const Navigation = ({ user }) => {
                 </div>
               </div>
             ) : (
+              // <div className="absolute top-5 right-5">
+              //   <Link to="/login">
+              //     <div className="text-lg btn bg-primary hover:bg-secondary">
+              //       Login to save and filter data
+              //     </div>
+              //   </Link>
+              //   {/* <Link to="/login" className="">
+              //     <div tabIndex={-1} className="">
+              //       <RiUser3Line className="w-5 h-10" />
+              //     </div>
+              //   </Link> */}
+              // </div>
+
               <Link to='/login'>
                 <button className='absolute top-5 right-5' tabIndex={-1}>
                   <RiUser3Line className='w-5 h-10' />

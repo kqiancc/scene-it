@@ -114,7 +114,7 @@ const TaggedEpisodesPage = ({ user }) => {
   const handleHeartClick = (episodeId) => {
     setTaggedEpisodes((prevTaggedEpisodes) =>
       prevTaggedEpisodes.map((taggedEpisode) => {
-        if (taggedEpisode.episode.episode_id === episodeId) {
+        if (taggedEpisode.episode_id === episodeId) {
           const newHeartState = !taggedEpisode.is_heart_clicked;
           toggleEpFav(
             taggedEpisode.show_id,
@@ -137,37 +137,6 @@ const TaggedEpisodesPage = ({ user }) => {
   // const handleHeartClick = async (episodeId) => {
   //   const clickedEpisode = taggedEpisodes.find(te => te.episode.episode_id === episodeId);
   //   if (!clickedEpisode) return;
-
-  //   const newHeartState = !clickedEpisode.is_heart_clicked;
-
-  //   try {
-  //       Update in the database first
-  //       await toggleEpFav(
-  //           clickedEpisode.show_id,
-  //           clickedEpisode.season_number,
-  //           clickedEpisode.episode_id,
-  //           clickedEpisode.episode_name,
-  //           clickedEpisode.episode_number,
-  //           newHeartState
-  //       );
-
-  //       Then update the UI
-  //       setTaggedEpisodes((prevTaggedEpisodes) =>
-  //           prevTaggedEpisodes.map((taggedEpisode) => {
-  //               if (taggedEpisode.episode.episode_id === episodeId) {
-  //                   return {
-  //                       ...taggedEpisode,
-  //                       is_heart_clicked: newHeartState,
-  //                   };
-  //               }
-  //               return taggedEpisode;
-  //           })
-  //       );
-  //   } catch (error) {
-  //       console.error("Error updating heart status:", error);
-  //       Optionally, you can notify the user about the error or provide a way to retry.
-  //   }
-  // };
 
   if (loading) {
     return <Spinner />;

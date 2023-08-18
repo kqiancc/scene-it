@@ -40,17 +40,7 @@ module.exports = {
   daisyui: {
     styled: true,
     themes: [
-      {
-        typeroyale: {
-          primary: "#663399", //accents and title, bright
-          secondary: "#4C4452", //typed text, should be dark
-          "base-100": "#111111ff", //background, dark
-          "base-content": "#E8D5B5", //text color, bright
-          "--rounded-box": "4px",
-          "--rounded-btn": "4px",
-          "--rounded-badge": "4px",
-        },
-      },
+      "dracula",
       {
         rain: {
           primary: "#ca9ff5", //accents and title, bright
@@ -59,7 +49,6 @@ module.exports = {
           "base-content": "#ADD3FF", //text color, bright
         },
       },
-
       "acid",
       "aqua",
       "autumn",
@@ -72,7 +61,6 @@ module.exports = {
       "cyberpunk",
       "cmyk",
       "dark",
-      "dracula",
       "emerald",
       "fantasy",
       "forest",
@@ -95,6 +83,6 @@ module.exports = {
     logs: true,
     rtl: false,
     prefix: "",
-    darkTheme: "typeroyale",
+    darkTheme: "dracula",
   },
 };

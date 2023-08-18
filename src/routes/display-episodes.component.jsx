@@ -63,7 +63,12 @@ const DisplayEpisodes = ({ user }) => {
   const handleTagsChange = (episodeId, newTags) => {
     setEpisodes((prevEpisodes) =>
       prevEpisodes.map((episode) =>
-        episode.id === episodeId ? { ...episode, tags: newTags } : episode
+        episode.id === episodeId
+          ? {
+              ...episode,
+              tags: [...new Set([...episode.tags, ...newTags])], // Use a Set to remove duplicates
+            }
+          : episode
       )
     );
   };

@@ -9,7 +9,7 @@ import { getAuth } from "firebase/auth"; // Import Firebase's authentication mod
 import MovieNotes from "../components/movie-notes";
 import Spinner from "../firebase/spinner";
 
-const MovieDetails = ({ user }) => {
+const MovieDetails = ({ userUid }) => {
   const location = useLocation();
   const movie = location.state?.item || null;
 
@@ -51,26 +51,40 @@ const MovieDetails = ({ user }) => {
     } else {
       setLoading(false);
     }
-  }, [movie, user]);
+  }, [movie, userUid]);
 
-  const handleTagsChange = (movieId, newTags) => {
+  const handleTagsChange = (movieId, newTagsInput) => {
     setMovies((prevMovies) =>
       prevMovies.map((movie) =>
-        movie.id === movieId ? { ...movie, tags: newTags } : movie
+        movie.id === movieId
+          ? {
+              ...movie,
+              // Combine existing tags with the new ones, ensuring uniqueness
+              tags: [...new Set([...movie.tags, ...newTagsInput])],
+            }
+          : movie
       )
     );
   };
 
-  const handleTagDelete = (movieId, tagToDelete) => {
-    console.log("skdjfhsdjkfhsdkjfhsdjkfhds", movie.id);
-    setMovies((prevMovies) =>
-      prevMovies.map((movie) =>
-        movie.id === movieId
-          ? { ...movie, tags: movie.tags.filter((tag) => tag !== tagToDelete) }
-          : movie
-      )
-    );
-    deleteTagFromMovie(movieId, tagToDelete);
+  const handleTagDelete = async (movieId, tagToDelete) => {
+    try {
+      await deleteTagFromMovie(movieId, tagToDelete); // First, delete the tag from the database
+
+      // If deletion is successful, then update the local state
+      setMovies((prevMovies) =>
+        prevMovies.map((movie) =>
+          movie.id === movieId
+            ? {
+                ...movie,
+                tags: movie.tags.filter((tag) => tag !== tagToDelete),
+              }
+            : movie
+        )
+      );
+    } catch (error) {
+      console.error("Error deleting tag:", error);
+    }
   };
 
   const handleNotesChange = (movieId, newNotes) => {
@@ -88,19 +102,6 @@ const MovieDetails = ({ user }) => {
   if (error) {
     return <div>{error}</div>;
   }
-
-  const handleHeartClick = (movieId) => {
-    setMovies((prevMovies) =>
-      prevMovies.map((movie) => {
-        if (movie.id === movieId) {
-          const newHeartState = !movie.isHeartClicked;
-          toggleMovieFav(movie.id, newHeartState);
-          return { ...movie, isHeartClicked: newHeartState };
-        }
-        return movie;
-      })
-    );
-  };
 
   return (
     <div className='flex flex-col items-center'>
