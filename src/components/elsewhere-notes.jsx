@@ -34,11 +34,22 @@ const SavedNotes = ({
   const handleInputKeyPress = async (event) => {
     console.log(userInput, "before");
     if (event.key === "Enter") {
-      const newTags = userInput.split(",").map((tag) => tag.trim());
+      // Split the userInput into individual tags and trim any whitespace
+      const inputTags = userInput.split(",").map((tag) => tag.trim());
+
+      // Filter out tags that already exist in the current episode's tags
+      const newTags = inputTags.filter(tag => !tags.includes(tag));
+
+      // If all tags from the userInput are duplicates, then return early without updating
+      if (newTags.length === 0) {
+          setUserInput('');  // Clear the input field
+          return;
+      }
+
+      // Update the local state with the new tags
       setTags((prevTags) => [...prevTags, ...newTags]);
       onTagsChange([...tags, ...newTags]);
       console.log(userInput);
-      setUserInput("");
       //saving tags to firestore
       const auth = getAuth();
       const user = auth.currentUser;

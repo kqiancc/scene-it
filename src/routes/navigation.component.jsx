@@ -7,8 +7,8 @@ import {
   RiLogoutBoxLine,
   RiHeartLine,
   RiDownload2Line,
-  } from "react-icons/ri";
-import {PiTelevision} from "react-icons/pi";
+} from "react-icons/ri";
+import { PiTelevision } from "react-icons/pi";
 import { logout } from "../firebase/firebase";
 import ForwardButton from "../components/forwardbutton";
 import BackButton from "../components/backbutton";
@@ -54,10 +54,8 @@ const Navigation = ({ user }) => {
                     tabIndex={-1}
                     className="w-32 p-2 shadow dropdown-content menu bg-secondary rounded-box"
                   >
-                    <li className = "m-1 text-center">
-                      {user.displayName}
-                    </li>
-                    <li className = "m-1 text-center">
+                    <li className="m-1 text-center">{user.displayName}</li>
+                    <li className="m-1 text-center">
                       <button onClick={logout}>
                         <RiLogoutBoxLine className="w-5 h-5" />
                         logout
@@ -67,6 +65,19 @@ const Navigation = ({ user }) => {
                 </div>
               </div>
             ) : (
+              // <div className="absolute top-5 right-5">
+              //   <Link to="/login">
+              //     <div className="text-lg btn bg-primary hover:bg-secondary">
+              //       Login to save and filter data
+              //     </div>
+              //   </Link>
+              //   {/* <Link to="/login" className="">
+              //     <div tabIndex={-1} className="">
+              //       <RiUser3Line className="w-5 h-10" />
+              //     </div>
+              //   </Link> */}
+              // </div>
+
               <Link to="/login">
                 <button className="absolute top-5 right-5" tabIndex={-1}>
                   <RiUser3Line className="w-5 h-10" />

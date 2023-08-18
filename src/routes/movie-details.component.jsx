@@ -46,7 +46,6 @@ const MovieDetails = ({userUid}) => {
   }
 };
 
-
     if (movie) {
       fetchMovies();
     } else {
@@ -54,29 +53,38 @@ const MovieDetails = ({userUid}) => {
     }
   }, [movie, userUid]);
 
-  const handleTagsChange = (movieId, newTags) => {
+  const handleTagsChange = (movieId, newTagsInput) => {
     setMovies((prevMovies) =>
-      prevMovies.map((movie) =>
-        movie.id === movieId ? { ...movie, tags: newTags } : movie
-      )
+        prevMovies.map((movie) =>
+            movie.id === movieId
+                ? {
+                    ...movie,
+                    // Combine existing tags with the new ones, ensuring uniqueness
+                    tags: [...new Set([...movie.tags, ...newTagsInput])]
+                }
+                : movie
+        )
     );
-  };
+};
 
-  const handleTagDelete = (movieId, tagToDelete) => {
-    console.log("skdjfhsdjkfhsdkjfhsdjkfhds", movie.id)
-    setMovies((prevMovies) =>
-      prevMovies.map((movie) =>
+
+  const handleTagDelete = async (movieId, tagToDelete) => {
+    try {
+      await deleteTagFromMovie(movieId, tagToDelete);  // First, delete the tag from the database
       
-        movie.id === movieId
-        
-          ? { ...movie, tags: movie.tags.filter((tag) => tag !== tagToDelete) }
-          : movie
-      )
-    );
-       deleteTagFromMovie(movieId, tagToDelete);
+      // If deletion is successful, then update the local state
+      setMovies((prevMovies) =>
+        prevMovies.map((movie) =>
+          movie.id === movieId
+            ? { ...movie, tags: movie.tags.filter((tag) => tag !== tagToDelete) }
+            : movie
+        )
+      );
+    } catch (error) {
+      console.error("Error deleting tag:", error);
     }
+  };
   
-
   const handleNotesChange = (movieId, newNotes) => {
     setMovies((prevMovies) =>
       prevMovies.map((movie) =>
@@ -92,19 +100,6 @@ const MovieDetails = ({userUid}) => {
   if (error) {
     return <div>{error}</div>;
   }
-
-  const handleHeartClick = (movieId) => {
-    setMovies((prevMovies) =>
-      prevMovies.map((movie) => {
-        if (movie.id === movieId) {
-          const newHeartState = !movie.isHeartClicked;
-          toggleMovieFav(movie.id, newHeartState);
-          return { ...movie, isHeartClicked: newHeartState };
-        }
-        return movie;
-      })
-    );
-  };
 
   return (
     <div className="flex flex-col items-center">

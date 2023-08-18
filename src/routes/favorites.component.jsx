@@ -58,17 +58,24 @@ const FavoritesPage = ({ userUid }) => {
       setLoading(false);
     }
   };
-
-  const handleTagsChange = (episodeId, newTags) => {
-    console.log(episodeId)
+  
+  const handleTagsChange = (episodeId, newTagsInput) => {
     setFavorites((prevFavorites) =>
-      prevFavorites.map((favorite) =>
-        favorite.episode.id === episodeId
-          ? { ...favorite, episode: { ...favorite.episode, tags: newTags } }
-          : favorite
-      )
+        prevFavorites.map((favorite) =>
+            favorite.episode.id === episodeId
+                ? {
+                    ...favorite,
+                    episode: {
+                        ...favorite.episode,
+                        // Combine existing tags with the new ones, ensuring uniqueness
+                        tags: [...new Set([...favorite.episode.tags, ...newTagsInput])]
+                    }
+                }
+                : favorite
+        )
     );
-  };
+};
+
 
   const handleTagDelete = async (episodeId, tagToDelete) => {
     setFavorites((prevFavorites) =>
