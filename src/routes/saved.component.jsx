@@ -107,7 +107,7 @@ const handleNotesChange = (episodeId, newNotes) => {
 const handleHeartClick = (episodeId) => {
     setTaggedEpisodes((prevTaggedEpisodes) =>
       prevTaggedEpisodes.map((taggedEpisode) => {
-        if (taggedEpisode.episode.episode_id === episodeId) {
+        if (taggedEpisode.episode_id === episodeId) {
           const newHeartState = !taggedEpisode.is_heart_clicked;  
           toggleEpFav(
             taggedEpisode.show_id,
