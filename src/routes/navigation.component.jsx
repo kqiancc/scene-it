@@ -8,7 +8,7 @@ import {
   RiHeartLine,
   RiDownload2Line,
 } from "react-icons/ri";
-import { PiTelevision } from "react-icons/pi";
+import {PiPopcorn} from "react-icons/pi"
 import { logout } from "../firebase/firebase";
 import ForwardButton from "../components/forwardbutton";
 import BackButton from "../components/backbutton";
@@ -24,7 +24,7 @@ const Navigation = ({ user }) => {
         <div>
           <div class='flex items-center space-x-4'>
             <Link class='btn btn-ghost normal-case h-20 text-xl' to='/'>
-              <PiTelevision className='w-10 h-10' />
+              <PiPopcorn className='w-10 h-10' />
             </Link>
             <div className='join'>
               <BackButton />
