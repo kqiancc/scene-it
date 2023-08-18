@@ -420,6 +420,7 @@ const updateMovieField = async (movieId, fieldToUpdate, newValue) => {
 };
 
 const deleteTagFromMovie = async (movieId, tagToDelete) => {
+  console.log(movieId);
   try {
     const docRef = doc(db, "users", userUid);
     const docSnap = await getDoc(docRef);

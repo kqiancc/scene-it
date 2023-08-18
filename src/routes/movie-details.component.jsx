@@ -63,16 +63,19 @@ const MovieDetails = ({userUid}) => {
   };
 
   const handleTagDelete = (movieId, tagToDelete) => {
+    console.log("skdjfhsdjkfhsdkjfhsdjkfhds", movie.id)
     setMovies((prevMovies) =>
       prevMovies.map((movie) =>
+      
         movie.id === movieId
+        
           ? { ...movie, tags: movie.tags.filter((tag) => tag !== tagToDelete) }
           : movie
       )
     );
-    // Call the corresponding function to delete a tag from a movie
-    deleteTagFromMovie(movieId, tagToDelete);
-  };
+       deleteTagFromMovie(movieId, tagToDelete);
+    }
+  
 
   const handleNotesChange = (movieId, newNotes) => {
     setMovies((prevMovies) =>
@@ -105,45 +108,50 @@ const MovieDetails = ({userUid}) => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="flex items-center w-10/12 shadow-xl bg-base-300 rounded-xl">
-        <figure className="flex-shrink-0 float-left m-6">
-          {movie.poster_path ? (
-            <img
-              className="rounded"
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt={`${movie.title}`}
-              style={{ width: "300px", height: "auto" }}
-            />
-          ) : (
-            <div
-              style={{ width: "300px", height: "450px" }}
-              className="flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-300 text-base-content"
-            >
-              No Poster Image Currently Found
+      {movies.map((mergedMovie) => (
+        <>
+          <div className="flex items-center w-10/12 shadow-xl bg-base-300 rounded-xl">
+            <figure className="flex-shrink-0 float-left m-6">
+              {mergedMovie.poster_path ? (
+                <img
+                  className="rounded"
+                  src={`https://image.tmdb.org/t/p/w500${mergedMovie.poster_path}`}
+                  alt={`${mergedMovie.title}`}
+                  style={{ width: "300px", height: "auto" }}
+                />
+              ) : (
+                <div
+                  style={{ width: "300px", height: "450px" }}
+                  className="flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-300 text-base-content"
+                >
+                  No Poster Image Currently Found
+                </div>
+              )}
+            </figure>
+            <div className="max-w-full card-body">
+              <h2 className="text-3xl font-bold">{`${mergedMovie.title}`}</h2>
+              <p className="text-xl italic">
+                Rating: {mergedMovie.vote_average}/10 - {mergedMovie.runtime} minutes
+              </p>
+              <p className="text-xl italic">Released: {mergedMovie.release_date}</p>
+              <p className="text-xl">{mergedMovie.overview}</p>
+              <div className="justify-end card-actions"></div>
             </div>
-          )}
-        </figure>
-        <div className="max-w-full card-body">
-          <h2 className="text-3xl font-bold">{`${movie.title}`}</h2>
-          <p className="text-xl italic">
-            Rating: {movie.vote_average}/10 - {movie.runtime} minutes
-          </p>
-          <p className="text-xl italic">Released: {movie.release_date}</p>
-          <p className="text-xl">{movie.overview}</p>
-          <div className="justify-end card-actions"></div>
-        </div>
-      </div>
-      <div className="w-10/12">
-        <MovieNotes
-          movieId={movie.id}
-          movieData={movie}
-          onTagsChange={(newTags) => handleTagsChange(movie.id, newTags)}
-          onNotesChange={(newNotes) => handleNotesChange(movie.id, newNotes)}
-          onTagDelete={(tagToDelete) => handleTagDelete(movie.id, tagToDelete)}
-      />
-        </div>
+          </div>
+          <div className="w-10/12">
+            <MovieNotes
+              movieId={mergedMovie.id}
+              movieData={mergedMovie}
+              onTagsChange={(newTags) => handleTagsChange(mergedMovie.id, newTags)}
+              onNotesChange={(newNotes) => handleNotesChange(mergedMovie.id, newNotes)}
+              onTagDelete={(tagToDelete) => handleTagDelete(mergedMovie.id, tagToDelete)}
+            />
+          </div>
+        </>
+      ))}
     </div>
   );
+  
 };
 
 export default MovieDetails;
