@@ -3,9 +3,10 @@ import Spinner from "../firebase/spinner";
 import Heart from "../components/heart";
 import SavedNotes from "../components/elsewhere-notes";
 import { toggleEpFav, deleteTagFromEpisode } from "../firebase/firebase";
-import { getTVShowsWithTags } from "../firebase/firebase";  // Adjust the path
+import { getTVShowsWithTags } from "../firebase/firebase"; // Adjust the path
 
-const TaggedEpisodesPage = ({ userUid }) => {
+const TaggedEpisodesPage = ({ user }) => {
+  console.log("jfoisfjds", user);
   const [taggedEpisodes, setTaggedEpisodes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,7 +14,7 @@ const TaggedEpisodesPage = ({ userUid }) => {
 
   useEffect(() => {
     fetchTaggedEpisodesDetails();
-  }, [userUid]);
+  }, [user]);
 
   const fetchTaggedEpisodesDetails = async () => {
     try {
@@ -47,7 +48,6 @@ const TaggedEpisodesPage = ({ userUid }) => {
               isHeartClicked: true,
             },
             showName: showName,
-            
           };
         })
       );
@@ -64,20 +64,25 @@ const TaggedEpisodesPage = ({ userUid }) => {
     setTaggedEpisodes((prevTaggedEpisodes) =>
       prevTaggedEpisodes.map((taggedEpisode) =>
         taggedEpisode.episode.id === episodeId
-          ? { ...taggedEpisode, episode: { ...taggedEpisode.episode, tags: newTags } }
+          ? {
+              ...taggedEpisode,
+              episode: { ...taggedEpisode.episode, tags: newTags },
+            }
           : taggedEpisode
       )
     );
-};
+  };
 
-const handleTagDelete = async (episodeId, tagToDelete) => {
+  const handleTagDelete = async (episodeId, tagToDelete) => {
     // 1. Update the UI immediately
     setTaggedEpisodes((prevTaggedEpisodes) =>
       prevTaggedEpisodes.map((taggedEpisode) =>
         taggedEpisode.episode.episode_id === episodeId
           ? {
               ...taggedEpisode,
-              tags: taggedEpisode.episode.tags.filter((tag) => tag !== tagToDelete),
+              tags: taggedEpisode.episode.tags.filter(
+                (tag) => tag !== tagToDelete
+              ),
             }
           : taggedEpisode
       )
@@ -92,30 +97,33 @@ const handleTagDelete = async (episodeId, tagToDelete) => {
     } catch (error) {
       console.error("Error deleting tag:", error);
     }
-};
+  };
 
-const handleNotesChange = (episodeId, newNotes) => {
+  const handleNotesChange = (episodeId, newNotes) => {
     setTaggedEpisodes((prevTaggedEpisodes) =>
       prevTaggedEpisodes.map((taggedEpisode) =>
         taggedEpisode.episode.id === episodeId
-          ? { ...taggedEpisode, episode: { ...taggedEpisode.episode, notes: newNotes } }
+          ? {
+              ...taggedEpisode,
+              episode: { ...taggedEpisode.episode, notes: newNotes },
+            }
           : taggedEpisode
       )
     );
-};
+  };
 
-const handleHeartClick = (episodeId) => {
+  const handleHeartClick = (episodeId) => {
     setTaggedEpisodes((prevTaggedEpisodes) =>
       prevTaggedEpisodes.map((taggedEpisode) => {
         if (taggedEpisode.episode.episode_id === episodeId) {
-          const newHeartState = !taggedEpisode.is_heart_clicked;  
+          const newHeartState = !taggedEpisode.is_heart_clicked;
           toggleEpFav(
             taggedEpisode.show_id,
             taggedEpisode.season_number,
             taggedEpisode.episode_id,
             taggedEpisode.episode_name,
             taggedEpisode.episode_number,
-            newHeartState  
+            newHeartState
           );
           return {
             ...taggedEpisode,
@@ -125,44 +133,42 @@ const handleHeartClick = (episodeId) => {
         return taggedEpisode;
       })
     );
-};
+  };
 
-// const handleHeartClick = async (episodeId) => {
-//   const clickedEpisode = taggedEpisodes.find(te => te.episode.episode_id === episodeId);
-//   if (!clickedEpisode) return;
+  // const handleHeartClick = async (episodeId) => {
+  //   const clickedEpisode = taggedEpisodes.find(te => te.episode.episode_id === episodeId);
+  //   if (!clickedEpisode) return;
 
-//   const newHeartState = !clickedEpisode.is_heart_clicked;
+  //   const newHeartState = !clickedEpisode.is_heart_clicked;
 
-//   try {
-//       Update in the database first
-//       await toggleEpFav(
-//           clickedEpisode.show_id,
-//           clickedEpisode.season_number,
-//           clickedEpisode.episode_id,
-//           clickedEpisode.episode_name,
-//           clickedEpisode.episode_number,
-//           newHeartState  
-//       );
+  //   try {
+  //       Update in the database first
+  //       await toggleEpFav(
+  //           clickedEpisode.show_id,
+  //           clickedEpisode.season_number,
+  //           clickedEpisode.episode_id,
+  //           clickedEpisode.episode_name,
+  //           clickedEpisode.episode_number,
+  //           newHeartState
+  //       );
 
-//       Then update the UI
-//       setTaggedEpisodes((prevTaggedEpisodes) =>
-//           prevTaggedEpisodes.map((taggedEpisode) => {
-//               if (taggedEpisode.episode.episode_id === episodeId) {
-//                   return {
-//                       ...taggedEpisode,
-//                       is_heart_clicked: newHeartState,
-//                   };
-//               }
-//               return taggedEpisode;
-//           })
-//       );
-//   } catch (error) {
-//       console.error("Error updating heart status:", error);
-//       Optionally, you can notify the user about the error or provide a way to retry.
-//   }
-// };
-
-
+  //       Then update the UI
+  //       setTaggedEpisodes((prevTaggedEpisodes) =>
+  //           prevTaggedEpisodes.map((taggedEpisode) => {
+  //               if (taggedEpisode.episode.episode_id === episodeId) {
+  //                   return {
+  //                       ...taggedEpisode,
+  //                       is_heart_clicked: newHeartState,
+  //                   };
+  //               }
+  //               return taggedEpisode;
+  //           })
+  //       );
+  //   } catch (error) {
+  //       console.error("Error updating heart status:", error);
+  //       Optionally, you can notify the user about the error or provide a way to retry.
+  //   }
+  // };
 
   if (loading) {
     return <Spinner />;
@@ -171,79 +177,85 @@ const handleHeartClick = (episodeId) => {
   if (error) {
     return <div>{error}</div>;
   }
-  
 
-  return (
-    <div className="flex flex-col items-center">
-      <h1 className="p-5 text-5xl font-bold text-center h-28">Saved</h1>
+  return user ? (
+    <div className='flex flex-col items-center'>
+      <h1 className='p-5 text-5xl font-bold text-center h-28'>Saved</h1>
       {taggedEpisodes.map((taggedEpisode, index) => (
-               <div key={index} className="w-9/12 collapse collapse-plus bg-base-200 ">
-               <input
-                 type="checkbox"
-                 name="my-accordion-3 flex flex-row items-center"
-               />
-               <div className="flex items-center text-xl collapse-title">
-                 <figure className="flex-shrink-0 float-left m-4">
-                   {taggedEpisode.episode.still_path ? (
-                     <img
-                       className="rounded-lg"
-                       src={`https://image.tmdb.org/t/p/w500${taggedEpisode.episode.still_path}`}
-                       alt={`Episode ${taggedEpisode.episode.episode_number} - ${taggedEpisode.episode.name}`}
-                       style={{ width: "300px", height: "auto" }}
-                     />
-                   ) : (
-                     <div
-                       style={{ width: "300px", height: "175px" }}
-                       className="flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-100 text-base-content"
-                     >
-                       No Poster Image Currently Found
-                     </div>
-                   )}
-                 </figure>
-                 <div className="select-text card-body">
-                   <h3 className="text-3xl font-bold">
-                     {taggedEpisode.showName} - Season {taggedEpisode.season_number}
-                   </h3>
-                   <h2 className="text-2xl font-bold">
-                     Episode {taggedEpisode.episode.episode_number}:{" "}
-                     {taggedEpisode.episode.name}
-                   </h2>
-                   <h1 className="italic">
-                     {taggedEpisode.episode.vote_average}/10 - {taggedEpisode.episode.runtime}{" "}
-                     minutes
-                   </h1>
-                   <h1 className="italic">Aired: {taggedEpisode.episode.air_date} </h1>
-                   <p>{taggedEpisode.episode.overview}</p>
-                   <div className="justify-end card-actions"></div>
-                 </div>
-               </div>
-               {/*TESTING NEW STUFF */}
-               <div className="collapse-content">
-                 <Heart
-                   showId={taggedEpisode.show_id}
-                   seasonNumber={taggedEpisode.season_number}
-                   episodeId={taggedEpisode.episode_id}
-                   episodeNumber={taggedEpisode.episode_number}
-                   episodeName={taggedEpisode.episode_name}
-                   isHeartClicked={taggedEpisode.is_heart_clicked}
-                   handleHeartClick={handleHeartClick}
-                 />
-                 <div className="divider" />
-                 <SavedNotes
-                   episodeData={taggedEpisode}
-                   onTagsChange={(newTags) =>
-                     handleTagsChange(taggedEpisode.episode.episode_id, newTags)
-                   }
-                   onNotesChange={(newNotes) =>
-                     handleNotesChange(taggedEpisode.episode.episode_id, newNotes)
-                   }
-                   onTagDelete={(episodeId, tagToDelete) =>
-                     handleTagDelete(episodeId, tagToDelete)
-                   }
-                 />
-               </div>
-             </div>
+        <div key={index} className='w-9/12 collapse collapse-plus bg-base-200 '>
+          <input
+            type='checkbox'
+            name='my-accordion-3 flex flex-row items-center'
+          />
+          <div className='flex items-center text-xl collapse-title'>
+            <figure className='flex-shrink-0 float-left m-4'>
+              {taggedEpisode.episode.still_path ? (
+                <img
+                  className='rounded-lg'
+                  src={`https://image.tmdb.org/t/p/w500${taggedEpisode.episode.still_path}`}
+                  alt={`Episode ${taggedEpisode.episode.episode_number} - ${taggedEpisode.episode.name}`}
+                  style={{ width: "300px", height: "auto" }}
+                />
+              ) : (
+                <div
+                  style={{ width: "300px", height: "175px" }}
+                  className='flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-100 text-base-content'
+                >
+                  No Poster Image Currently Found
+                </div>
+              )}
+            </figure>
+            <div className='select-text card-body'>
+              <h3 className='text-3xl font-bold'>
+                {taggedEpisode.showName} - Season {taggedEpisode.season_number}
+              </h3>
+              <h2 className='text-2xl font-bold'>
+                Episode {taggedEpisode.episode.episode_number}:{" "}
+                {taggedEpisode.episode.name}
+              </h2>
+              <h1 className='italic'>
+                {taggedEpisode.episode.vote_average}/10 -{" "}
+                {taggedEpisode.episode.runtime} minutes
+              </h1>
+              <h1 className='italic'>
+                Aired: {taggedEpisode.episode.air_date}{" "}
+              </h1>
+              <p>{taggedEpisode.episode.overview}</p>
+              <div className='justify-end card-actions'></div>
+            </div>
+          </div>
+          {/*TESTING NEW STUFF */}
+          <div className='collapse-content'>
+            <Heart
+              showId={taggedEpisode.show_id}
+              seasonNumber={taggedEpisode.season_number}
+              episodeId={taggedEpisode.episode_id}
+              episodeNumber={taggedEpisode.episode_number}
+              episodeName={taggedEpisode.episode_name}
+              isHeartClicked={taggedEpisode.is_heart_clicked}
+              handleHeartClick={handleHeartClick}
+            />
+            <div className='divider' />
+            <SavedNotes
+              episodeData={taggedEpisode}
+              onTagsChange={(newTags) =>
+                handleTagsChange(taggedEpisode.episode.episode_id, newTags)
+              }
+              onNotesChange={(newNotes) =>
+                handleNotesChange(taggedEpisode.episode.episode_id, newNotes)
+              }
+              onTagDelete={(episodeId, tagToDelete) =>
+                handleTagDelete(episodeId, tagToDelete)
+              }
+            />
+          </div>
+        </div>
       ))}
+    </div>
+  ) : (
+    <div className='flex flex-col items-center justify-center'>
+      <h1 className='p-5 text-5xl font-bold text-center h-28'>Saved</h1>
+      <p className='mt-4 text-xl'>Log in to use this feature</p>
     </div>
   );
 };
