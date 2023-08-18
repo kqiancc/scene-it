@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Spinner from "../firebase/spinner";
 import Heart from "../components/heart";
-import SavedNotes from "../components/saved-notes";
+import SavedNotes from "../components/elsewhere-notes";
 import { toggleEpFav, deleteTagFromEpisode } from "../firebase/firebase";
 import { getTVShowsWithTags } from "../firebase/firebase";  // Adjust the path
 

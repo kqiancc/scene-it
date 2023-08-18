@@ -108,8 +108,6 @@ const createTVShow = (tv_id, tv_name, tv_seasons) => {
 const INITIAL_DOC = {
   tv_shows: [],
   movies: [],
-  favorites: [],
-  watch_list: [],
   tags: [],
 };
 
@@ -628,26 +626,24 @@ const getTVShowsWithTags = async () => {
   }
 };
 
-const getMoviesWithTags = async () => {
+const getFavoritedEps = async () => {
   try {
     const docRef = doc(db, "users", userUid);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       const userData = docSnap.data().user_data;
-      const movies = userData.movies || []; // Assuming movies are stored in the 'movies' array
-      console.log(userData.movies);
+      const tvShows = userData.tv_shows || [];
+      console.log(userData.tv_shows);
 
-      const moviesWithTags = movies.filter((movie) => {
-        return movie.movie_tags && movie.movie_tags.length > 0;
-      });
+      const favoritedEp = tvShows.filter((episode) => episode.is_heart_clicked);
 
-      console.log(moviesWithTags);
-      if (moviesWithTags.length > 0) {
-        console.log("Movies with tags found");
-        return moviesWithTags;
+      console.log(favoritedEp);
+      if (favoritedEp.length > 0) {
+        console.log("TV faves found");
+        return favoritedEp;
       } else {
-        console.log("No movies with tags found.");
+        console.log("No tv faves found.");
         return [];
       }
     } else {
@@ -655,7 +651,7 @@ const getMoviesWithTags = async () => {
       return [];
     }
   } catch (error) {
-    console.error("Error getting movies with tags:", error);
+    console.error("Error getting favorited TV Shows:", error);
     return [];
   }
 };
@@ -683,5 +679,5 @@ export {
   toggleMovieFav,
   //saved
   getTVShowsWithTags,
-  getMoviesWithTags,
+  getFavoritedEps,
 };

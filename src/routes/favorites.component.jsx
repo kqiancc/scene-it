@@ -1,80 +1,63 @@
 import React, { useEffect, useState } from "react";
-import { getFavorites, getFavEpisodes } from "../firebase/firebase";
 import Spinner from "../firebase/spinner";
-import ElsewhereNotes from "../components/favorites-notes";
 import Heart from "../components/heart";
+import SavedNotes from "../components/elsewhere-notes";
 import { toggleEpFav, deleteTagFromEpisode } from "../firebase/firebase";
-//race condition for heart thingy
-//set a state for the heart in this file
-//set use effect to update with that too
-//make sure that the data is gotten first before updating, so refer back to the delete tags
+import { getFavoritedEps } from "../firebase/firebase"; // Adjust the path if necessary
 
 const FavoritesPage = ({ userUid }) => {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25"; // Insert your API key
 
   useEffect(() => {
-    fetchFavoritesAndEpisodes();
+    fetchFavoritesDetails();
   }, [userUid]);
 
-  const fetchFavoritesAndEpisodes = async () => {
+  const fetchFavoritesDetails = async () => {
     try {
-      const favoritesData = await getFavorites();
-      const episodesData = await getFavEpisodes();
-      const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25";
+      const showsWithTags = await getFavoritedEps();
 
-      const favoritesWithDetails = await Promise.all(
-        favoritesData.map(async (favorite) => {
+      const favoritesDetails = await Promise.all(
+        showsWithTags.map(async (favorite) => {
           const response = await fetch(
-            `https://api.themoviedb.org/3/tv/${favorite.showId}/season/${favorite.seasonNumber}/episode/${favorite.episodeNumber}?api_key=${apiKey}&language=en-US`
+            `https://api.themoviedb.org/3/tv/${favorite.show_id}/season/${favorite.season_number}/episode/${favorite.episode_number}?api_key=${apiKey}&language=en-US`
           );
-          const episodeDetails = await response.json();
+          const favoriteDetails = await response.json();
 
-          const matchingEpisode = episodesData.find(
-            (episode) => episode.episode_id === favorite.episodeId
-          );
-
-          let showName = ""; // Initialize the showName variable using let
+          let showName = ""; 
 
           try {
             const showResponse = await fetch(
-              `https://api.themoviedb.org/3/tv/${favorite.showId}?api_key=${apiKey}&language=en-US`
+              `https://api.themoviedb.org/3/tv/${favorite.show_id}?api_key=${apiKey}&language=en-US`
             );
             const showData = await showResponse.json();
-            showName = showData.name; // Get the show name from the API response
+            showName = showData.name; 
           } catch (error) {
             console.error("Error fetching show details:", error);
           }
-          console.log("WE CAN PLAY MATCHING", matchingEpisode);
+
           return {
             ...favorite,
-            episode: episodeDetails,
+            episode: {
+              ...favoriteDetails,
+              tags: favorite.tags || [], 
+              notes: favorite.notes || [],
+              isHeartClicked: true,
+            },
             showName: showName,
-            isHeartClicked: matchingEpisode.is_heart_clicked,
-            tags:
-              matchingEpisode && matchingEpisode.episode_tags
-                ? matchingEpisode.episode_tags
-                : [],
-            notes:
-              matchingEpisode && matchingEpisode.episode_notes
-                ? matchingEpisode.episode_notes
-                : [],
           };
         })
       );
-      console.log("FAVORITESIWTHDETAUSLS", favoritesWithDetails);
-      setFavorites(favoritesWithDetails);
+
+      setFavorites(favoritesDetails);
       setLoading(false);
     } catch (error) {
-      setError("error fetching data :(");
+      setError("Error fetching data :(");
       setLoading(false);
     }
   };
-
-  if (loading) {
-    return <Spinner />;
-  }
 
   const handleTagsChange = (episodeId, newTags) => {
     setFavorites((prevFavorites) =>
@@ -87,10 +70,9 @@ const FavoritesPage = ({ userUid }) => {
   };
 
   const handleTagDelete = async (episodeId, tagToDelete) => {
-    // 1. Update the UI immediately
     setFavorites((prevFavorites) =>
       prevFavorites.map((favorite) =>
-        favorite.episode.episodeId === episodeId
+        favorite.episode.episode_id === episodeId
           ? {
               ...favorite,
               tags: favorite.episode.tags.filter((tag) => tag !== tagToDelete),
@@ -99,12 +81,9 @@ const FavoritesPage = ({ userUid }) => {
       )
     );
 
-    // 2. Delete the tag from the backend
     try {
       await deleteTagFromEpisode(episodeId, tagToDelete);
-
-      // 3. Re-fetch data to sync with backend
-      await fetchFavoritesAndEpisodes();
+      await fetchFavoritesDetails();
     } catch (error) {
       console.error("Error deleting tag:", error);
     }
@@ -121,26 +100,21 @@ const FavoritesPage = ({ userUid }) => {
   };
 
   const handleHeartClick = (episodeId) => {
-    console.log("handleheartClick", episodeId);
     setFavorites((prevFavorites) =>
       prevFavorites.map((favorite) => {
-        if (favorite.episodeId === episodeId) {
-          const newHeartState = !favorite.isHeartClicked;
-          console.log("handleHeartClick", favorite, newHeartState);
-          console.log(favorite.episode.episodeId, favorite.episodeId);
+        if (favorite.episode.episode_id === episodeId) {
+          const newHeartState = !favorite.episode.isHeartClicked;  
           toggleEpFav(
-            favorite.showId,
-            favorite.seasonNumber,
-            favorite.episodeId,
-            favorite.episodeName,
-            favorite.episodeNumber,
-            newHeartState
+            favorite.episode.show_id,
+            favorite.episode.season_number,
+            favorite.episode.episode_id,
+            favorite.episode.episode_name,
+            favorite.episode.episode_number,
+            newHeartState  
           );
-          console.log(favorite);
           return {
             ...favorite,
-            episode: { ...favorite.episode },
-            isHeartClicked: newHeartState,
+            episode: { ...favorite.episode, isHeartClicked: newHeartState },
           };
         }
         return favorite;
@@ -157,74 +131,74 @@ const FavoritesPage = ({ userUid }) => {
   }
 
   return (
-    <div className='flex flex-col items-center'>
-      <h1 className='p-5 text-5xl font-bold text-center h-28'>Favorites</h1>
+    <div className="flex flex-col items-center">
+      <h1 className="p-5 text-5xl font-bold text-center h-28">Favorites</h1>
       {favorites.map((favorite, index) => (
-        <div key={index} className='w-9/12 collapse collapse-plus bg-base-200 '>
-          <input
-            type='checkbox'
-            name='my-accordion-3 flex flex-row items-center'
-          />
-          <div className='flex items-center text-xl collapse-title'>
-            <figure className='flex-shrink-0 float-left m-4'>
-              {favorite.episode.still_path ? (
-                <img
-                  className='rounded-lg'
-                  src={`https://image.tmdb.org/t/p/w500${favorite.episode.still_path}`}
-                  alt={`Episode ${favorite.episode.episode_number} - ${favorite.episode.name}`}
-                  style={{ width: "300px", height: "auto" }}
-                />
-              ) : (
-                <div
-                  style={{ width: "300px", height: "175px" }}
-                  className='flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-100 text-base-content'
-                >
-                  No Poster Image Currently Found
-                </div>
-              )}
-            </figure>
-            <div className='select-text card-body'>
-              <h3 className='text-3xl font-bold'>
-                {favorite.showName} - Season {favorite.seasonNumber}
-              </h3>
-              <h2 className='text-2xl font-bold'>
-                Episode {favorite.episode.episode_number}:{" "}
-                {favorite.episode.name}
-              </h2>
-              <h1 className='italic'>
-                {favorite.episode.vote_average}/10 - {favorite.episode.runtime}{" "}
-                minutes
-              </h1>
-              <h1 className='italic'>Aired: {favorite.episode.air_date} </h1>
-              <p>{favorite.episode.overview}</p>
-              <div className='justify-end card-actions'></div>
-            </div>
-          </div>
-          {/*TESTING NEW STUFF */}
-          <div className='collapse-content'>
-            <Heart
-              showId={favorite.episode.showId}
-              seasonNumber={favorite.episode.seasonNumber}
-              episodeId={favorite.episodeId}
-              episodeNumber={favorite.episode.episodeNumber}
-              episodeName={favorite.episode.episodeName}
-              isHeartClicked={favorite.isHeartClicked}
-              handleHeartClick={handleHeartClick}
-            />
-            <div className='divider' />
-            <ElsewhereNotes
-              episodeData={favorite}
-              onTagsChange={(newTags) =>
-                handleTagsChange(favorite.episode.episodeId, newTags)
-              }
-              onNotesChange={(newNotes) =>
-                handleNotesChange(favorite.episode.episodeId, newNotes)
-              }
-              onTagDelete={(episodeId, tagToDelete) =>
-                handleTagDelete(episodeId, tagToDelete)
-              }
-            />
-          </div>
+        <div key={index} className="w-9/12 collapse collapse-plus bg-base-200 ">
+         <input
+                 type="checkbox"
+                 name="my-accordion-3 flex flex-row items-center"
+               />
+               <div className="flex items-center text-xl collapse-title">
+                 <figure className="flex-shrink-0 float-left m-4">
+                   {favorite.episode.still_path ? (
+                     <img
+                       className="rounded-lg"
+                       src={`https://image.tmdb.org/t/p/w500${favorite.episode.still_path}`}
+                       alt={`Episode ${favorite.episode.episode_number} - ${favorite.episode.name}`}
+                       style={{ width: "300px", height: "auto" }}
+                     />
+                   ) : (
+                     <div
+                       style={{ width: "300px", height: "175px" }}
+                       className="flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-100 text-base-content"
+                     >
+                       No Poster Image Currently Found
+                     </div>
+                   )}
+                 </figure>
+                 <div className="select-text card-body">
+                   <h3 className="text-3xl font-bold">
+                     {favorite.showName} - Season {favorite.season_number}
+                   </h3>
+                   <h2 className="text-2xl font-bold">
+                     Episode {favorite.episode.episode_number}:{" "}
+                     {favorite.episode.name}
+                   </h2>
+                   <h1 className="italic">
+                     {favorite.episode.vote_average}/10 - {favorite.episode.runtime}{" "}
+                     minutes
+                   </h1>
+                   <h1 className="italic">Aired: {favorite.episode.air_date} </h1>
+                   <p>{favorite.episode.overview}</p>
+                   <div className="justify-end card-actions"></div>
+                 </div>
+               </div>
+               {/*TESTING NEW STUFF */}
+               <div className="collapse-content">
+                 <Heart
+                   showId={favorite.episode.show_id}
+                   seasonNumber={favorite.episode.season_number}
+                   episodeId={favorite.episode.episode_id}
+                   episodeNumber={favorite.episode.episode_number}
+                   episodeName={favorite.episode.episode_name}
+                   isHeartClicked={favorite.episode.is_heart_clicked}
+                   handleHeartClick={handleHeartClick}
+                 />
+                 <div className="divider" />
+                 <SavedNotes
+                   episodeData={favorite}
+                   onTagsChange={(newTags) =>
+                     handleTagsChange(favorite.episode.episode_id, newTags)
+                   }
+                   onNotesChange={(newNotes) =>
+                     handleNotesChange(favorite.episode.episode_id, newNotes)
+                   }
+                   onTagDelete={(episodeId, tagToDelete) =>
+                     handleTagDelete(episodeId, tagToDelete)
+                   }
+                 />
+               </div>
         </div>
       ))}
     </div>
