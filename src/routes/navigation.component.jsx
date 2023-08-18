@@ -7,7 +7,6 @@ import {
   RiLogoutBoxLine,
   RiHeartLine,
   RiDownload2Line,
-  RiPlayList2Line,
   } from "react-icons/ri";
 import {PiTelevision} from "react-icons/pi";
 import { logout } from "../firebase/firebase";
@@ -41,13 +40,6 @@ const Navigation = ({ user }) => {
               >
                 <RiHeartLine />
                 favorites
-              </Link>
-              <Link
-              className = "join-item btn"
-              to="/to-watch"
-              aria-label = "to-watch">
-                <RiPlayList2Line/>
-                to watch
               </Link>
               <ThemePicker />
             </div>
