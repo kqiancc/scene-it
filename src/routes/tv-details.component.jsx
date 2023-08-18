@@ -68,7 +68,7 @@ const TVDetails = () => {
             />
           ) : (
             <div
-              style={{ width: "315px", height: "450px" }}
+              style={{ width: "300px", height: "450px" }}
               className="flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-100 text-base-content"
             >
               No Poster Image Currently Found

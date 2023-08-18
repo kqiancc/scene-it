@@ -36,17 +36,10 @@ const googleProvider = new GoogleAuthProvider();
 let userUid = null;
 
 ///////////////////////// CONSTANTS /////////////////////////////////////
-const createMovie = (
-  movie_id,
-  movie_name,
-  movie_rating,
-  movie_tags,
-  movie_notes
-) => {
+const createMovie = (movie_id, movie_name, movie_tags, movie_notes) => {
   return {
     movie_id,
     movie_name,
-    movie_rating,
     movie_tags,
     movie_notes,
   };
@@ -87,6 +80,13 @@ const createFavEpisode = (
     episodeId,
     episodeName,
     episodeNumber,
+  };
+};
+
+const createFavMovie = (movieId, movieName) => {
+  return {
+    movieId,
+    movieName,
   };
 };
 
@@ -206,6 +206,45 @@ const toggleEpFav = async (
   }
 };
 
+const toggleMovieFav = async (
+  // For movies
+  movieId,
+  movieName,
+  isFavorited
+) => {
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+
+      // Check if the movie is already favorited
+      const existingFavIndex = userData.favorites.findIndex(
+        (fav) => fav.movieId === movieId
+      );
+
+      if (isFavorited && existingFavIndex === -1) {
+        // Add to favorites
+        const newFav = createFavMovie(movieId, movieName);
+        userData.favorites.push(newFav);
+        console.log("New favorite movie added successfully.");
+      } else if (!isFavorited && existingFavIndex !== -1) {
+        // Remove from favorites
+        userData.favorites.splice(existingFavIndex, 1);
+        console.log("Favorite movie removed successfully.");
+      }
+
+      // Update the user's document with the modified user_data
+      await updateDoc(docRef, { user_data: userData });
+    } else {
+      console.log("User document not found.");
+    }
+  } catch (error) {
+    console.error("Error toggling favorite:", error);
+  }
+};
+
 const getFavorites = async () => {
   try {
     const docRef = doc(db, "users", userUid);
@@ -260,47 +299,41 @@ const getFavEpisodes = async () => {
 };
 
 ///////////////////////// MOVIES /////////////////////////////////////
-const updateUserMovieField = async (movieId, fieldToUpdate, newValue) => {
-  try {
-    // Retrieve the user's document reference
-    const docRef = doc(db, "users", userUid);
+// const updateUserMovieField = async (movieId, fieldToUpdate, newValue) => {
+//   try {
+//     // Retrieve the user's document reference
+//     const docRef = doc(db, "users", userUid);
 
-    // Get the user's document snapshot
-    const docSnap = await getDoc(docRef);
+//     // Get the user's document snapshot
+//     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const userData = docSnap.data().user_data;
+//     if (docSnap.exists()) {
+//       const userData = docSnap.data().user_data;
 
-      // Find the movie index by searching for the movie name
-      const movieIndex = userData.movies.findIndex(
-        (movie) => movie.movie_id === movieId
-      );
+//       // Find the movie index by searching for the movie name
+//       const movieIndex = userData.movies.findIndex(
+//         (movie) => movie.movie_id === movieId
+//       );
 
-      if (movieIndex !== -1) {
-        // Update the specific field with the new value
-        userData.movies[movieIndex][fieldToUpdate] = newValue;
+//       if (movieIndex !== -1) {
+//         // Update the specific field with the new value
+//         userData.movies[movieIndex][fieldToUpdate] = newValue;
 
-        // Update the user's document with the modified user_data
-        await updateDoc(docRef, { user_data: userData });
-        console.log("Movie field updated successfully.");
-      } else {
-        console.log("Movie not found.");
-      }
-    } else {
-      console.log("User document not found.");
-    }
-  } catch (error) {
-    console.error("Error updating movie field:", error);
-  }
-};
+//         // Update the user's document with the modified user_data
+//         await updateDoc(docRef, { user_data: userData });
+//         console.log("Movie field updated successfully.");
+//       } else {
+//         console.log("Movie not found.");
+//       }
+//     } else {
+//       console.log("User document not found.");
+//     }
+//   } catch (error) {
+//     console.error("Error updating movie field:", error);
+//   }
+// };
 
-const addNewMovie = async (
-  movieId,
-  movieName,
-  movieRating,
-  movieTags,
-  movieNotes
-) => {
+const addNewMovie = async (movieId, movieName, movieTags, movieNotes) => {
   try {
     // Retrieve the user's document reference
     const docRef = doc(db, "users", userUid);
@@ -312,13 +345,7 @@ const addNewMovie = async (
       const userData = docSnap.data().user_data;
 
       // Create a new movie object
-      const newMovie = createMovie(
-        movieId,
-        movieName,
-        movieRating,
-        movieTags,
-        movieNotes
-      );
+      const newMovie = createMovie(movieId, movieName, movieTags, movieNotes);
 
       // Add the new movie to the movies array
       userData.movies.push(newMovie);
@@ -349,11 +376,11 @@ const getMovie = async (movieId) => {
       const movie = userData.movies.find((movie) => movie.movie_id === movieId);
 
       if (movie) {
-        console.log("movie found");
+        console.log("movie found !!!");
         console.log(movie.movie_tags);
         return movie; // Return the movie if found
       } else {
-        console.log("Movie not found.");
+        console.log("Movie not found. !!!!");
         return null; // Return null if the movie is not found
       }
     } else {
@@ -363,6 +390,68 @@ const getMovie = async (movieId) => {
   } catch (error) {
     console.error("Error getting movie:", error);
     return null; // Return null if there's an error
+  }
+};
+
+const updateMovieField = async (movieId, fieldToUpdate, newValue) => {
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const movieIndex = userData.movies.findIndex(
+        (movie) => movie.movie_id === movieId
+      );
+
+      if (movieIndex !== -1) {
+        userData.movies[movieIndex][fieldToUpdate] = newValue;
+        await updateDoc(docRef, { user_data: userData });
+        console.log("Movie field updated successfully.");
+      } else {
+        console.log("Movie not found.");
+      }
+    } else {
+      console.log("User data not found.");
+    }
+  } catch (error) {
+    console.error("Error updating movie field:", error);
+  }
+};
+
+const deleteTagFromMovie = async (movieId, tagToDelete) => {
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const movieIndex = userData.movies.findIndex(
+        (movie) => movie.movie_id === movieId
+      );
+
+      if (movieIndex !== -1) {
+        // Find the tags array for the specific movie
+        const tags = userData.movies[movieIndex].movie_tags;
+
+        // Remove the tag to delete from the tags array
+        const updatedTags = tags.filter((tag) => tag !== tagToDelete);
+
+        // Update the tags field with the updatedTags array
+        userData.movies[movieIndex].movie_tags = updatedTags;
+
+        // Update the user data in Firebase
+        await updateDoc(docRef, { user_data: userData });
+
+        console.log("Tag deleted successfully.");
+      } else {
+        console.log("Movie not found.");
+      }
+    } else {
+      console.log("User not found.");
+    }
+  } catch (error) {
+    console.error("Error deleting tag:", error);
   }
 };
 
@@ -545,8 +634,9 @@ export {
   auth,
   //movies
   getMovie,
-  updateUserMovieField,
   addNewMovie,
+  updateMovieField,
+  deleteTagFromMovie,
   //episodes
   updateEpisodeField,
   deleteTagFromEpisode,
@@ -556,6 +646,7 @@ export {
   toggleEpFav,
   getFavEpisodes,
   getFavorites,
+  toggleMovieFav,
   //saved
   getTVShowsWithTags,
 };

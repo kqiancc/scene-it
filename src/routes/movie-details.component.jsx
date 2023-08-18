@@ -1,179 +1,147 @@
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { getMovie, addNewMovie, updateUserMovieField } from '../firebase/firebase'; // Import your addNewMovie function
-import { getAuth } from 'firebase/auth'; // Import Firebase's authentication module
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import {
+  getMovie,
+  toggleMovieFav,
+  deleteTagFromMovie,
+} from "../firebase/firebase"; // Import your addNewMovie function
+import { getAuth } from "firebase/auth"; // Import Firebase's authentication module
+import MovieNotes from "../components/movie-notes";
+import Spinner from "../firebase/spinner";
 
-const MovieDetails = () => {
+const MovieDetails = ({userUid}) => {
   const location = useLocation();
   const movie = location.state?.item || null;
-  const [userInput, setUserInput] = useState('');
-  const [userNotes, setUserNotes] = useState('');
-  const [tags, setTags] = useState(() => {
-    const storedTags = JSON.parse(localStorage.getItem(`tags_${movie.id}`));
-    return storedTags || [];
-  });
-  const [notes, setNotes] = useState(() => {
-    const storedNotes = JSON.parse(localStorage.getItem(`notes_${movie.id}`));
-    return storedNotes || [];
-  });
 
-  const handleInputChange = (event) => {
-    setUserInput(event.target.value);
-  };
-
-  const handleNotesInputChange = (event) => {
-    setUserNotes(event.target.value);
-  };
-
-  const handleInputKeyPress = async (event) => {
-    if (event.key === 'Enter') {
-      if (userInput.trim() !== '') {
-        setTags((prevTags) => {
-          const newTags = [...prevTags, userInput];
-          localStorage.setItem(`tags_${movie.id}`, JSON.stringify(newTags));
-          return newTags;
-        });
-
-        //saving tags to firestore
-        const auth = getAuth();
-        const user = auth.currentUser;
-        if (user){
-          const existingMovie = await getMovie(movie.id)
-
-          //check if movie already exists
-          if (existingMovie){
-            const old_tags = existingMovie.movie_tags
-            const new_tags = [...old_tags || [], userInput]
-            updateUserMovieField(movie.id,"movie_tags", new_tags)
-
-          } else { //save movie and tag to firestore
-            addNewMovie(
-              movie.id,
-              movie.title,
-              movie.vote_average,
-              [userInput], 
-              []
-            );
-          }
-        }
-        setUserInput('');
-      }
-    }
-  };
-
-  const handleNotesKeyPress = async (event) => {
-    if (event.key === 'Enter') {
-      if (userNotes.trim() !== '') {
-        setNotes((prevNotes) => {
-          const newNotes = [...prevNotes, userNotes];
-          localStorage.setItem(`notes_${movie.id}`, JSON.stringify(newNotes));
-          return newNotes;
-        });
-       
-        //saving note to firestore
-        const auth = getAuth();
-        const user = auth.currentUser;
-        if (user){
-          const existingMovie = await getMovie(movie.id)
-
-          //check if movie already exists
-          if (existingMovie){
-            updateUserMovieField(movie.id,"movie_notes", userNotes)
-
-          } else { //save movie and note to firestore
-            addNewMovie(
-              movie.id,
-              movie.title,
-              movie.vote_average,
-              [], 
-              [userNotes],
-            );
-          }
-        }
-        setUserNotes('');
-      }
-    }
-  };
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Initialize tags and notes from local storage on component mount
-    const storedTags = JSON.parse(localStorage.getItem(`tags_${movie.id}`));
-    const storedNotes = JSON.parse(localStorage.getItem(`notes_${movie.id}`));
-    if (storedTags) {
-      setTags(storedTags);
+    const fetchMovies = async () => {
+      try {
+        const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25";
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${apiKey}&language=en-US`
+        );
+        const data = await response.json();
+    
+        if (data) {
+          const userMovieData = await getMovie(movie.id);
+          const movieWithUserData = {
+            ...data,
+            isHeartClicked: userMovieData?.is_heart_clicked || false,
+            tags: userMovieData?.movie_tags || [],
+            notes: userMovieData?.movie_notes || [],
+          };
+          setMovies([movieWithUserData]);
+          setLoading(false);
+        } else {
+          setError("Movie data not found.");
+          setLoading(false);
+        }
+      } catch (error) {
+        setError("Error fetching data.");
+        setLoading(false);
+      }
+    };
+    
+
+    if (movie) {
+      fetchMovies();
+    } else {
+      setLoading(false);
     }
-    if (storedNotes) {
-      setNotes(storedNotes);
-    }
-  }, [movie]);
+  }, [movie, userUid]);
+
+  const handleTagsChange = (movieId, newTags) => {
+    setMovies((prevMovies) =>
+      prevMovies.map((movie) =>
+        movie.id === movieId ? { ...movie, tags: newTags } : movie
+      )
+    );
+  };
+
+  const handleTagDelete = (movieId, tagToDelete) => {
+    setMovies((prevMovies) =>
+      prevMovies.map((movie) =>
+        movie.id === movieId
+          ? { ...movie, tags: movie.tags.filter((tag) => tag !== tagToDelete) }
+          : movie
+      )
+    );
+    // Call the corresponding function to delete a tag from a movie
+    deleteTagFromMovie(movieId, tagToDelete);
+  };
+
+  const handleNotesChange = (movieId, newNotes) => {
+    setMovies((prevMovies) =>
+      prevMovies.map((movie) =>
+        movie.id === movieId ? { ...movie, notes: newNotes } : movie
+      )
+    );
+  };
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  const handleHeartClick = (movieId) => {
+    setMovies((prevMovies) =>
+      prevMovies.map((movie) => {
+        if (movie.id === movieId) {
+          const newHeartState = !movie.isHeartClicked;
+          toggleMovieFav(movie.id, newHeartState);
+          return { ...movie, isHeartClicked: newHeartState };
+        }
+        return movie;
+      })
+    );
+  };
 
   return (
-    <div className ="bg-base-200 w-9/12">
-      <div className="bg-base-200 shadow-xl">
-        <figure className = "float-left items-center justify-center">
-          <img
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt={movie.title}
-            className="h-96 w-auto object-contain"
-          />
-        </figure>
-        <div className="card-body">
-          <h2 className="card-title">{movie.title}</h2>
-          <p>{movie.overview}</p>
-          <p>Rating: {movie.vote_average}/10</p>
-          <p>Released: {movie.release_date}</p>
-          <div className="card-actions justify-end">
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col w-full bg-base-200">
-        <div className="grid h-10 card bg-base-200 rounded-box place-items-left">
-          <div className="place-items-center">
-            <input
-              type="text"
-              value={userInput}
-              onChange={handleInputChange}
-              onKeyPress={handleInputKeyPress}
-              placeholder="Personal tags"
-              className="input input-bordered input-info w-full max-w-xs"
+    <div className="flex flex-col items-center">
+      <div className="flex items-center w-10/12 shadow-xl bg-base-300 rounded-xl">
+        <figure className="flex-shrink-0 float-left m-6">
+          {movie.poster_path ? (
+            <img
+              className="rounded"
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={`${movie.title}`}
+              style={{ width: "300px", height: "auto" }}
             />
-            <div className="divider divider-horizontal bg-base-200"></div>
-            <div className="tag-container">
-              {/* Display tags from the first input box */}
-              {tags.map((tag, index) => (
-                <div key={index} className="badge badge-secondary mx-1">
-                  {tag}
-                </div>
-              ))}
+          ) : (
+            <div
+              style={{ width: "300px", height: "450px" }}
+              className="flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-100 text-base-content"
+            >
+              No Poster Image Currently Found
             </div>
-            <div className="grid h-10 flex-grow card bg-base-200 rounded-box place-items-center">
-              {/* Empty container for the tags */}
-            </div>
-          </div>
+          )}
+        </figure>
+        <div className="max-w-full card-body">
+          <h2 className="text-3xl font-bold">{`${movie.title}`}</h2>
+          <p className="text-xl italic">
+            Rating: {movie.vote_average}/10 - {movie.runtime} minutes
+          </p>
+          <p className="text-xl italic">Released: {movie.release_date}</p>
+          <p className="text-xl">{movie.overview}</p>
+          <div className="justify-end card-actions"></div>
         </div>
       </div>
-
-      <div className="divider bg-base-200"></div>
-
-      <div className="grid h-10 card bg-base-200 rounded-box place-items-left">
-        <input
-          type="text"
-          value={userNotes}
-          onChange={handleNotesInputChange}
-          onKeyPress={handleNotesKeyPress}
-          placeholder="Personal notes"
-          className="input input-bordered input-primary w-full max-w-xs"
-        />
-      </div>
-      <div className="tag-container flex flex-wrap mt-2">
-        {/* Display tags from the second input box */}
-        {notes.map((note, index) => (
-          <div key={index} className="badge badge-secondary mx-1">
-            {note}
-          </div>
-        ))}
-      </div>
+      <div>
+        <MovieNotes
+          movieId={movie.id}
+          movieData={movie}
+          onTagsChange={(newTags) => handleTagsChange(movie.id, newTags)}
+          onNotesChange={(newNotes) => handleNotesChange(movie.id, newNotes)}
+          onTagDelete={(tagToDelete) => handleTagDelete(movie.id, tagToDelete)}
+      />
+        </div>
     </div>
   );
 };

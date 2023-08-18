@@ -124,7 +124,7 @@ const DisplayEpisodes = (userUid) => {
           className="w-9/12 collapse collapse-plus bg-base-200 "
           key={episode.id}
         >
-        <input type="checkbox" name="my-accordion-3 flex flex-row items-center" />
+        <input type="checkbox" className="flex flex-row items-center my-accordion-3" />
           <div className="flex items-center text-xl collapse-title"> 
             <figure className="flex-shrink-0 float-left m-4">
             {episode.still_path ? (
