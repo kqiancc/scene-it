@@ -3,10 +3,7 @@ import { getFavorites, getFavEpisodes } from "../firebase/firebase";
 import Spinner from "../firebase/spinner";
 import ElsewhereNotes from "../components/favorites-notes";
 import Heart from "../components/heart";
-import {
-  toggleEpFav,
-  deleteTagFromEpisode,
-} from "../firebase/firebase";
+import { toggleEpFav, deleteTagFromEpisode } from "../firebase/firebase";
 //race condition for heart thingy
 //set a state for the heart in this file
 //set use effect to update with that too
@@ -36,9 +33,7 @@ const FavoritesPage = ({ userUid }) => {
 
           const matchingEpisode = episodesData.find(
             (episode) => episode.episode_id === favorite.episodeId
-            
           );
-         
 
           let showName = ""; // Initialize the showName variable using let
 
@@ -51,12 +46,12 @@ const FavoritesPage = ({ userUid }) => {
           } catch (error) {
             console.error("Error fetching show details:", error);
           }
-
+          console.log("WE CAN PLAY MATCHING", matchingEpisode);
           return {
             ...favorite,
             episode: episodeDetails,
             showName: showName,
-            isHeartClicked: true,
+            isHeartClicked: matchingEpisode.is_heart_clicked,
             tags:
               matchingEpisode && matchingEpisode.episode_tags
                 ? matchingEpisode.episode_tags
@@ -68,7 +63,7 @@ const FavoritesPage = ({ userUid }) => {
           };
         })
       );
-
+      console.log("FAVORITESIWTHDETAUSLS", favoritesWithDetails);
       setFavorites(favoritesWithDetails);
       setLoading(false);
     } catch (error) {
@@ -126,22 +121,26 @@ const FavoritesPage = ({ userUid }) => {
   };
 
   const handleHeartClick = (episodeId) => {
+    console.log("handleheartClick", episodeId);
     setFavorites((prevFavorites) =>
       prevFavorites.map((favorite) => {
-        if (favorite.episode.episodeId === episodeId) {
-          const newHeartState = !favorite.episode.isHeartClicked;
-          console.log("HSLDFJSDL", newHeartState);
+        if (favorite.episodeId === episodeId) {
+          const newHeartState = !favorite.isHeartClicked;
+          console.log("handleHeartClick", favorite, newHeartState);
+          console.log(favorite.episode.episodeId, favorite.episodeId);
           toggleEpFav(
             favorite.showId,
             favorite.seasonNumber,
-            favorite.episode.episodeId,
-            favorite.episode.episodeName,
-            favorite.episode.episodeNumber,
+            favorite.episodeId,
+            favorite.episodeName,
+            favorite.episodeNumber,
             newHeartState
           );
+          console.log(favorite);
           return {
             ...favorite,
-            episode: { ...favorite.episode, isHeartClicked: newHeartState },
+            episode: { ...favorite.episode },
+            isHeartClicked: newHeartState,
           };
         }
         return favorite;
@@ -158,19 +157,19 @@ const FavoritesPage = ({ userUid }) => {
   }
 
   return (
-    <div className="flex flex-col items-center">
-      <h1 className="p-5 text-5xl font-bold text-center h-28">Favorites</h1>
+    <div className='flex flex-col items-center'>
+      <h1 className='p-5 text-5xl font-bold text-center h-28'>Favorites</h1>
       {favorites.map((favorite, index) => (
-        <div key={index} className="w-9/12 collapse collapse-plus bg-base-200 ">
+        <div key={index} className='w-9/12 collapse collapse-plus bg-base-200 '>
           <input
-            type="checkbox"
-            name="my-accordion-3 flex flex-row items-center"
+            type='checkbox'
+            name='my-accordion-3 flex flex-row items-center'
           />
-          <div className="flex items-center text-xl collapse-title">
-            <figure className="flex-shrink-0 float-left m-4">
+          <div className='flex items-center text-xl collapse-title'>
+            <figure className='flex-shrink-0 float-left m-4'>
               {favorite.episode.still_path ? (
                 <img
-                  className="rounded-lg"
+                  className='rounded-lg'
                   src={`https://image.tmdb.org/t/p/w500${favorite.episode.still_path}`}
                   alt={`Episode ${favorite.episode.episode_number} - ${favorite.episode.name}`}
                   style={{ width: "300px", height: "auto" }}
@@ -178,41 +177,41 @@ const FavoritesPage = ({ userUid }) => {
               ) : (
                 <div
                   style={{ width: "300px", height: "175px" }}
-                  className="flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-100 text-base-content"
+                  className='flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-100 text-base-content'
                 >
                   No Poster Image Currently Found
                 </div>
               )}
             </figure>
-            <div className="select-text card-body">
-              <h3 className="text-3xl font-bold">
+            <div className='select-text card-body'>
+              <h3 className='text-3xl font-bold'>
                 {favorite.showName} - Season {favorite.seasonNumber}
               </h3>
-              <h2 className="text-2xl font-bold">
+              <h2 className='text-2xl font-bold'>
                 Episode {favorite.episode.episode_number}:{" "}
                 {favorite.episode.name}
               </h2>
-              <h1 className="italic">
+              <h1 className='italic'>
                 {favorite.episode.vote_average}/10 - {favorite.episode.runtime}{" "}
                 minutes
               </h1>
-              <h1 className="italic">Aired: {favorite.episode.air_date} </h1>
+              <h1 className='italic'>Aired: {favorite.episode.air_date} </h1>
               <p>{favorite.episode.overview}</p>
-              <div className="justify-end card-actions"></div>
+              <div className='justify-end card-actions'></div>
             </div>
           </div>
           {/*TESTING NEW STUFF */}
-          <div className="collapse-content">
+          <div className='collapse-content'>
             <Heart
               showId={favorite.episode.showId}
               seasonNumber={favorite.episode.seasonNumber}
-              episodeId={favorite.episode.episodeId}
+              episodeId={favorite.episodeId}
               episodeNumber={favorite.episode.episodeNumber}
               episodeName={favorite.episode.episodeName}
-              isHeartClicked={favorite.episode.isHeartClicked}
+              isHeartClicked={favorite.isHeartClicked}
               handleHeartClick={handleHeartClick}
             />
-            <div className="divider" />
+            <div className='divider' />
             <ElsewhereNotes
               episodeData={favorite}
               onTagsChange={(newTags) =>
