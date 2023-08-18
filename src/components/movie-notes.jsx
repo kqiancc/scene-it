@@ -1,66 +1,51 @@
-import { useState, useEffect } from "react";
-import {
-  getEpisode,
-  addNewEpisode,
-  updateEpisodeField,
-} from "../firebase/firebase"; // Import your addNewMovie function
-import { getAuth } from "firebase/auth"; // Import Firebase's authentication module
+import React, { useState, useEffect } from "react";
+import { getMovie, addNewMovie, updateMovieField } from "../firebase/firebase";
+import { getAuth } from "firebase/auth";
 import { RiCloseLine } from "react-icons/ri";
 
-const ElsewhereNotes = ({
-  episodeData,
-  onTagsChange,
-  onNotesChange,
-  onTagDelete,
-}) => {
+const MovieNotes = ({ movieId, movieData, onTagsChange, onNotesChange, onTagDelete }) => {
   const [userInput, setUserInput] = useState("");
   const [tags, setTags] = useState([]);
   const [userNotes, setUserNotes] = useState("");
   const [notesDisplay, setNotesDisplay] = useState([]);
 
   useEffect(() => {
-    if (episodeData) {
+    if (movieData) {
+      console.log("Tags:", movieData.tags);
       setUserInput("");
-      setTags(episodeData.tags);
-      setUserNotes(episodeData.notes);
-      setNotesDisplay(episodeData.notes);
+      setTags(movieData.movie_tags || []); // Set the initial state of tags
+      setUserNotes(movieData.movie_notes || "");
+      setNotesDisplay(movieData.movie_notes || []);
     }
-  }, [episodeData]);
+  }, [movieData]);
+  
 
   const handleInputChange = (event) => {
     setUserInput(event.target.value);
   };
 
   const handleInputKeyPress = async (event) => {
-    console.log(userInput, "before");
     if (event.key === "Enter") {
       const newTags = userInput.split(",").map((tag) => tag.trim());
       setTags((prevTags) => [...prevTags, ...newTags]);
       onTagsChange([...tags, ...newTags]);
-      console.log(userInput);
       setUserInput("");
-      //saving tags to firestore
       const auth = getAuth();
       const user = auth.currentUser;
       if (user) {
-        const existingEpisode = await getEpisode(episodeData.episodeId);
+       
+        const existingMovie = await getMovie(movieData.id);
 
-        //check if episode already exists
-        if (existingEpisode) {
-          const old_tags = existingEpisode.episode_tags;
-          const new_tags = [...old_tags, userInput];
-          updateEpisodeField(episodeData.episodeId, "episode_tags", new_tags);
+        if (existingMovie) {
+          const oldTags = existingMovie.movie_tags;
+          const updatedTags = [...oldTags, ...newTags];
+          updateMovieField(movieData.id, "movie_tags", updatedTags);
         } else {
-          //save episode and tag to firestore
-          addNewEpisode(
-            episodeData.episodeId,
-            episodeData.episodeName,
-            episodeData.episodeNumber,
+          addNewMovie(
+            movieData.id,
+            movieData.title,
             [userInput],
-            [],
-            null,
-            episodeData.showId,
-            episodeData.seasonNumber
+            []
           );
         }
       }
@@ -75,45 +60,32 @@ const ElsewhereNotes = ({
   const handleNotesBlur = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
-    const existingEpisode = await getEpisode(episodeData.episodeId);
+    const existingMovie = await getMovie(movieData.id);
 
-    console.log(userNotes);
-    if (userNotes.length <= 0 && !existingEpisode) {
+    if (userNotes.length <= 0 && !existingMovie) {
       return;
     }
-    console.log(userNotes.length);
-    // const newNotes = userNotes.split("\n").map((note) => note.trim());
-    const newNotes = userNotes;
 
-    console.log("new notes", newNotes);
+    onNotesChange(userNotes);
+    setNotesDisplay((prevNotes) => [...prevNotes, userNotes]);
 
-    onNotesChange(newNotes);
-    setNotesDisplay((prevNotes) => [...prevNotes, ...newNotes]);
     if (user) {
-      //check if movie already exists
-      if (existingEpisode) {
-        updateEpisodeField(episodeData.episodeId, "episode_notes", userNotes);
+      if (existingMovie) {
+        updateMovieField(movieData.id, "movie_notes", userNotes);
       } else {
-        //save episode and tag to Firestore
-        console.log("im here!");
-        console.log(episodeData.episodeId);
-        addNewEpisode(
-          episodeData.episodeId,
-          episodeData.episodeName,
-          episodeData.episodeNumber,
+        addNewMovie(
+          movieData.id,
+          movieData.title,
           [],
-          [userNotes],
-          null,
-          episodeData.showId,
-          episodeData.seasonNumber
+          [userNotes]
         );
       }
     }
   };
 
   return (
-    <div>
-      <div className="grid h-10 card bg-base-200 rounded-box">
+    <div className = "bg-base-300 rounded-box">
+      <div className="grid h-10 card bg-base-300 rounded-box">
         <div className="flex items-center space-x-2">
           <div className="place-items-center">
             <input
@@ -130,11 +102,11 @@ const ElsewhereNotes = ({
               {tags.map((tag, index) => (
                 <div
                   key={index}
-                  class="badge badge-lg badge-secondary gap-2 text-base-100"
+                  className="gap-2 badge badge-lg badge-secondary text-base-100"
                 >
                   <RiCloseLine
-                    class="inline-block w-4 h-4 stroke-current"
-                    onClick={() => onTagDelete(episodeData.episodeId, tag)}
+                    className="inline-block w-4 h-4 stroke-current"
+                    onClick={() => onTagDelete(movieData.id, tag)}
                   />
                   {tag}
                 </div>
@@ -146,7 +118,7 @@ const ElsewhereNotes = ({
 
       <div className="divider"></div>
 
-      <div className="grid card bg-base-200 rounded-box place-items-left">
+      <div className="grid card bg-base-300 rounded-box place-items-left">
         <div className="place-items-center ">
           <textarea
             value={userNotes}
@@ -162,7 +134,7 @@ const ElsewhereNotes = ({
         </div>
       </div>
 
-      {notesDisplay.length > 0 && (
+      {notesDisplay && notesDisplay.length > 0 && (
         <div
           className={`tag-container mt-2 ${
             notesDisplay.length > 1 ? "flex-wrap" : ""
@@ -173,4 +145,4 @@ const ElsewhereNotes = ({
   );
 };
 
-export default ElsewhereNotes;
+export default MovieNotes;
