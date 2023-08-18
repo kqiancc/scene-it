@@ -13,9 +13,9 @@ const MovieNotes = ({ movieId, movieData, onTagsChange, onNotesChange, onTagDele
     if (movieData) {
       console.log("Tags:", movieData.tags);
       setUserInput("");
-      setTags(movieData.movie_tags || []); // Set the initial state of tags
-      setUserNotes(movieData.movie_notes || "");
-      setNotesDisplay(movieData.movie_notes || []);
+      setTags(movieData.tags || []); // Set the initial state of tags
+      setUserNotes(movieData.notes || "");
+      setNotesDisplay(movieData.notes || []);
     }
   }, [movieData]);
   
@@ -37,9 +37,10 @@ const MovieNotes = ({ movieId, movieData, onTagsChange, onNotesChange, onTagDele
         const existingMovie = await getMovie(movieData.id);
 
         if (existingMovie) {
-          const oldTags = existingMovie.movie_tags;
+          const oldTags = existingMovie.tags;
           const updatedTags = [...oldTags, ...newTags];
           updateMovieField(movieData.id, "movie_tags", updatedTags);
+          console.log(movieData.id)
         } else {
           addNewMovie(
             movieData.id,
