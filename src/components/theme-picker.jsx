@@ -3,11 +3,11 @@ const ThemePicker = () => {
 		<div>
 			<button className = "join-item btn">
 				<select
-					className='select select-xs w-full max-w-xs scrollbar'
+					className='w-full max-w-xs select select-xs scrollbar'
 					data-choose-theme
 					tabIndex={-1}
 				>
-					<option value='typeroyale'>typeroyale</option>
+					<option value='dracula'>dracula</option>
 					<option value='rain'>rain</option>
 					<option value='acid'>acid</option>
 					<option value='aqua'>aqua</option>
@@ -21,12 +21,10 @@ const ThemePicker = () => {
 					<option value='cyberpunk'>cyberpunk</option>
 					<option value='cmyk'>cmyk</option>
 					<option value='dark'>dark</option>
-					<option value='dracula'>dracula</option>
 					<option value='emerald'>emerald</option>
 					<option value='fantasy'>fantasy</option>
 					<option value='forest'>forest</option>
 					<option value='garden'>garden</option>
-					<option value='dracula'>dracula</option>
 					<option value='halloween'>halloween</option>
 					<option value='lemonade'>lemonade</option>
 					<option value='light'>light</option>

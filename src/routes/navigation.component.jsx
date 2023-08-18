@@ -1,5 +1,5 @@
 import { Fragment, useEffect } from "react";
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import { themeChange } from "theme-change";
 import ThemePicker from "../components/theme-picker";
 import {
@@ -7,8 +7,8 @@ import {
   RiLogoutBoxLine,
   RiHeartLine,
   RiDownload2Line,
-  } from "react-icons/ri";
-import {PiTelevision} from "react-icons/pi";
+} from "react-icons/ri";
+import { PiTelevision } from "react-icons/pi";
 import { logout } from "../firebase/firebase";
 import ForwardButton from "../components/forwardbutton";
 import BackButton from "../components/backbutton";
@@ -20,23 +20,23 @@ const Navigation = ({ user }) => {
 
   return (
     <Fragment>
-      <div className="App">
+      <div className='App'>
         <div>
-          <div class="flex items-center space-x-4">
-            <Link class="btn btn-ghost normal-case h-20 text-xl" to="/">
-              <PiTelevision className="w-10 h-10" />
+          <div class='flex items-center space-x-4'>
+            <Link class='btn btn-ghost normal-case h-20 text-xl' to='/'>
+              <PiTelevision className='w-10 h-10' />
             </Link>
-            <div className="join">
+            <div className='join'>
               <BackButton />
               <ForwardButton />
-              <Link className="join-item btn" to="/saved" aria-label="recents">
+              <Link className='join-item btn' to='/saved' aria-label='recents'>
                 <RiDownload2Line />
                 saved
               </Link>
               <Link
-                className="join-item btn"
-                to="/favorites"
-                aria-label="favorites"
+                className='join-item btn'
+                to='/favorites'
+                aria-label='favorites'
               >
                 <RiHeartLine />
                 favorites
@@ -45,21 +45,19 @@ const Navigation = ({ user }) => {
             </div>
 
             {user ? (
-              <div className="absolute top-5 right-5">
-                <div className="dropdown dropdown-bottom dropdown-end ">
+              <div className='absolute top-5 right-5'>
+                <div className='dropdown dropdown-bottom dropdown-end '>
                   <button tabIndex={-1}>
-                    <RiUser3Line className="w-5 h-10" />
+                    <RiUser3Line className='w-5 h-10' />
                   </button>
                   <ul
                     tabIndex={-1}
-                    className="w-32 p-2 shadow dropdown-content menu bg-secondary rounded-box"
+                    className='w-32 p-2 shadow dropdown-content menu bg-secondary rounded-box'
                   >
-                    <li className = "m-1 text-center">
-                      {user.displayName}
-                    </li>
-                    <li className = "m-1 text-center">
+                    <li className='m-1 text-center'>{user.displayName}</li>
+                    <li className='m-1 text-center'>
                       <button onClick={logout}>
-                        <RiLogoutBoxLine className="w-5 h-5" />
+                        <RiLogoutBoxLine className='w-5 h-5' />
                         logout
                       </button>
                     </li>
@@ -67,9 +65,22 @@ const Navigation = ({ user }) => {
                 </div>
               </div>
             ) : (
-              <Link to="/login">
-                <button className="absolute top-5 right-5" tabIndex={-1}>
-                  <RiUser3Line className="w-5 h-10" />
+              // <div className="absolute top-5 right-5">
+              //   <Link to="/login">
+              //     <div className="text-lg btn bg-primary hover:bg-secondary">
+              //       Login to save and filter data
+              //     </div>
+              //   </Link>
+              //   {/* <Link to="/login" className="">
+              //     <div tabIndex={-1} className="">
+              //       <RiUser3Line className="w-5 h-10" />
+              //     </div>
+              //   </Link> */}
+              // </div>
+
+              <Link to='/login'>
+                <button className='absolute top-5 right-5' tabIndex={-1}>
+                  <RiUser3Line className='w-5 h-10' />
                 </button>
               </Link>
             )}
