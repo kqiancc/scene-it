@@ -282,39 +282,6 @@ const getFavEpisodes = async () => {
 };
 
 ///////////////////////// MOVIES /////////////////////////////////////
-// const updateUserMovieField = async (movieId, fieldToUpdate, newValue) => {
-//   try {
-//     // Retrieve the user's document reference
-//     const docRef = doc(db, "users", userUid);
-
-//     // Get the user's document snapshot
-//     const docSnap = await getDoc(docRef);
-
-//     if (docSnap.exists()) {
-//       const userData = docSnap.data().user_data;
-
-//       // Find the movie index by searching for the movie name
-//       const movieIndex = userData.movies.findIndex(
-//         (movie) => movie.movie_id === movieId
-//       );
-
-//       if (movieIndex !== -1) {
-//         // Update the specific field with the new value
-//         userData.movies[movieIndex][fieldToUpdate] = newValue;
-
-//         // Update the user's document with the modified user_data
-//         await updateDoc(docRef, { user_data: userData });
-//         console.log("Movie field updated successfully.");
-//       } else {
-//         console.log("Movie not found.");
-//       }
-//     } else {
-//       console.log("User document not found.");
-//     }
-//   } catch (error) {
-//     console.error("Error updating movie field:", error);
-//   }
-// };
 
 const addNewMovie = async (movieId, movieName, movieTags, movieNotes) => {
   try {
@@ -640,6 +607,37 @@ const getFavoritedEps = async () => {
   }
 };
 
+const getAllTags = async (userUid) => {
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const allTags = [];
+
+      userData.tv_shows.forEach((episode) => {
+        if (episode.episode_tags) {
+          episode.episode_tags.forEach((tag) => {
+            if (!allTags.includes(tag)) {
+              allTags.push(tag);
+            }
+          });
+        }
+      });
+
+      console.log("All tags:", allTags);
+      return allTags;
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting all tags:", error);
+    return [];
+  }
+};
+
 export {
   //authentification
   signInWithGoogle,
@@ -664,4 +662,5 @@ export {
   //saved
   getTVShowsWithTags,
   getFavoritedEps,
+  getAllTags,
 };

@@ -100,7 +100,7 @@ const MovieNotes = ({ movieId, movieData, onTagsChange, onNotesChange, onTagDele
 
   return (
     <div className = "bg-base-300 rounded-box">
-      <div className="grid h-10 card bg-base-300 rounded-box">
+      {/* <div className="grid h-10 card bg-base-300 rounded-box">
         <div className="flex items-center space-x-2">
           <div className="place-items-center">
             <input
@@ -131,7 +131,7 @@ const MovieNotes = ({ movieId, movieData, onTagsChange, onNotesChange, onTagDele
         </div>
       </div>
 
-      <div className="divider"></div>
+      <div className="divider"></div> */}
 
       <div className="grid card bg-base-300 rounded-box place-items-left">
         <div className="place-items-center ">
