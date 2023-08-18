@@ -60,6 +60,7 @@ const FavoritesPage = ({ userUid }) => {
   };
 
   const handleTagsChange = (episodeId, newTags) => {
+    console.log(episodeId)
     setFavorites((prevFavorites) =>
       prevFavorites.map((favorite) =>
         favorite.episode.id === episodeId
@@ -102,19 +103,20 @@ const FavoritesPage = ({ userUid }) => {
   const handleHeartClick = (episodeId) => {
     setFavorites((prevFavorites) =>
       prevFavorites.map((favorite) => {
-        if (favorite.episode.episode_id === episodeId) {
-          const newHeartState = !favorite.episode.isHeartClicked;  
+        if (favorite.episode_id === episodeId) {
+          const newHeartState = !favorite.is_heart_clicked; 
+          console.log("AAAAAAAAAAAAAAAAAA", favorite)
           toggleEpFav(
-            favorite.episode.show_id,
-            favorite.episode.season_number,
-            favorite.episode.episode_id,
-            favorite.episode.episode_name,
-            favorite.episode.episode_number,
+            favorite.show_id,
+            favorite.season_number,
+            favorite.episode_id,
+            favorite.episode_name,
+            favorite.episode_number,
             newHeartState  
           );
           return {
             ...favorite,
-            episode: { ...favorite.episode, isHeartClicked: newHeartState },
+            is_heart_clicked:newHeartState
           };
         }
         return favorite;
@@ -177,12 +179,12 @@ const FavoritesPage = ({ userUid }) => {
                {/*TESTING NEW STUFF */}
                <div className="collapse-content">
                  <Heart
-                   showId={favorite.episode.show_id}
-                   seasonNumber={favorite.episode.season_number}
-                   episodeId={favorite.episode.episode_id}
-                   episodeNumber={favorite.episode.episode_number}
-                   episodeName={favorite.episode.episode_name}
-                   isHeartClicked={favorite.episode.is_heart_clicked}
+                   showId={favorite.show_id}
+                   seasonNumber={favorite.season_number}
+                   episodeId={favorite.episode_id}
+                   episodeNumber={favorite.episode_number}
+                   episodeName={favorite.episode_name}
+                   isHeartClicked={favorite.is_heart_clicked}
                    handleHeartClick={handleHeartClick}
                  />
                  <div className="divider" />
