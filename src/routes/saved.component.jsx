@@ -108,24 +108,60 @@ const handleHeartClick = (episodeId) => {
     setTaggedEpisodes((prevTaggedEpisodes) =>
       prevTaggedEpisodes.map((taggedEpisode) => {
         if (taggedEpisode.episode.episode_id === episodeId) {
-          const newHeartState = !taggedEpisode.episode.isHeartClicked;  
+          const newHeartState = !taggedEpisode.is_heart_clicked;  
           toggleEpFav(
-            taggedEpisode.episode.show_id,
-            taggedEpisode.episode.season_number,
-            taggedEpisode.episode.episode_id,
-            taggedEpisode.episode.episode_name,
-            taggedEpisode.episode.episode_number,
+            taggedEpisode.show_id,
+            taggedEpisode.season_number,
+            taggedEpisode.episode_id,
+            taggedEpisode.episode_name,
+            taggedEpisode.episode_number,
             newHeartState  
           );
           return {
             ...taggedEpisode,
-            episode: { ...taggedEpisode.episode, isHeartClicked: newHeartState },
+            is_heart_clicked: newHeartState,
           };
         }
         return taggedEpisode;
       })
     );
 };
+
+// const handleHeartClick = async (episodeId) => {
+//   const clickedEpisode = taggedEpisodes.find(te => te.episode.episode_id === episodeId);
+//   if (!clickedEpisode) return;
+
+//   const newHeartState = !clickedEpisode.is_heart_clicked;
+
+//   try {
+//       Update in the database first
+//       await toggleEpFav(
+//           clickedEpisode.show_id,
+//           clickedEpisode.season_number,
+//           clickedEpisode.episode_id,
+//           clickedEpisode.episode_name,
+//           clickedEpisode.episode_number,
+//           newHeartState  
+//       );
+
+//       Then update the UI
+//       setTaggedEpisodes((prevTaggedEpisodes) =>
+//           prevTaggedEpisodes.map((taggedEpisode) => {
+//               if (taggedEpisode.episode.episode_id === episodeId) {
+//                   return {
+//                       ...taggedEpisode,
+//                       is_heart_clicked: newHeartState,
+//                   };
+//               }
+//               return taggedEpisode;
+//           })
+//       );
+//   } catch (error) {
+//       console.error("Error updating heart status:", error);
+//       Optionally, you can notify the user about the error or provide a way to retry.
+//   }
+// };
+
 
 
   if (loading) {
@@ -184,12 +220,12 @@ const handleHeartClick = (episodeId) => {
                {/*TESTING NEW STUFF */}
                <div className="collapse-content">
                  <Heart
-                   showId={taggedEpisode.episode.show_id}
-                   seasonNumber={taggedEpisode.episode.season_number}
-                   episodeId={taggedEpisode.episode.episode_id}
-                   episodeNumber={taggedEpisode.episode.episode_number}
-                   episodeName={taggedEpisode.episode.episode_name}
-                   isHeartClicked={taggedEpisode.episode.is_heart_clicked}
+                   showId={taggedEpisode.show_id}
+                   seasonNumber={taggedEpisode.season_number}
+                   episodeId={taggedEpisode.episode_id}
+                   episodeNumber={taggedEpisode.episode_number}
+                   episodeName={taggedEpisode.episode_name}
+                   isHeartClicked={taggedEpisode.is_heart_clicked}
                    handleHeartClick={handleHeartClick}
                  />
                  <div className="divider" />
