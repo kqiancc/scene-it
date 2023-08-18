@@ -74,6 +74,7 @@ const SavedNotes = ({
             episodeData.season_number
           );
         }
+        setUserInput("");  
       }
     }
   };
