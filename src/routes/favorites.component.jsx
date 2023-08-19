@@ -2,17 +2,28 @@ import React, { useEffect, useState } from "react";
 import Spinner from "../firebase/spinner";
 import Heart from "../components/heart";
 import SavedNotes from "../components/elsewhere-notes";
-import { toggleEpFav, deleteTagFromEpisode } from "../firebase/firebase";
-import { getFavoritedEps } from "../firebase/firebase"; // Adjust the path if necessary
+import { toggleEpFav, deleteTagFromEpisode, getFavTags, getFavoritedEps } from "../firebase/firebase";
 
 const FavoritesPage = ({ user }) => {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [allTags, setAllTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25"; // Insert your API key
 
   useEffect(() => {
-    fetchFavoritesDetails();
+    async function fetchData(){
+      await fetchFavoritesDetails();
+
+    if (user) {
+      const tags = await getFavTags(user.uid);
+      setAllTags(tags);
+    }
+  }
+
+    fetchData();
   }, [user]);
 
   const fetchFavoritesDetails = async () => {
@@ -130,6 +141,28 @@ const FavoritesPage = ({ user }) => {
     );
   };
 
+ //FILTER STUFF
+  // Event handler to set the value of selectedTag when a tag is clicked
+  const handleTagClick = (tag) => {
+    if (selectedTags.includes(tag)) {
+      setSelectedTags((prevTags) => prevTags.filter((t) => t !== tag));
+    } else {
+      setSelectedTags((prevTags) => [...prevTags, tag]);
+    }
+  };
+
+  // Clear the filter to show all episodes again
+  const clearFilter = () => {
+    setSelectedTags([]);
+    setSearchQuery("");
+  };
+
+  const filteredEpisodes = favorites.filter((favorite) =>
+    selectedTags.every((tag) => favorite.episode_tags.includes(tag))
+  );
+
+
+
   if (loading) {
     return <Spinner />;
   }
@@ -139,13 +172,59 @@ const FavoritesPage = ({ user }) => {
   }
 
   return user ? (
+    <div className="drawer drawer-end">
+      <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+      <div className="drawer-content">
+        <label
+          htmlFor="my-drawer-4"
+          className="drawer-button btn btn-secondary"
+        >
+          filter episodes by tag
+        </label>
+      </div>
+
+      <div className="drawer-side">
+        <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
+        <input
+          type="text"
+          placeholder="Search tags..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full p-2 mb-2"
+        />
+
+        <ul className="h-full p-4 menu w-80 bg-base-200 text-base-content">
+          {/* Add onClick event to each tag */}
+          {allTags
+            .sort((a, b) => a.localeCompare(b))
+            .filter((tag) =>
+              tag.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .map((tag, index) => (
+              <button
+                key={index}
+                class="badge badge-lg badge-secondary gap-2 text-base-100"
+                onClick={() => handleTagClick(tag)}
+              >
+                {tag}
+              </button>
+            ))}
+          <button onClick={clearFilter} className="mt-2">
+            Clear Filter
+          </button>
+        </ul>
+      </div>
+
     <div className='flex flex-col items-center'>
       <h1 className='p-5 text-5xl font-bold text-center h-28'>Favorites</h1>
       {console.log("JIODASJDIOAJDOIASJ", favorites)}
       {favorites.length === 0 ? (
         <div className='mt-4 text-xl'>No favorited episodes found</div>
       ) : (
-        favorites.map((favorite, index) => (
+        filteredEpisodes.length === 0 ? (
+          <div className="mt-4 text-xl">No episodes found with selected filters</div>
+        ) : (
+        filteredEpisodes.map((favorite, index) => (
           <div
             key={index}
             className='w-9/12 collapse collapse-plus bg-base-200 '
@@ -215,8 +294,9 @@ const FavoritesPage = ({ user }) => {
               />
             </div>
           </div>
-        ))
+        )))
       )}
+    </div>
     </div>
   ) : (
     <div className='flex flex-col items-center justify-center'>

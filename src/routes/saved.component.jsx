@@ -216,7 +216,6 @@ const TaggedEpisodesPage = ({ user }) => {
                 class="badge badge-lg badge-secondary gap-2 text-base-100"
                 onClick={() => handleTagClick(tag)}
               >
-                <RiCheckboxBlankCircleLine class="inline-block w-4 h-4 stroke-current" />
                 {tag}
               </div>
             ))}
