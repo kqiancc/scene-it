@@ -181,55 +181,69 @@ const TaggedEpisodesPage = ({ user }) => {
   }
 
   return user ? (
-    <div className='drawer drawer-end'>
-      <input id='my-drawer-4' type='checkbox' className='drawer-toggle' />
-      <div className='drawer-content'>
-        <label
-          htmlFor='my-drawer-4'
-          className='drawer-button btn btn-secondary'
-        >
-          filter episodes by tag
-        </label>
+    <div className='flex flex-col'>
+      <div className='sticky top-0 w-64 overflow-y-auto rounded-lg bg-base-200'>
+        <div className='p-4'>
+          <h1 className='mb-4 text-xl font-bold'>Sticky Sidebar</h1>
+          <ul>
+            <li>
+              <a href='#' className='block px-4 py-2 hover:bg-blue-500'>
+                Item 1
+              </a>
+            </li>
+            <li>
+              <a href='#' className='block px-4 py-2 hover:bg-blue-500'>
+                Item 2
+              </a>
+            </li>
+            {/* ... */}
+          </ul>
+        </div>
       </div>
-
-      <div className='drawer-side'>
-        <label htmlFor='my-drawer-4' className='drawer-overlay'></label>
-        <input
-          type='text'
-          placeholder='Search tags...'
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className='w-full p-2 mb-2'
-        />
-
-        <ul className='h-full p-4 menu w-80 bg-base-200 text-base-content'>
-          {/* Add onClick event to each tag */}
-          {allTags.length === 0 ? (
-            <div className='text-lg text-center'>No tags to filter by</div>
-          ) : (
-            allTags
-              .sort((a, b) => a.localeCompare(b))
-              .filter((tag) =>
-                tag.toLowerCase().includes(searchQuery.toLowerCase())
-              )
-              .map((tag, index) => (
-                <div
-                  key={index}
-                  class='badge badge-lg badge-secondary gap-2 text-base-100'
-                  onClick={() => handleTagClick(tag)}
+      <h1 className='p-5 text-5xl font-bold text-center h-28'>Saved</h1>
+      <div className='grid grid-cols-12 gap-4'>
+        <div className='sticky grid col-span-2 col-start-2 rounded-xl bg-base-200'>
+          <div className='flex flex-col'>
+            <div class='form-control w-full max-w-xs'>
+              <input
+                type='text'
+                placeholder='Search tags'
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className='w-full max-w-xs focus:outline-none input input-bordered bg-base-200'
+              />
+              <label class='label'>
+                <button
+                  onClick={clearFilter}
+                  className='text-sm label-text-alt'
                 >
-                  {tag}
-                </div>
-              ))
-          )}
-          <button onClick={clearFilter} className='mt-2'>
-            Clear Filter
-          </button>
-        </ul>
-      </div>
-
-      <div className='flex flex-col items-center'>
-        <h1 className='p-5 text-5xl font-bold text-center h-28'>Saved</h1>
+                  Clear Filter
+                </button>
+              </label>
+            </div>
+            <ul className='grid grid-flow-row-dense grid-cols-auto'>
+              {/* Add onClick event to each tag */}
+              {allTags.length === 0 ? (
+                <div className='text-lg text-center'>No tags to filter by</div>
+              ) : (
+                allTags
+                  .sort((a, b) => a.localeCompare(b))
+                  .filter((tag) =>
+                    tag.toLowerCase().includes(searchQuery.toLowerCase())
+                  )
+                  .map((tag, index) => (
+                    <div
+                      key={index}
+                      class='badge badge-lg badge-secondary text-base-100'
+                      onClick={() => handleTagClick(tag)}
+                    >
+                      {tag}
+                    </div>
+                  ))
+              )}
+            </ul>
+          </div>
+        </div>
         {taggedEpisodes.length === 0 ? (
           <div className='mt-4 text-xl'>No saved episodes found </div>
         ) : filteredEpisodes.length === 0 ? (
@@ -240,7 +254,7 @@ const TaggedEpisodesPage = ({ user }) => {
           filteredEpisodes.map((taggedEpisode, index) => (
             <div
               key={index}
-              className='w-9/12 collapse collapse-plus bg-base-200 '
+              className='grid w-9/12 col-start-4 col-span-full collapse collapse-plus bg-base-200'
             >
               <input
                 type='checkbox'
