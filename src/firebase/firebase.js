@@ -638,6 +638,37 @@ const getAllTags = async (userUid) => {
   }
 };
 
+const getFavTags = async (userUid) => {
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const favTags = [];
+
+      userData.tv_shows.forEach((episode) => {
+        if (episode.is_heart_clicked && episode.episode_tags) {
+          episode.episode_tags.forEach((tag) => {
+            if (!favTags.includes(tag)) {
+              favTags.push(tag);
+            }
+          });
+        }
+      });
+
+      console.log("All tags:", favTags);
+      return favTags;
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting all tags:", error);
+    return [];
+  }
+};
+
 export {
   //authentification
   signInWithGoogle,
@@ -659,6 +690,7 @@ export {
   getFavEpisodes,
   getFavorites,
   toggleMovieFav,
+  getFavTags,
   //saved
   getTVShowsWithTags,
   getFavoritedEps,

@@ -13,8 +13,11 @@ import { RiCheckboxBlankCircleLine } from "react-icons/ri";
 const TaggedEpisodesPage = ({ user }) => {
   const [taggedEpisodes, setTaggedEpisodes] = useState([]);
   const [allTags, setAllTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const apiKey = "1b2efb1dfa6123bdd9569b0959c0da25"; // Insert your API key
 
   useEffect(() => {
@@ -150,9 +153,25 @@ const TaggedEpisodesPage = ({ user }) => {
     );
   };
 
-  // const handleHeartClick = async (episodeId) => {
-  //   const clickedEpisode = taggedEpisodes.find(te => te.episode.episode_id === episodeId);
-  //   if (!clickedEpisode) return;
+  //FILTER STUFF
+  // Event handler to set the value of selectedTag when a tag is clicked
+  const handleTagClick = (tag) => {
+    if (selectedTags.includes(tag)) {
+      setSelectedTags((prevTags) => prevTags.filter((t) => t !== tag));
+    } else {
+      setSelectedTags((prevTags) => [...prevTags, tag]);
+    }
+  };
+
+  // Clear the filter to show all episodes again
+  const clearFilter = () => {
+    setSelectedTags([]);
+    setSearchQuery("");
+  };
+
+  const filteredEpisodes = taggedEpisodes.filter((taggedEpisode) =>
+    selectedTags.every((tag) => taggedEpisode.episode_tags.includes(tag))
+  );
 
   if (loading) {
     return <Spinner />;
@@ -163,38 +182,59 @@ const TaggedEpisodesPage = ({ user }) => {
   }
 
   return user ? (
-    // <div className="drawer drawer-end">
-    //   <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-    //   <div className="drawer-content">
-    //     <label
-    //       htmlFor="my-drawer-4"
-    //       className="drawer-button btn btn-secondary"
-    //     >
-    //       filter tags
-    //     </label>
-    //    </div>
+    <div className="drawer drawer-end">
+      <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+      <div className="drawer-content">
+        <label
+          htmlFor="my-drawer-4"
+          className="drawer-button btn btn-secondary"
+        >
+          filter episodes by tag
+        </label>
+      </div>
 
-    //   <div className="drawer-side">
-    //     <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
-    //     <ul className="h-full p-4 menu w-80 bg-base-200 text-base-content">
-    //       {allTags.map((tag, index) => (
-    //         <div
-    //           key={index}
-    //           class="badge badge-lg badge-secondary gap-2 text-base-100"
-    //         >
-    //           <RiCheckboxBlankCircleLine class="inline-block w-4 h-4 stroke-current" />
-    //           {tag}
-    //         </div>
-    //       ))}
-    //     </ul>
-    //   </div>
+      <div className="drawer-side">
+        <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
+        <input
+          type="text"
+          placeholder="Search tags..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full p-2 mb-2"
+        />
+
+        <ul className="h-full p-4 menu w-80 bg-base-200 text-base-content">
+          {/* Add onClick event to each tag */}
+          {allTags
+            .sort((a, b) => a.localeCompare(b))
+            .filter((tag) =>
+              tag.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .map((tag, index) => (
+              <div
+                key={index}
+                class="badge badge-lg badge-secondary gap-2 text-base-100"
+                onClick={() => handleTagClick(tag)}
+              >
+                <RiCheckboxBlankCircleLine class="inline-block w-4 h-4 stroke-current" />
+                {tag}
+              </div>
+            ))}
+          <button onClick={clearFilter} className="mt-2">
+            Clear Filter
+          </button>
+        </ul>
+      </div>
 
       <div className="flex flex-col items-center">
         <h1 className="p-5 text-5xl font-bold text-center h-28">Saved</h1>
         {taggedEpisodes.length === 0 ? (
           <div className="mt-4 text-xl">No saved episodes found </div>
         ) : (
-          taggedEpisodes.map((taggedEpisode, index) => (
+          filteredEpisodes.length === 0 ? (
+            <div className="mt-4 text-xl">No episodes found with selected filters</div>
+          ) : (
+          filteredEpisodes.map((taggedEpisode, index) => (
             <div
               key={index}
               className="w-9/12 collapse collapse-plus bg-base-200 "
@@ -270,10 +310,10 @@ const TaggedEpisodesPage = ({ user }) => {
                 />
               </div>
             </div>
-          ))
+          )))
         )}
       </div>
-    //  </div>
+    </div>
   ) : (
     <div className="flex flex-col items-center justify-center">
       <h1 className="p-5 text-5xl font-bold text-center h-28">Saved</h1>
