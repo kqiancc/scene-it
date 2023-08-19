@@ -181,154 +181,151 @@ const TaggedEpisodesPage = ({ user }) => {
   }
 
   return user ? (
-    <div className='flex flex-col'>
-      <div className='sticky top-0 w-64 overflow-y-auto rounded-lg bg-base-200'>
+    <div className='grid grid-cols-[1fr,5fr] gap-4 h-full'>
+      <div className='sticky top-0 h-screen col-span-1 overflow-y-auto rounded-lg bg-base-200'>
         <div className='p-4'>
-          <h1 className='mb-4 text-xl font-bold'>Sticky Sidebar</h1>
-          <ul>
-            <li>
-              <a href='#' className='block px-4 py-2 hover:bg-blue-500'>
-                Item 1
-              </a>
-            </li>
-            <li>
-              <a href='#' className='block px-4 py-2 hover:bg-blue-500'>
-                Item 2
-              </a>
-            </li>
-            {/* ... */}
+          <h1 className='mb-4 text-xl font-bold'>Filter</h1>
+          <div class='form-control w-full max-w-xs'>
+            <input
+              type='text'
+              placeholder='Search tags'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className='w-full max-w-xs focus:outline-none input input-bordered bg-base-200'
+            />
+            <label class='label'>
+              <button onClick={clearFilter} className='text-sm label-text-alt'>
+                Clear Filter
+              </button>
+            </label>
+          </div>
+          <ul className=''>
+            {/* Add onClick event to each tag */}
+            {allTags.length === 0 ? (
+              <div className='text-lg text-center'>No tags to filter by</div>
+            ) : (
+              allTags
+                .sort((a, b) => a.localeCompare(b))
+                .filter((tag) =>
+                  tag.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+                .map((tag, index) => (
+                  <button
+                    key={index}
+                    className={`mb-2 mr-2 badge badge-lg badge-secondary ${
+                      selectedTags.includes(tag) ? "ring-2 ring-primary" : ""
+                    }`}
+                    onClick={() => {
+                      // Check if the tag is already in the selectedTags array
+                      if (selectedTags.includes(tag)) {
+                        setSelectedTags((prevTags) =>
+                          prevTags.filter((t) => t !== tag)
+                        ); // Remove the tag
+                      } else {
+                        setSelectedTags((prevTags) => [...prevTags, tag]); // Add the tag
+                      }
+                      handleTagClick(tag);
+                    }}
+                  >
+                    {tag}
+                  </button>
+                ))
+            )}
           </ul>
         </div>
       </div>
-      <h1 className='p-5 text-5xl font-bold text-center h-28'>Saved</h1>
-      <div className='grid grid-cols-12 gap-4'>
-        <div className='sticky grid col-span-2 col-start-2 rounded-xl bg-base-200'>
-          <div className='flex flex-col'>
-            <div class='form-control w-full max-w-xs'>
-              <input
-                type='text'
-                placeholder='Search tags'
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className='w-full max-w-xs focus:outline-none input input-bordered bg-base-200'
-              />
-              <label class='label'>
-                <button
-                  onClick={clearFilter}
-                  className='text-sm label-text-alt'
-                >
-                  Clear Filter
-                </button>
-              </label>
+      <div className='flex flex-col items-center'>
+        <h1 className='p-5 text-5xl font-bold h-28'>Saved</h1>
+        <div className='flex flex-col items-center'>
+          {taggedEpisodes.length === 0 ? (
+            <div className='mt-4 text-xl'>No saved episodes found </div>
+          ) : filteredEpisodes.length === 0 ? (
+            <div className='mt-4 text-xl'>
+              No episodes found with selected filters
             </div>
-            <ul className='grid grid-flow-row-dense grid-cols-auto'>
-              {/* Add onClick event to each tag */}
-              {allTags.length === 0 ? (
-                <div className='text-lg text-center'>No tags to filter by</div>
-              ) : (
-                allTags
-                  .sort((a, b) => a.localeCompare(b))
-                  .filter((tag) =>
-                    tag.toLowerCase().includes(searchQuery.toLowerCase())
-                  )
-                  .map((tag, index) => (
-                    <div
-                      key={index}
-                      class='badge badge-lg badge-secondary text-base-100'
-                      onClick={() => handleTagClick(tag)}
-                    >
-                      {tag}
-                    </div>
-                  ))
-              )}
-            </ul>
-          </div>
-        </div>
-        {taggedEpisodes.length === 0 ? (
-          <div className='mt-4 text-xl'>No saved episodes found </div>
-        ) : filteredEpisodes.length === 0 ? (
-          <div className='mt-4 text-xl'>
-            No episodes found with selected filters
-          </div>
-        ) : (
-          filteredEpisodes.map((taggedEpisode, index) => (
-            <div
-              key={index}
-              className='grid w-9/12 col-start-4 col-span-full collapse collapse-plus bg-base-200'
-            >
-              <input
-                type='checkbox'
-                name='my-accordion-3 flex flex-row items-center'
-              />
-              <div className='flex items-center text-xl collapse-title'>
-                <figure className='flex-shrink-0 float-left m-4'>
-                  {taggedEpisode.episode.still_path ? (
-                    <img
-                      className='rounded-lg'
-                      src={`https://image.tmdb.org/t/p/w500${taggedEpisode.episode.still_path}`}
-                      alt={`Episode ${taggedEpisode.episode.episode_number} - ${taggedEpisode.episode.name}`}
-                      style={{ width: "300px", height: "auto" }}
-                    />
-                  ) : (
-                    <div
-                      style={{ width: "300px", height: "175px" }}
-                      className='flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-100 text-base-content'
-                    >
-                      No Poster Image Currently Found
-                    </div>
-                  )}
-                </figure>
-                <div className='select-text card-body'>
-                  <h3 className='text-3xl font-bold'>
-                    {taggedEpisode.showName} - Season{" "}
-                    {taggedEpisode.season_number}
-                  </h3>
-                  <h2 className='text-2xl font-bold'>
-                    Episode {taggedEpisode.episode.episode_number}:{" "}
-                    {taggedEpisode.episode.name}
-                  </h2>
-                  <h1 className='italic'>
-                    {taggedEpisode.episode.vote_average}/10 -{" "}
-                    {taggedEpisode.episode.runtime} minutes
-                  </h1>
-                  <h1 className='italic'>
-                    Aired: {taggedEpisode.episode.air_date}{" "}
-                  </h1>
-                  <p>{taggedEpisode.episode.overview}</p>
-                  <div className='justify-end card-actions'></div>
+          ) : (
+            filteredEpisodes.map((taggedEpisode, index) => (
+              <div
+                key={index}
+                className='w-9/12 collapse collapse-plus bg-base-200'
+              >
+                <input
+                  type='checkbox'
+                  name='my-accordion-3 flex flex-row items-center'
+                />
+                <div className='flex items-center text-xl collapse-title'>
+                  <figure className='flex-shrink-0 float-left m-4'>
+                    {taggedEpisode.episode.still_path ? (
+                      <img
+                        className='rounded-lg'
+                        src={`https://image.tmdb.org/t/p/w500${taggedEpisode.episode.still_path}`}
+                        alt={`Episode ${taggedEpisode.episode.episode_number} - ${taggedEpisode.episode.name}`}
+                        style={{ width: "300px", height: "auto" }}
+                      />
+                    ) : (
+                      <div
+                        style={{ width: "300px", height: "175px" }}
+                        className='flex items-center justify-center w-full text-2xl text-center rounded h-96 bg-base-100 text-base-content'
+                      >
+                        No Poster Image Currently Found
+                      </div>
+                    )}
+                  </figure>
+                  <div className='select-text card-body'>
+                    <h3 className='text-3xl font-bold'>
+                      {taggedEpisode.showName} - Season{" "}
+                      {taggedEpisode.season_number}
+                    </h3>
+                    <h2 className='text-2xl font-bold'>
+                      Episode {taggedEpisode.episode.episode_number}:{" "}
+                      {taggedEpisode.episode.name}
+                    </h2>
+                    <h1 className='italic'>
+                      {taggedEpisode.episode.vote_average}/10 -{" "}
+                      {taggedEpisode.episode.runtime} minutes
+                    </h1>
+                    <h1 className='italic'>
+                      Aired: {taggedEpisode.episode.air_date}{" "}
+                    </h1>
+                    <p>{taggedEpisode.episode.overview}</p>
+                    <div className='justify-end card-actions'></div>
+                  </div>
+                </div>
+
+                <div className='collapse-content'>
+                  <Heart
+                    showId={taggedEpisode.show_id}
+                    seasonNumber={taggedEpisode.season_number}
+                    episodeId={taggedEpisode.episode_id}
+                    episodeNumber={taggedEpisode.episode_number}
+                    episodeName={taggedEpisode.episode_name}
+                    isHeartClicked={taggedEpisode.is_heart_clicked}
+                    handleHeartClick={handleHeartClick}
+                  />
+                  <div className='divider' />
+                  <SavedNotes
+                    episodeData={taggedEpisode}
+                    onTagsChange={(newTags) =>
+                      handleTagsChange(
+                        taggedEpisode.episode.episode_id,
+                        newTags
+                      )
+                    }
+                    onNotesChange={(newNotes) =>
+                      handleNotesChange(
+                        taggedEpisode.episode.episode_id,
+                        newNotes
+                      )
+                    }
+                    onTagDelete={(episodeId, tagToDelete) =>
+                      handleTagDelete(episodeId, tagToDelete)
+                    }
+                  />
                 </div>
               </div>
-
-              <div className='collapse-content'>
-                <Heart
-                  showId={taggedEpisode.show_id}
-                  seasonNumber={taggedEpisode.season_number}
-                  episodeId={taggedEpisode.episode_id}
-                  episodeNumber={taggedEpisode.episode_number}
-                  episodeName={taggedEpisode.episode_name}
-                  isHeartClicked={taggedEpisode.is_heart_clicked}
-                  handleHeartClick={handleHeartClick}
-                />
-                <div className='divider' />
-                <SavedNotes
-                  episodeData={taggedEpisode}
-                  onTagsChange={(newTags) =>
-                    handleTagsChange(taggedEpisode.episode.episode_id, newTags)
-                  }
-                  onNotesChange={(newNotes) =>
-                    handleNotesChange(
-                      taggedEpisode.episode.episode_id,
-                      newNotes
-                    )
-                  }
-                  onTagDelete={(episodeId, tagToDelete) =>
-                    handleTagDelete(episodeId, tagToDelete)
-                  }
-                />
-              </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
     </div>
   ) : (
