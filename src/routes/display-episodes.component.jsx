@@ -6,6 +6,7 @@ import {
   toggleEpFav,
   deleteTagFromEpisode,
   getEpisode,
+  getEpisodeTags,
 } from "../firebase/firebase";
 import Spinner from "../firebase/spinner";
 
@@ -18,6 +19,10 @@ const DisplayEpisodes = ({ user }) => {
   const [episodes, setEpisodes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  const [allTags, setAllTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchEpisodes = async () => {
@@ -42,6 +47,12 @@ const DisplayEpisodes = ({ user }) => {
             })
           );
           setEpisodes(episodesWithUserData);
+
+          if (user) {
+            const tags = await getEpisodeTags(user.uid);
+            setAllTags(tags);
+          }
+          
           setLoading(false);
         } else {
           setError("Episodes data not found.");
@@ -124,13 +135,70 @@ const DisplayEpisodes = ({ user }) => {
     );
   };
 
+  const handleTagClick = (tag) => {
+    if (selectedTags.includes(tag)) {
+      setSelectedTags((prevTags) => prevTags.filter((t) => t !== tag));
+    } else {
+      setSelectedTags((prevTags) => [...prevTags, tag]);
+    }
+  };
+
+  const clearFilter = () => {
+    setSelectedTags([]);
+    setSearchQuery("");
+  };
+
+  const filteredEpisodes = episodes.filter((episode) =>
+    selectedTags.every((tag) => episode.tags.includes(tag))
+  );
+
+
+
+
+
   return (
     <div className='flex flex-col items-center'>
       <h1 className='p-5 text-5xl font-bold text-center h-28'>
         Season {seasonNumber}
       </h1>
       <div />
-      {episodes.map((episode) => (
+      <div className="drawer drawer-end">
+        <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+        <div className="drawer-content">
+          <label htmlFor="my-drawer-4" className="drawer-button btn btn-secondary">
+            filter episodes by tag
+          </label>
+        </div>
+        <div className="drawer-side">
+          <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
+          <input
+            type="text"
+            placeholder="Search tags..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full p-2 mb-2"
+          />
+          <ul className="h-full p-4 menu w-80 bg-base-200 text-base-content">
+            {allTags
+              .sort((a, b) => a.localeCompare(b))
+              .filter((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+              .map((tag, index) => (
+                <div
+                  key={index}
+                  class="badge badge-lg badge-secondary gap-2 text-base-100"
+                  onClick={() => handleTagClick(tag)}
+                >
+                 
+                  {tag}
+                </div>
+              ))}
+            <button onClick={clearFilter} className="mt-2">
+              Clear Filter
+            </button>
+          </ul>
+        </div>
+      </div>
+      {filteredEpisodes.map((episode) => (
         <div
           className='w-9/12 collapse collapse-plus bg-base-200'
           key={episode.id}

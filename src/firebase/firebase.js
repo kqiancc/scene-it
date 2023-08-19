@@ -669,6 +669,34 @@ const getFavTags = async (userUid) => {
   }
 };
 
+const getEpisodeTags = async (userUid) => {
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const tvShows = userData.tv_shows || [];
+
+      // Extract episode tags from each TV show and flatten the result into a single array
+      const allTags = tvShows.flatMap((episode) => episode.episode_tags || []);
+
+      // To get unique tags, convert the array into a Set and back into an array
+      const uniqueTags = [...new Set(allTags)];
+
+      return uniqueTags;
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting episode tags:", error);
+    return [];
+  }
+};
+
+export default getEpisodeTags;
+
 export {
   //authentification
   signInWithGoogle,
@@ -695,4 +723,5 @@ export {
   getTVShowsWithTags,
   getFavoritedEps,
   getAllTags,
+  getEpisodeTags,
 };
