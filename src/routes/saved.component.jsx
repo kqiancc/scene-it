@@ -163,31 +163,31 @@ const TaggedEpisodesPage = ({ user }) => {
   }
 
   return user ? (
-    <div className="drawer drawer-end">
-      <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content">
-        <label
-          htmlFor="my-drawer-4"
-          className="drawer-button btn btn-secondary"
-        >
-          filter tags
-        </label>
-       </div>
+    // <div className="drawer drawer-end">
+    //   <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+    //   <div className="drawer-content">
+    //     <label
+    //       htmlFor="my-drawer-4"
+    //       className="drawer-button btn btn-secondary"
+    //     >
+    //       filter tags
+    //     </label>
+    //    </div>
 
-      <div className="drawer-side">
-        <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
-        <ul className="h-full p-4 menu w-80 bg-base-200 text-base-content">
-          {allTags.map((tag, index) => (
-            <div
-              key={index}
-              class="badge badge-lg badge-secondary gap-2 text-base-100"
-            >
-              <RiCheckboxBlankCircleLine class="inline-block w-4 h-4 stroke-current" />
-              {tag}
-            </div>
-          ))}
-        </ul>
-      </div>
+    //   <div className="drawer-side">
+    //     <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
+    //     <ul className="h-full p-4 menu w-80 bg-base-200 text-base-content">
+    //       {allTags.map((tag, index) => (
+    //         <div
+    //           key={index}
+    //           class="badge badge-lg badge-secondary gap-2 text-base-100"
+    //         >
+    //           <RiCheckboxBlankCircleLine class="inline-block w-4 h-4 stroke-current" />
+    //           {tag}
+    //         </div>
+    //       ))}
+    //     </ul>
+    //   </div>
 
       <div className="flex flex-col items-center">
         <h1 className="p-5 text-5xl font-bold text-center h-28">Saved</h1>
@@ -273,7 +273,7 @@ const TaggedEpisodesPage = ({ user }) => {
           ))
         )}
       </div>
-     </div>
+    //  </div>
   ) : (
     <div className="flex flex-col items-center justify-center">
       <h1 className="p-5 text-5xl font-bold text-center h-28">Saved</h1>
