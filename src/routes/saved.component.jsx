@@ -205,20 +205,24 @@ const TaggedEpisodesPage = ({ user }) => {
 
         <ul className="h-full p-4 menu w-80 bg-base-200 text-base-content">
           {/* Add onClick event to each tag */}
-          {allTags
-            .sort((a, b) => a.localeCompare(b))
-            .filter((tag) =>
-              tag.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-            .map((tag, index) => (
-              <div
-                key={index}
-                class="badge badge-lg badge-secondary gap-2 text-base-100"
-                onClick={() => handleTagClick(tag)}
-              >
-                {tag}
-              </div>
-            ))}
+          {allTags.length === 0 ? (
+            <div className="text-lg text-center">No tags to filter by</div>
+          ) : (
+            allTags
+              .sort((a, b) => a.localeCompare(b))
+              .filter((tag) =>
+                tag.toLowerCase().includes(searchQuery.toLowerCase())
+              )
+              .map((tag, index) => (
+                <div
+                  key={index}
+                  class="badge badge-lg badge-secondary gap-2 text-base-100"
+                  onClick={() => handleTagClick(tag)}
+                >
+                  {tag}
+                </div>
+              ))
+          )}
           <button onClick={clearFilter} className="mt-2">
             Clear Filter
           </button>
@@ -229,10 +233,11 @@ const TaggedEpisodesPage = ({ user }) => {
         <h1 className="p-5 text-5xl font-bold text-center h-28">Saved</h1>
         {taggedEpisodes.length === 0 ? (
           <div className="mt-4 text-xl">No saved episodes found </div>
+        ) : filteredEpisodes.length === 0 ? (
+          <div className="mt-4 text-xl">
+            No episodes found with selected filters
+          </div>
         ) : (
-          filteredEpisodes.length === 0 ? (
-            <div className="mt-4 text-xl">No episodes found with selected filters</div>
-          ) : (
           filteredEpisodes.map((taggedEpisode, index) => (
             <div
               key={index}
@@ -280,7 +285,7 @@ const TaggedEpisodesPage = ({ user }) => {
                   <div className="justify-end card-actions"></div>
                 </div>
               </div>
-              {/*TESTING NEW STUFF */}
+
               <div className="collapse-content">
                 <Heart
                   showId={taggedEpisode.show_id}
@@ -309,7 +314,7 @@ const TaggedEpisodesPage = ({ user }) => {
                 />
               </div>
             </div>
-          )))
+          ))
         )}
       </div>
     </div>
