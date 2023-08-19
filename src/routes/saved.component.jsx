@@ -183,55 +183,75 @@ const TaggedEpisodesPage = ({ user }) => {
   return user ? (
     <div className='grid grid-cols-[1fr,5fr] gap-4 h-full'>
       <div className='sticky top-0 h-screen col-span-1 overflow-y-auto rounded-lg bg-base-200'>
-        <div className='p-4'>
+        <div className='p-2'>
           <h1 className='mb-4 text-xl font-bold'>Filter</h1>
-          <div class='form-control w-full max-w-xs'>
-            <input
-              type='text'
-              placeholder='Search tags'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className='w-full max-w-xs focus:outline-none input input-bordered bg-base-200'
-            />
-            <label class='label'>
-              <button onClick={clearFilter} className='text-sm label-text-alt'>
-                Clear Filter
-              </button>
-            </label>
-          </div>
-          <ul className=''>
-            {/* Add onClick event to each tag */}
-            {allTags.length === 0 ? (
-              <div className='text-lg text-center'>No tags to filter by</div>
-            ) : (
-              allTags
-                .sort((a, b) => a.localeCompare(b))
-                .filter((tag) =>
-                  tag.toLowerCase().includes(searchQuery.toLowerCase())
-                )
-                .map((tag, index) => (
+          <div class='collapse collapse-plus border'>
+            <input type='checkbox' />
+            <div class='collapse-title text-xl font-medium'>Filter Tags</div>
+            <div class='collapse-content'>
+              <div class='form-control w-full max-w-xs'>
+                <input
+                  type='text'
+                  placeholder='Search tags'
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className='w-full max-w-xs focus:outline-none input input-bordered bg-base-200'
+                />
+                <label class='label'>
                   <button
-                    key={index}
-                    className={`mb-2 mr-2 badge badge-lg badge-secondary ${
-                      selectedTags.includes(tag) ? "ring-2 ring-primary" : ""
-                    }`}
-                    onClick={() => {
-                      // Check if the tag is already in the selectedTags array
-                      if (selectedTags.includes(tag)) {
-                        setSelectedTags((prevTags) =>
-                          prevTags.filter((t) => t !== tag)
-                        ); // Remove the tag
-                      } else {
-                        setSelectedTags((prevTags) => [...prevTags, tag]); // Add the tag
-                      }
-                      handleTagClick(tag);
-                    }}
+                    onClick={clearFilter}
+                    className='text-sm label-text-alt'
                   >
-                    {tag}
+                    Clear Filter
                   </button>
-                ))
-            )}
-          </ul>
+                </label>
+              </div>
+              <ul className=''>
+                {/* Add onClick event to each tag */}
+                {allTags.length === 0 ? (
+                  <div className='text-lg text-center'>
+                    No tags to filter by
+                  </div>
+                ) : (
+                  allTags
+                    .sort((a, b) => a.localeCompare(b))
+                    .filter((tag) =>
+                      tag.toLowerCase().includes(searchQuery.toLowerCase())
+                    )
+                    .map((tag, index) => (
+                      <button
+                        key={index}
+                        className={`mb-2 mr-2 badge badge-lg badge-secondary ${
+                          selectedTags.includes(tag)
+                            ? "ring-2 ring-primary"
+                            : ""
+                        }`}
+                        onClick={() => {
+                          // Check if the tag is already in the selectedTags array
+                          if (selectedTags.includes(tag)) {
+                            setSelectedTags((prevTags) =>
+                              prevTags.filter((t) => t !== tag)
+                            ); // Remove the tag
+                          } else {
+                            setSelectedTags((prevTags) => [...prevTags, tag]); // Add the tag
+                          }
+                          handleTagClick(tag);
+                        }}
+                      >
+                        {tag}
+                      </button>
+                    ))
+                )}
+              </ul>
+            </div>
+          </div>
+          <div class='collapse collapse-plus border mt-2'>
+            <input type='checkbox' />
+            <div class='collapse-title text-xl font-medium'>Filter Shows</div>
+            <div class='collapse-content'>
+              <p>pagman</p>
+            </div>
+          </div>
         </div>
       </div>
       <div className='flex flex-col items-center'>
