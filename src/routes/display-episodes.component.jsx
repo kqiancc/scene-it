@@ -171,6 +171,7 @@ const DisplayEpisodes = ({ user }) => {
   );
 
   return (
+    
     <div className="flex flex-col items-center">
       <h1 className="p-5 text-5xl font-bold text-center h-28">
         Season {seasonNumber}
