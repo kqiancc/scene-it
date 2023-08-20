@@ -194,7 +194,7 @@ const DisplayEpisodes = ({ user }) => {
 							<div class="form-control w-full max-w-xs">
 								<input
 									type="text"
-									placeholder="Search tags"
+									placeholder="Search Tags"
 									value={searchQuery}
 									onChange={(e) => setSearchQuery(e.target.value)}
 									className="w-full max-w-xs focus:outline-none input input-bordered bg-base-200"
