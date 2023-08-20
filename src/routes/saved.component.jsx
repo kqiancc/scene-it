@@ -211,7 +211,7 @@ const clearAllFilters = () => {
 							<div class="form-control w-full max-w-xs">
 								<input
 									type="text"
-									placeholder="Search tags"
+									placeholder="Search Tags"
 									value={searchQuery}
 									onChange={(e) => setSearchQuery(e.target.value)}
 									className="w-full max-w-xs focus:outline-none input input-bordered bg-base-200"
@@ -271,7 +271,7 @@ const clearAllFilters = () => {
 							<div class="form-control w-full max-w-xs">
 								<input
 									type="text"
-									placeholder="Search shows"
+									placeholder="Search Shows"
 									value={showSearchQuery}
 									onChange={(e) => setShowSearchQuery(e.target.value)}
 									className="w-full max-w-xs focus:outline-none input input-bordered bg-base-200"
@@ -312,7 +312,7 @@ const clearAllFilters = () => {
 			<div className="flex flex-col items-center">
 				<h1 className="p-5 text-5xl font-bold h-28">Saved</h1>
 				<div className="flex flex-col items-center">
-					{taggedEpisodes.length === 0 ? (
+					{taggedEpisodes.length === 0 && !loading ?  (
 						<div className="mt-4 text-xl">No saved episodes found </div>
 					) : filteredEpisodes.length === 0 ? (
 						<div className="mt-4 text-xl">
