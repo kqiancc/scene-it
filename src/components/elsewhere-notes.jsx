@@ -125,9 +125,9 @@ const SavedNotes = ({
 
   return (
     <div>
-      <div className="grid h-10 card bg-base-200 rounded-box">
-        <div className="flex items-center space-x-2">
-          <div className="place-items-center">
+      <div className="card bg-base-200 rounded-box">
+        <div className="flex flex-wrap items-center space-x-2">
+          <div className="flex-none">
             <input
               type="text"
               value={userInput}
@@ -138,11 +138,12 @@ const SavedNotes = ({
             />
           </div>
           {tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 tag-container">
+            <div className="flex flex-wrap flex-grow gap-2 mt-4 tag-container">
               {tags.map((tag, index) => (
                 <div
                   key={index}
                   class="badge badge-lg badge-secondary gap-2 text-base-100"
+                  style={{ wordBreak: "break-all", height: "auto", padding: "" }} 
                 >
                   <RiCloseLine
                     class="inline-block w-4 h-4 stroke-current"
@@ -159,7 +160,7 @@ const SavedNotes = ({
       <div className="divider"></div>
 
       <div className="grid card bg-base-200 rounded-box place-items-left">
-        <div className="place-items-center ">
+        <div className="flex-none place-items-center">
           <textarea
             value={userNotes}
             onChange={handleNotesInputChange}

@@ -91,7 +91,6 @@ const createFavMovie = (movieId, movieName) => {
 const INITIAL_DOC = {
 	tv_shows: [],
 	movies: [],
-	tags: [],
 };
 
 ///////////////////////// AUTH /////////////////////////////////////

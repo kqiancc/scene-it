@@ -1,45 +1,47 @@
+import { useState, useEffect } from "react";
+import { RiSunLine, RiMoonLine } from "react-icons/ri";
+
 const ThemePicker = () => {
-	return (
-		<div>
-			<button className = "join-item btn">
-				<select
-					className='w-full max-w-xs select select-xs scrollbar'
-					data-choose-theme
-					tabIndex={-1}
-				>
-					<option value='dracula'>dracula</option>
-					<option value='rain'>rain</option>
-					<option value='acid'>acid</option>
-					<option value='aqua'>aqua</option>
-					<option value='autumn'>autumn</option>
-					<option value='bumblebee'>bumblebee</option>
-					<option value='black'>black</option>
-					<option value='business'>business</option>
-					<option value='coffee'>coffee</option>
-					<option value='corporate'>corporate</option>
-					<option value='cupcake'>cupcake</option>
-					<option value='cyberpunk'>cyberpunk</option>
-					<option value='cmyk'>cmyk</option>
-					<option value='dark'>dark</option>
-					<option value='emerald'>emerald</option>
-					<option value='fantasy'>fantasy</option>
-					<option value='forest'>forest</option>
-					<option value='garden'>garden</option>
-					<option value='halloween'>halloween</option>
-					<option value='lemonade'>lemonade</option>
-					<option value='light'>light</option>
-					<option value='lofi'>lofi</option>
-					<option value='luxury'>luxury</option>
-					<option value='night'>night</option>
-					<option value='pastel'>pastel</option>
-					<option value='retro'>retro</option>
-					<option value='synthwave'>synthwave</option>
-					<option value='valentine'>valentine</option>
-					<option value='winter'>winter</option>
-					<option value='wireframe'>wireframe</option>
-				</select>
-			</button>
-		</div>
-	);
+  // Initially, try getting the theme from localStorage or fallback to dark mode
+  const initialThemeFromLocalStorage = localStorage.getItem("theme");
+  const [theme, setTheme] = useState(initialThemeFromLocalStorage || "");
+  console.log(theme);
+
+  // Toggle theme function
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "rain" ? "dracula" : "rain"));
+  };
+
+  useEffect(() => {
+    // on mount, if theme is not already set from localStorage, set it based on the document attribute
+    if (!theme) {
+      const initialThemeFromDocument =
+        document.documentElement.getAttribute("data-toggle-theme");
+      if (initialThemeFromDocument) {
+        setTheme(initialThemeFromDocument);
+      }
+    }
+  }, []);
+
+  // useEffect to update the data-theme attribute on the document element and store in localStorage
+  useEffect(() => {
+    document.documentElement.setAttribute("data-toggle-theme", theme);
+  }, [theme]);
+
+  return (
+    <button
+      className='btn join-item'
+      data-act-class='ACTIVECLASS'
+      data-toggle-theme='dracula,rain'
+      onClick={toggleTheme}
+    >
+      {theme === "rain" ? (
+        <RiSunLine className='w-4 h-4' />
+      ) : (
+        <RiMoonLine className='w-4 h-4' />
+      )}
+    </button>
+  );
 };
+
 export default ThemePicker;

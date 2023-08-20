@@ -123,9 +123,9 @@ const Notes = ({ showId, showName, episodeData, onTagsChange, onNotesChange, onT
 
   return (
     <div>
-      <div className="grid h-10 card bg-base-200 rounded-box">
-        <div className="flex items-center space-x-2">
-          <div className="place-items-center">
+      <div className="card bg-base-200 rounded-box">
+        <div className="flex flex-wrap items-center space-x-2">
+          <div className="flex-none">
             <input
               type="text"
               value={userInput}
@@ -133,14 +133,15 @@ const Notes = ({ showId, showName, episodeData, onTagsChange, onNotesChange, onT
               onKeyPress={handleInputKeyPress}
               placeholder="Tags"
               className="w-full max-w-xs input input-ghost input-primary focus:outline-none"
-            />
+           />
           </div>
           {tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 tag-container">
+            <div className="flex flex-wrap flex-grow gap-2 mt-4 tag-container">
               {tags.map((tag, index) => (
                 <div
                   key={index}
                   class="badge badge-lg badge-secondary gap-2 text-base-100"
+                  style={{ wordBreak: "break-all", height: "auto", padding: "" }} 
                 >
                   <RiCloseLine
                     class="inline-block w-4 h-4 stroke-current"

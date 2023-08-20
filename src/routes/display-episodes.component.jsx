@@ -116,13 +116,6 @@ const DisplayEpisodes = ({ user }) => {
 		);
 	};
 
-	if (loading) {
-		return <Spinner />;
-	}
-
-	if (error) {
-		return <div>{error}</div>;
-	}
 
 	const handleHeartClick = (episodeId) => {
 		setEpisodes((prevEpisodes) =>
@@ -171,6 +164,20 @@ const DisplayEpisodes = ({ user }) => {
 			)
 	);
 
+	const clearAllFilters = () => {
+		setSelectedTags([]);
+		setSearchQuery('');
+		setShowFavoritesOnly(false);
+	  };
+	  
+	  if (loading) {
+		return <Spinner />;
+	}
+
+	if (error) {
+		return <div>{error}</div>;
+	}
+
 	return (
 		<div className="grid grid-cols-[1fr,5fr] gap-4 h-full">
 			<div className="sticky top-0 h-screen col-span-1 overflow-y-auto rounded-xl bg-base-200">
@@ -183,7 +190,7 @@ const DisplayEpisodes = ({ user }) => {
 							onChange={toggleFavoritesFilter}
 						/>
 						<div className="text-xl font-medium collapse-title">
-							Display Favorited Only
+							Favorites
 						</div>
 					</div>
 
@@ -246,6 +253,11 @@ const DisplayEpisodes = ({ user }) => {
 								)}
 							</ul>
 						</div>
+					</div>
+					<div className="flex items-center justify-center mt-4">
+						<button onClick={clearAllFilters} className="text-sm">
+							Clear All Filters
+						</button>
 					</div>
 				</div>
 			</div>
