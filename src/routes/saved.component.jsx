@@ -15,7 +15,7 @@ const TaggedEpisodesPage = ({ user }) => {
 	const [selectedTags, setSelectedTags] = useState([]);
 	const [selectedShow, setSelectedShow] = useState('');
 	const [searchQuery, setSearchQuery] = useState('');
-  const [showSearchQuery, setShowSearchQuery] = useState("");
+	const [showSearchQuery, setShowSearchQuery] = useState('');
 
 	const [allShows, setAllShows] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -174,21 +174,21 @@ const TaggedEpisodesPage = ({ user }) => {
 
 	const clearShowFilter = () => {
 		setSelectedShow(''); // This will reset the selectedShow state to its initial empty string value.
-    setShowSearchQuery('');
-  };
+		setShowSearchQuery('');
+	};
 
-  const filteredShows = showSearchQuery
-  ? allShows.filter(show => 
-      show.toLowerCase().includes(showSearchQuery.toLowerCase())
-    )
-  : allShows;
+	const filteredShows = showSearchQuery
+		? allShows.filter((show) =>
+				show.toLowerCase().includes(showSearchQuery.toLowerCase())
+		  )
+		: allShows;
 
-const clearAllFilters = () => {
-  setSelectedTags([]);
+	const clearAllFilters = () => {
+		setSelectedTags([]);
 		setSearchQuery('');
-    setSelectedShow(''); // This will reset the selectedShow state to its initial empty string value.
-    setShowSearchQuery('');
-}
+		setSelectedShow(''); // This will reset the selectedShow state to its initial empty string value.
+		setShowSearchQuery('');
+	};
 
 	if (loading) {
 		return <Spinner />;
@@ -203,8 +203,41 @@ const clearAllFilters = () => {
 			<div className="sticky top-0 h-screen col-span-1 overflow-y-auto rounded-xl bg-base-200">
 				<div className="p-2">
 					<h1 className="mb-4 text-xl font-bold text-center">Filters</h1>
- 					<div class="collapse collapse-plus border">
-            
+					<div class="collapse collapse-plus border">
+						<input type="checkbox" />
+						<div class="collapse-title text-xl font-medium">Filter Shows</div>
+						<div class="collapse-content">
+							<div class="form-control w-full max-w-xs">
+								<input
+									type="text"
+									placeholder="Search Shows"
+									value={showSearchQuery}
+									onChange={(e) => setShowSearchQuery(e.target.value)}
+									className="w-full max-w-xs focus:outline-none input input-bordered bg-base-200"
+								/>
+								<label class="label">
+									<button onClick={clearShowFilter} className="mt-4 text-sm">
+										Clear Show Filter
+									</button>
+								</label>
+							</div>
+
+							{filteredShows.map((show) => (
+								<button
+									key={show}
+									className={`mb-2 mr-2 badge badge-lg badge-secondary ${
+										selectedShow === show ? 'ring-2 ring-primary' : ''
+									}`}
+									onClick={() =>
+										setSelectedShow(show === selectedShow ? '' : show)
+									}
+								>
+									{show}
+								</button>
+							))}
+						</div>
+					</div>
+					<div class="collapse collapse-plus border mt-2">
 						<input type="checkbox" />
 						<div class="collapse-title text-xl font-medium">Filter Tags</div>
 						<div class="collapse-content">
@@ -264,55 +297,17 @@ const clearAllFilters = () => {
 							</ul>
 						</div>
 					</div>
-					<div class="collapse collapse-plus border mt-2">
-						<input type="checkbox" />
-						<div class="collapse-title text-xl font-medium">Filter Shows</div>
-						<div class="collapse-content">
-							<div class="form-control w-full max-w-xs">
-								<input
-									type="text"
-									placeholder="Search Shows"
-									value={showSearchQuery}
-									onChange={(e) => setShowSearchQuery(e.target.value)}
-									className="w-full max-w-xs focus:outline-none input input-bordered bg-base-200"
-								/>
-								<label class="label">
-									<button onClick={clearShowFilter} className="mt-4 text-sm">
-										Clear Show Filter
-									</button>
-								</label>
-
-							</div>
-              
-
-							{filteredShows.map((show) => (
-								<button
-									key={show}
-									className={`mb-2 mr-2 badge badge-lg badge-secondary ${
-										selectedShow === show ? 'ring-2 ring-primary' : ''
-									}`}
-									onClick={() =>
-										setSelectedShow(show === selectedShow ? '' : show)
-									}
-								>
-									{show}
-								</button>
-							))}
-						</div>
+					<div className="flex items-center justify-center mt-4">
+						<button onClick={clearAllFilters} className="text-sm">
+							Clear All Filters
+						</button>
 					</div>
-          <div className="flex items-center justify-center mt-4">
-    <button onClick={clearAllFilters} className="text-sm">
-        Clear All Filters
-    </button>
-</div>
-
-          
 				</div>
 			</div>
 			<div className="flex flex-col items-center">
 				<h1 className="p-5 text-5xl font-bold h-28">Saved</h1>
 				<div className="flex flex-col items-center">
-					{taggedEpisodes.length === 0 && !loading ?  (
+					{taggedEpisodes.length === 0 && !loading ? (
 						<div className="mt-4 text-xl">No saved episodes found </div>
 					) : filteredEpisodes.length === 0 ? (
 						<div className="mt-4 text-xl">

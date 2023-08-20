@@ -125,7 +125,7 @@ const Notes = ({ showId, showName, episodeData, onTagsChange, onNotesChange, onT
     <div>
       <div className="grid h-10 card bg-base-200 rounded-box">
         <div className="flex items-center space-x-2">
-          <div className="place-items-center">
+          <div className="place-items-center ">
             <input
               type="text"
               value={userInput}
@@ -133,7 +133,7 @@ const Notes = ({ showId, showName, episodeData, onTagsChange, onNotesChange, onT
               onKeyPress={handleInputKeyPress}
               placeholder="Tags"
               className="w-full max-w-xs input input-ghost input-primary focus:outline-none"
-            />
+           />
           </div>
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-2 tag-container">
