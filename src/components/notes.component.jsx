@@ -7,7 +7,7 @@ import {
 import { getAuth } from "firebase/auth"; // Import Firebase's authentication module
 import { RiCloseLine } from "react-icons/ri";
 
-const Notes = ({ showId, episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
+const Notes = ({ showId, showName, episodeData, onTagsChange, onNotesChange, onTagDelete }) => {
   const [userInput, setUserInput] = useState("");
   const [tags, setTags] = useState([]);
   const [userNotes, setUserNotes] = useState("");
@@ -60,9 +60,10 @@ const Notes = ({ showId, episodeData, onTagsChange, onNotesChange, onTagDelete }
           updateEpisodeField(episodeData.id, "episode_tags", new_tags);
         } else {
           //save episode and tag to firestore
+          console.log(showName)
           addNewEpisode(
             episodeData.id,
-            episodeData.name,
+            showName,
             episodeData.episode_number,
             [userInput],
             [],
@@ -108,7 +109,7 @@ const Notes = ({ showId, episodeData, onTagsChange, onNotesChange, onTagDelete }
         console.log(episodeData)
         addNewEpisode(
           episodeData.id,
-          episodeData.name,
+          showName,
           episodeData.episode_number,
           [],
           [userNotes],

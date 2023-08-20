@@ -1,7 +1,7 @@
 import { RiHeartLine, RiHeartFill } from 'react-icons/ri';
 import {getEpisode, addNewEpisode, updateEpisodeField} from '../firebase/firebase';
 
-const Heart = ({ showId, seasonNumber, episodeId, episodeNumber, episodeName, isHeartClicked, handleHeartClick }) => {
+const Heart = ({ showId, seasonNumber, episodeId, episodeNumber, showName, isHeartClicked, handleHeartClick }) => {
   
   const checkAndAddOrUpdateEpisode = async (newHeartState) => {
    console.log(episodeId)
@@ -9,7 +9,7 @@ const Heart = ({ showId, seasonNumber, episodeId, episodeNumber, episodeName, is
 
     if (!episode) {
       // If the episode doesn't exist, add it
-      await addNewEpisode(episodeId, episodeName, episodeNumber, [], [], newHeartState, showId, seasonNumber);
+      await addNewEpisode(episodeId, showName, episodeNumber, [], [], newHeartState, showId, seasonNumber);
     } else {
       // If the episode exists, update the is_heart_clicked field
       await updateEpisodeField(episodeId, 'is_heart_clicked', newHeartState);
