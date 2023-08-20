@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { RiSunLine, RiMoonLine } from "react-icons/ri";
 
 const ThemePicker = () => {
-  const [theme, setTheme] = useState("");
+  // Initially, try getting the theme from localStorage or fallback to dark mode
+  const initialThemeFromLocalStorage = localStorage.getItem("theme");
+  const [theme, setTheme] = useState(initialThemeFromLocalStorage || "dracula");
+  console.log(theme);
 
   // Toggle theme function
   const toggleTheme = () => {
@@ -10,20 +13,22 @@ const ThemePicker = () => {
   };
 
   useEffect(() => {
-    // Set theme based on the attribute after the component has mounted
-    const initialTheme =
-      document.documentElement.getAttribute("data-toggle-theme");
-    setTheme(initialTheme);
-    console.log(initialTheme);
+    // on mount, if theme is not already set from localStorage, set it based on the document attribute
+    if (!theme) {
+      const initialThemeFromDocument =
+        document.documentElement.getAttribute("data-toggle-theme");
+      if (initialThemeFromDocument) {
+        setTheme(initialThemeFromDocument);
+      }
+    }
   }, []);
 
-  // useEffect to update the data-theme attribute on the document element
+  // useEffect to update the data-theme attribute on the document element and store in localStorage
   useEffect(() => {
     document.documentElement.setAttribute("data-toggle-theme", theme);
   }, [theme]);
 
   return (
-    //check against the light mode
     <button
       className='btn join-item'
       data-act-class='ACTIVECLASS'
@@ -31,10 +36,8 @@ const ThemePicker = () => {
       onClick={toggleTheme}
     >
       {theme === "rain" ? (
-        //if the theme is light, set light
         <RiSunLine className='w-4 h-4' />
       ) : (
-        //if the themeis dark, set dark
         <RiMoonLine className='w-4 h-4' />
       )}
     </button>
