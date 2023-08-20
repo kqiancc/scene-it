@@ -175,55 +175,10 @@ const FavoritesPage = ({ user }) => {
   }
 
   return user ? (
-    // <div className="drawer drawer-end">
-    //   <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-    //   <div className="drawer-content">
-    //     <label
-    //       htmlFor="my-drawer-4"
-    //       className="drawer-button btn btn-secondary"
-    //     >
-    //       filter episodes by tag
-    //     </label>
-    //   </div>
-
-    //   <div className="drawer-side">
-    //     <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
-    //     <input
-    //       type="text"
-    //       placeholder="Search tags..."
-    //       value={searchQuery}
-    //       onChange={(e) => setSearchQuery(e.target.value)}
-    //       className="w-full p-2 mb-2"
-    //     />
-
-    //     <ul className="h-full p-4 menu w-80 bg-base-200 text-base-content">
-    //       {allTags.length === 0 ? (
-    //         <div className="text-lg text-center">No tags to filter by</div>
-    //       ) : (
-    //         allTags
-    //           .sort((a, b) => a.localeCompare(b))
-    //           .filter((tag) =>
-    //             tag.toLowerCase().includes(searchQuery.toLowerCase())
-    //           )
-    //           .map((tag, index) => (
-    //             <button
-    //               key={index}
-    //               class="badge badge-lg badge-secondary gap-2 text-base-100"
-    //               onClick={() => handleTagClick(tag)}
-    //             >
-    //               {tag}
-    //             </button>
-    //           ))
-    //       )}
-    //       <button onClick={clearFilter} className="mt-2">
-    //         Clear Filter
-    //       </button>
-    //     </ul>
-    //   </div>
     <div className='grid grid-cols-[1fr,5fr] gap-4 h-full'>
-      <div className='sticky top-0 h-screen col-span-1 overflow-y-auto rounded-lg bg-base-200'>
+      <div className='sticky top-0 h-screen col-span-1 overflow-y-auto rounded-xl bg-base-200'>
         <div className='p-2'>
-          <h1 className='mb-4 text-xl font-bold'>Filter</h1>
+          <h1 className='mb-4 text-xl font-bold text-center'>Filters</h1>
           <div class='collapse collapse-plus border'>
             <input type='checkbox' />
             <div class='collapse-title text-xl font-medium'>Filter Tags</div>
@@ -241,7 +196,7 @@ const FavoritesPage = ({ user }) => {
                     onClick={clearFilter}
                     className='text-sm label-text-alt'
                   >
-                    Clear Filter
+                    Clear Filters
                   </button>
                 </label>
               </div>

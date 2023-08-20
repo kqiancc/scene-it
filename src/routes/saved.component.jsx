@@ -182,9 +182,9 @@ const TaggedEpisodesPage = ({ user }) => {
 
   return user ? (
     <div className='grid grid-cols-[1fr,5fr] gap-4 h-full'>
-      <div className='sticky top-0 h-screen col-span-1 overflow-y-auto rounded-lg bg-base-200'>
+      <div className='sticky top-0 h-screen col-span-1 overflow-y-auto rounded-xl bg-base-200'>
         <div className='p-2'>
-          <h1 className='mb-4 text-xl font-bold'>Filter</h1>
+          <h1 className='mb-4 text-xl font-bold text-center'>Filters</h1>
           <div class='collapse collapse-plus border'>
             <input type='checkbox' />
             <div class='collapse-title text-xl font-medium'>Filter Tags</div>
@@ -202,7 +202,7 @@ const TaggedEpisodesPage = ({ user }) => {
                     onClick={clearFilter}
                     className='text-sm label-text-alt'
                   >
-                    Clear Filter
+                    Clear Filters
                   </button>
                 </label>
               </div>
