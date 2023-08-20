@@ -44,17 +44,6 @@ const TaggedEpisodesPage = ({ user }) => {
           );
           const episodeDetails = await response.json();
 
-          let showName = ""; // Initialize the showName variable using let
-
-          try {
-            const showResponse = await fetch(
-              `https://api.themoviedb.org/3/tv/${episode.show_id}?api_key=${apiKey}&language=en-US`
-            );
-            const showData = await showResponse.json();
-            showName = showData.name; // Get the show name from the API response
-          } catch (error) {
-            console.error("Error fetching show details:", error);
-          }
 
           return {
             ...episode,
@@ -64,7 +53,6 @@ const TaggedEpisodesPage = ({ user }) => {
               notes: episode.notes || [], // assuming notes is a string
               isHeartClicked: true,
             },
-            showName: showName,
           };
         })
       );
@@ -138,7 +126,7 @@ const TaggedEpisodesPage = ({ user }) => {
             taggedEpisode.show_id,
             taggedEpisode.season_number,
             taggedEpisode.episode_id,
-            taggedEpisode.episode_name,
+            taggedEpisode.show_name,
             taggedEpisode.episode_number,
             newHeartState
           );
@@ -293,7 +281,7 @@ const TaggedEpisodesPage = ({ user }) => {
                   </figure>
                   <div className='select-text card-body'>
                     <h3 className='text-3xl font-bold'>
-                      {taggedEpisode.showName} - Season{" "}
+                      {taggedEpisode.show_name} - Season{" "}
                       {taggedEpisode.season_number}
                     </h3>
                     <h2 className='text-2xl font-bold'>
@@ -318,7 +306,7 @@ const TaggedEpisodesPage = ({ user }) => {
                     seasonNumber={taggedEpisode.season_number}
                     episodeId={taggedEpisode.episode_id}
                     episodeNumber={taggedEpisode.episode_number}
-                    episodeName={taggedEpisode.episode_name}
+                    showName={taggedEpisode.show_name}
                     isHeartClicked={taggedEpisode.is_heart_clicked}
                     handleHeartClick={handleHeartClick}
                   />

@@ -133,7 +133,7 @@ const DisplayEpisodes = ({ user }) => {
 						show.id,
 						seasonNumber,
 						episode.id,
-						episode.name,
+						show.name,
 						episode.episode_number,
 						newHeartState
 					);
@@ -304,13 +304,14 @@ const DisplayEpisodes = ({ user }) => {
 									seasonNumber={seasonNumber}
 									episodeId={episode.id}
 									episodeNumber={episode.episode_number}
-									episodeName={episode.name}
+									showName={show.name}//MESSED WITH THIS
 									isHeartClicked={episode.isHeartClicked}
 									handleHeartClick={handleHeartClick}
 								/>
 								<div className="divider" />
 								<Notes
 									showId={show.id}
+                  showName = {show.name}
 									episodeData={episode}
 									onTagsChange={(newTags) =>
 										handleTagsChange(episode.id, newTags)
@@ -331,13 +332,14 @@ const DisplayEpisodes = ({ user }) => {
 										seasonNumber={seasonNumber}
 										episodeId={episode.id}
 										episodeNumber={episode.episode_number}
-										episodeName={episode.name}
+										showName={show.name} 
 										isHeartClicked={episode.isHeartClicked}
 										handleHeartClick={handleHeartClick}
 									/>
 									<div className="divider" />
 									<Notes
 										showId={show.id}
+                    showName = {show.name}
 										episodeData={episode}
 										onTagsChange={(newTags) =>
 											handleTagsChange(episode.id, newTags)

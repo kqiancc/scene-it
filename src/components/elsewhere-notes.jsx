@@ -65,7 +65,7 @@ const SavedNotes = ({
           //save episode and tag to firestore
           addNewEpisode(
             episodeData.episode_id,
-            episodeData.episode_name,
+            episodeData.show_name,
             episodeData.episode_number,
             [userInput],
             [],
@@ -111,7 +111,7 @@ const SavedNotes = ({
         console.log(episodeData.episode_id);
         addNewEpisode(
           episodeData.episode_id,
-          episodeData.episode_name,
+          episodeData.show_name,
           episodeData.episode_number,
           [],
           [userNotes],

@@ -42,18 +42,6 @@ const FavoritesPage = ({ user }) => {
           );
           const favoriteDetails = await response.json();
 
-          let showName = "";
-
-          try {
-            const showResponse = await fetch(
-              `https://api.themoviedb.org/3/tv/${favorite.show_id}?api_key=${apiKey}&language=en-US`
-            );
-            const showData = await showResponse.json();
-            showName = showData.name;
-          } catch (error) {
-            console.error("Error fetching show details:", error);
-          }
-
           return {
             ...favorite,
             episode: {
@@ -62,7 +50,6 @@ const FavoritesPage = ({ user }) => {
               notes: favorite.notes || [],
               isHeartClicked: true,
             },
-            showName: showName,
           };
         })
       );
@@ -132,7 +119,7 @@ const FavoritesPage = ({ user }) => {
             favorite.show_id,
             favorite.season_number,
             favorite.episode_id,
-            favorite.episode_name,
+            favorite.show_name,
             favorite.episode_number,
             newHeartState
           );
@@ -287,7 +274,7 @@ const FavoritesPage = ({ user }) => {
                 </figure>
                 <div className="select-text card-body">
                   <h3 className="text-3xl font-bold">
-                    {favorite.showName} - Season {favorite.season_number}
+                    {favorite.show_name} - Season {favorite.season_number}
                   </h3>
                   <h2 className="text-2xl font-bold">
                     Episode {favorite.episode.episode_number}:{" "}
@@ -311,13 +298,14 @@ const FavoritesPage = ({ user }) => {
                   seasonNumber={favorite.season_number}
                   episodeId={favorite.episode_id}
                   episodeNumber={favorite.episode_number}
-                  episodeName={favorite.episode_name}
+                  showName={favorite.show_name}
                   isHeartClicked={favorite.is_heart_clicked}
                   handleHeartClick={handleHeartClick}
                 />
                 <div className="divider" />
                 <SavedNotes
                   episodeData={favorite}
+                  showName = {favorite.show_name}
                   onTagsChange={(newTags) =>
                     handleTagsChange(favorite.episode.episode_id, newTags)
                   }
