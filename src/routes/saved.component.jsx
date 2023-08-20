@@ -216,8 +216,8 @@ const TaggedEpisodesPage = ({ user }) => {
 									className="w-full max-w-xs focus:outline-none input input-bordered bg-base-200"
 								/>
 								<label class="label">
-									<button onClick={clearShowFilter} className="mt-4 text-sm">
-										Clear Show Filter
+									<button onClick={clearShowFilter} className="text-sm label-text-alt">
+										Clear Filter
 									</button>
 								</label>
 							</div>
