@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { RiSunLine, RiMoonLine } from "react-icons/ri";
 
 const ThemePicker = () => {
   const [theme, setTheme] = useState("");
@@ -22,13 +23,20 @@ const ThemePicker = () => {
   }, [theme]);
 
   return (
+    //check against the light mode
     <button
       className='btn join-item'
       data-act-class='ACTIVECLASS'
       data-toggle-theme='dracula,rain'
       onClick={toggleTheme}
     >
-      {theme === "rain" ? "😇" : "😈"}
+      {theme === "rain" ? (
+        //if the theme is light, set light
+        <RiSunLine className='w-4 h-4' />
+      ) : (
+        //if the themeis dark, set dark
+        <RiMoonLine className='w-4 h-4' />
+      )}
     </button>
   );
 };
