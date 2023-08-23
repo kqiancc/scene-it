@@ -5,7 +5,6 @@ const ThemePicker = () => {
   // Initially, try getting the theme from localStorage or fallback to dark mode
   const initialThemeFromLocalStorage = localStorage.getItem("theme");
   const [theme, setTheme] = useState(initialThemeFromLocalStorage || "");
-  console.log(theme);
 
   // Toggle theme function
   const toggleTheme = () => {

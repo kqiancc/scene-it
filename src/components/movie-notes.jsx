@@ -3,7 +3,13 @@ import { getMovie, addNewMovie, updateMovieField } from "../firebase/firebase";
 import { getAuth } from "firebase/auth";
 import { RiCloseLine } from "react-icons/ri";
 
-const MovieNotes = ({ movieId, movieData, onTagsChange, onNotesChange, onTagDelete }) => {
+const MovieNotes = ({
+  movieId,
+  movieData,
+  onTagsChange,
+  onNotesChange,
+  onTagDelete,
+}) => {
   const [userInput, setUserInput] = useState("");
   const [tags, setTags] = useState([]);
   const [userNotes, setUserNotes] = useState("");
@@ -11,14 +17,12 @@ const MovieNotes = ({ movieId, movieData, onTagsChange, onNotesChange, onTagDele
 
   useEffect(() => {
     if (movieData) {
-      console.log("Tags:", movieData.tags);
       setUserInput("");
       setTags(movieData.tags || []); // Set the initial state of tags
       setUserNotes(movieData.notes || "");
       setNotesDisplay(movieData.notes || []);
     }
   }, [movieData]);
-  
 
   const handleInputChange = (event) => {
     setUserInput(event.target.value);
@@ -30,38 +34,30 @@ const MovieNotes = ({ movieId, movieData, onTagsChange, onNotesChange, onTagDele
       const inputTags = userInput.split(",").map((tag) => tag.trim());
 
       // Filter out tags that already exist in the current episode's tags
-      const newTags = inputTags.filter(tag => !tags.includes(tag));
+      const newTags = inputTags.filter((tag) => !tags.includes(tag));
 
       // If all tags from the userInput are duplicates, then return early without updating
       if (newTags.length === 0) {
-          setUserInput('');  // Clear the input field
-          return;
+        setUserInput(""); // Clear the input field
+        return;
       }
 
       // Update the local state with the new tags
       setTags((prevTags) => [...prevTags, ...newTags]);
       onTagsChange([...tags, ...newTags]);
-      console.log(userInput);
 
-        //saving tags to firestore
+      //saving tags to firestore
       const auth = getAuth();
       const user = auth.currentUser;
       if (user) {
-       
         const existingMovie = await getMovie(movieData.id);
 
         if (existingMovie) {
           const oldTags = existingMovie.tags || [];
           const updatedTags = [...oldTags, ...newTags];
           updateMovieField(movieData.id, "movie_tags", updatedTags);
-          console.log(movieData.id)
         } else {
-          addNewMovie(
-            movieData.id,
-            movieData.title,
-            [userInput],
-            []
-          );
+          addNewMovie(movieData.id, movieData.title, [userInput], []);
         }
       }
     }
@@ -88,18 +84,13 @@ const MovieNotes = ({ movieId, movieData, onTagsChange, onNotesChange, onTagDele
       if (existingMovie) {
         updateMovieField(movieData.id, "movie_notes", userNotes);
       } else {
-        addNewMovie(
-          movieData.id,
-          movieData.title,
-          [],
-          [userNotes]
-        );
+        addNewMovie(movieData.id, movieData.title, [], [userNotes]);
       }
     }
   };
 
   return (
-    <div className = "bg-base-300 rounded-box">
+    <div className='bg-base-300 rounded-box'>
       {/* <div className="grid h-10 card bg-base-300 rounded-box">
         <div className="flex items-center space-x-2">
           <div className="place-items-center">
@@ -133,14 +124,14 @@ const MovieNotes = ({ movieId, movieData, onTagsChange, onNotesChange, onTagDele
 
       <div className="divider"></div> */}
 
-      <div className="grid card bg-base-300 rounded-box place-items-left">
-        <div className="place-items-center ">
+      <div className='grid card bg-base-300 rounded-box place-items-left'>
+        <div className='place-items-center '>
           <textarea
             value={userNotes}
             onChange={handleNotesInputChange}
             onBlur={handleNotesBlur}
-            placeholder="Notes"
-            className="w-1/2 input input-ghost input-primary h-28 focus:outline-none"
+            placeholder='Notes'
+            className='w-1/2 input input-ghost input-primary h-28 focus:outline-none'
             style={{
               overflowWrap: "break-word",
             }}

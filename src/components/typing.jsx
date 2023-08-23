@@ -33,8 +33,6 @@ const TypingAnimation = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(words);
-
   useEffect(() => {
     gsap.to(".cursor", {
       opacity: 0,
@@ -57,7 +55,7 @@ const TypingAnimation = () => {
 
   return (
     <div className='flex items-center '>
-      <h1 className='relative font-bold overflow-hidden whitespace-nowrap'>
+      <h1 className='relative overflow-hidden font-bold whitespace-nowrap'>
         <span className='inline-block text-primary'>Search</span>&nbsp;
         <span className='text text-secondary'></span>
         <span className='cursor text-primary'>|</span>

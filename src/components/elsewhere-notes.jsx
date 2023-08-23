@@ -32,24 +32,22 @@ const SavedNotes = ({
   };
 
   const handleInputKeyPress = async (event) => {
-    console.log(userInput, "before");
     if (event.key === "Enter") {
       // Split the userInput into individual tags and trim any whitespace
       const inputTags = userInput.split(",").map((tag) => tag.trim());
 
       // Filter out tags that already exist in the current episode's tags
-      const newTags = inputTags.filter(tag => !tags.includes(tag));
+      const newTags = inputTags.filter((tag) => !tags.includes(tag));
 
       // If all tags from the userInput are duplicates, then return early without updating
       if (newTags.length === 0) {
-          setUserInput('');  // Clear the input field
-          return;
+        setUserInput(""); // Clear the input field
+        return;
       }
 
       // Update the local state with the new tags
       setTags((prevTags) => [...prevTags, ...newTags]);
       onTagsChange([...tags, ...newTags]);
-      console.log(userInput);
       //saving tags to firestore
       const auth = getAuth();
       const user = auth.currentUser;
@@ -74,7 +72,7 @@ const SavedNotes = ({
             episodeData.season_number
           );
         }
-        setUserInput("");  
+        setUserInput("");
       }
     }
   };
@@ -89,15 +87,12 @@ const SavedNotes = ({
     const user = auth.currentUser;
     const existingEpisode = await getEpisode(episodeData.episode_id);
 
-    console.log(userNotes);
     if (userNotes.length <= 0 && !existingEpisode) {
       return;
     }
-    console.log(userNotes.length);
+
     // const newNotes = userNotes.split("\n").map((note) => note.trim());
     const newNotes = userNotes;
-
-    console.log("new notes", newNotes);
 
     onNotesChange(newNotes);
     setNotesDisplay((prevNotes) => [...prevNotes, ...newNotes]);
@@ -107,8 +102,6 @@ const SavedNotes = ({
         updateEpisodeField(episodeData.episode_id, "episode_notes", userNotes);
       } else {
         //save episode and tag to Firestore
-        console.log("im here!");
-        console.log(episodeData.episode_id);
         addNewEpisode(
           episodeData.episode_id,
           episodeData.show_name,
@@ -117,7 +110,7 @@ const SavedNotes = ({
           [userNotes],
           null,
           episodeData.show_id,
-          episodeData.season_number,
+          episodeData.season_number
         );
       }
     }
@@ -125,28 +118,32 @@ const SavedNotes = ({
 
   return (
     <div>
-      <div className="card bg-base-200 rounded-box">
-        <div className="flex flex-wrap items-center space-x-2">
-          <div className="flex-none">
+      <div className='card bg-base-200 rounded-box'>
+        <div className='flex flex-wrap items-center space-x-2'>
+          <div className='flex-none'>
             <input
-              type="text"
+              type='text'
               value={userInput}
               onChange={handleInputChange}
               onKeyPress={handleInputKeyPress}
-              placeholder="Tags"
-              className="w-full max-w-xs input input-ghost input-primary focus:outline-none"
+              placeholder='Tags'
+              className='w-full max-w-xs input input-ghost input-primary focus:outline-none'
             />
           </div>
           {tags.length > 0 && (
-            <div className="flex flex-wrap flex-grow gap-2 mt-4 tag-container">
+            <div className='flex flex-wrap flex-grow gap-2 mt-4 tag-container'>
               {tags.map((tag, index) => (
                 <div
                   key={index}
-                  class="badge badge-lg badge-secondary gap-2 text-base-100"
-                  style={{ wordBreak: "break-all", height: "auto", padding: "" }} 
+                  class='badge badge-lg badge-secondary gap-2 text-base-100'
+                  style={{
+                    wordBreak: "break-all",
+                    height: "auto",
+                    padding: "",
+                  }}
                 >
                   <RiCloseLine
-                    class="inline-block w-4 h-4 stroke-current"
+                    class='inline-block w-4 h-4 stroke-current'
                     onClick={() => onTagDelete(episodeData.episode_id, tag)}
                   />
                   {tag}
@@ -157,16 +154,16 @@ const SavedNotes = ({
         </div>
       </div>
 
-      <div className="divider"></div>
+      <div className='divider'></div>
 
-      <div className="grid card bg-base-200 rounded-box place-items-left">
-        <div className="flex-none place-items-center">
+      <div className='grid card bg-base-200 rounded-box place-items-left'>
+        <div className='flex-none place-items-center'>
           <textarea
             value={userNotes}
             onChange={handleNotesInputChange}
             onBlur={handleNotesBlur}
-            placeholder="Notes"
-            className="w-1/2 input input-ghost input-primary h-28 focus:outline-none"
+            placeholder='Notes'
+            className='w-1/2 input input-ghost input-primary h-28 focus:outline-none'
             style={{
               overflowWrap: "break-word",
             }}

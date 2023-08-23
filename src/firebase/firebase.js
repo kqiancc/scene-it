@@ -1,30 +1,30 @@
 //all functions we need to store or push data is in this file
 
-import { initializeApp } from 'firebase/app';
+import { initializeApp } from "firebase/app";
 
 import {
-	GoogleAuthProvider,
-	getAuth,
-	signInWithPopup,
-	signOut,
-	onAuthStateChanged,
-} from 'firebase/auth';
+  GoogleAuthProvider,
+  getAuth,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 import {
-	getFirestore,
-	getDoc,
-	doc,
-	setDoc,
-	updateDoc,
-} from 'firebase/firestore';
+  getFirestore,
+  getDoc,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 const firebaseConfig = {
-	apiKey: 'AIzaSyBJhiyhBdgmCoeRmvoY-oBCDBzc8BOGarw',
-	authDomain: 'raje-773ec.firebaseapp.com',
-	projectId: 'raje-773ec',
-	storageBucket: 'raje-773ec.appspot.com',
-	messagingSenderId: '737930556953',
-	appId: '1:737930556953:web:c90e5ea10c1a5ee2cedc88',
+  apiKey: "AIzaSyBJhiyhBdgmCoeRmvoY-oBCDBzc8BOGarw",
+  authDomain: "raje-773ec.firebaseapp.com",
+  projectId: "raje-773ec",
+  storageBucket: "raje-773ec.appspot.com",
+  messagingSenderId: "737930556953",
+  appId: "1:737930556953:web:c90e5ea10c1a5ee2cedc88",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -35,692 +35,650 @@ let userUid = null;
 
 ///////////////////////// CONSTANTS /////////////////////////////////////
 const createMovie = (movie_id, movie_name, movie_tags, movie_notes) => {
-	return {
-		movie_id,
-		movie_name,
-		movie_tags,
-		movie_notes,
-	};
+  return {
+    movie_id,
+    movie_name,
+    movie_tags,
+    movie_notes,
+  };
 };
 
 const createEpisode = (
-	episode_id,
-	show_name,
-	episode_number,
-	episode_tags,
-	episode_notes,
-	is_heart_clicked,
-	show_id,
-	season_number
+  episode_id,
+  show_name,
+  episode_number,
+  episode_tags,
+  episode_notes,
+  is_heart_clicked,
+  show_id,
+  season_number
 ) => {
-	return {
-		episode_id,
-		show_name,
-		episode_number,
-		episode_tags,
-		episode_notes,
-		is_heart_clicked,
-		show_id,
-		season_number,
-	};
+  return {
+    episode_id,
+    show_name,
+    episode_number,
+    episode_tags,
+    episode_notes,
+    is_heart_clicked,
+    show_id,
+    season_number,
+  };
 };
 
 const createFavEpisode = (
-	showId,
-	seasonNumber,
-	episodeId,
-	showName,
-	episodeNumber
+  showId,
+  seasonNumber,
+  episodeId,
+  showName,
+  episodeNumber
 ) => {
-	return {
-		showId,
-		seasonNumber,
-		episodeId,
-		showName,
-		episodeNumber,
-	};
+  return {
+    showId,
+    seasonNumber,
+    episodeId,
+    showName,
+    episodeNumber,
+  };
 };
 
 const createFavMovie = (movieId, movieName) => {
-	return {
-		movieId,
-		movieName,
-	};
+  return {
+    movieId,
+    movieName,
+  };
 };
 
 const INITIAL_DOC = {
-	tv_shows: [],
-	movies: [],
+  tv_shows: [],
+  movies: [],
 };
 
 ///////////////////////// AUTH /////////////////////////////////////
 const signInWithGoogle = async () => {
-	try {
-		const res = await signInWithPopup(auth, googleProvider);
-		const user = res.user;
-		const docRef = doc(db, 'users', user.uid);
-		const docSnap = await getDoc(doc(db, 'users', user.uid));
+  try {
+    const res = await signInWithPopup(auth, googleProvider);
+    const user = res.user;
+    const docRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(doc(db, "users", user.uid));
 
-		//if document doesnt exist (ie new user), create a document
-		if (!docSnap.exists()) {
-			await setDoc(doc(db, 'users', user.uid), {
-				name: user.displayName,
-				authProvider: 'google',
-				email: user.email,
-				user_data: INITIAL_DOC,
-			});
-		} else {
-			// Existing user, add new movie to the movies array
-			const userData = docSnap.data().user_data;
+    //if document doesnt exist (ie new user), create a document
+    if (!docSnap.exists()) {
+      await setDoc(doc(db, "users", user.uid), {
+        name: user.displayName,
+        authProvider: "google",
+        email: user.email,
+        user_data: INITIAL_DOC,
+      });
+    } else {
+      // Existing user, add new movie to the movies array
+      const userData = docSnap.data().user_data;
 
-			await updateDoc(docRef, { user_data: userData });
-		}
-	} catch (err) {
-		console.log(err);
-	}
+      await updateDoc(docRef, { user_data: userData });
+    }
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 // Listen for authentication state changes
 onAuthStateChanged(auth, (user) => {
-	if (user) {
-		// User is signed in
-		userUid = user.uid;
-		console.log('User UID:', userUid);
-	} else {
-		// User is signed out
-		userUid = null;
-		console.log('No user is currently signed in.');
-	}
+  if (user) {
+    // User is signed in
+    userUid = user.uid;
+  } else {
+    // User is signed out
+    userUid = null;
+  }
 });
 
 const logout = () => {
-	signOut(auth);
+  signOut(auth);
 };
 
 ////////////////////////// FAVORITES ///////////////////////////////////
 const toggleEpFav = async (
-	//for episodes
-	showId,
-	seasonNumber,
-	episodeId,
-	showName,
-	episodeNumber,
-	isFavorited
+  //for episodes
+  showId,
+  seasonNumber,
+  episodeId,
+  showName,
+  episodeNumber,
+  isFavorited
 ) => {
-	try {
-		const docRef = doc(db, 'users', userUid);
-		const docSnap = await getDoc(docRef);
-		console.log('hi');
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
 
-			// Check if the episode is already favorited
-			const existingFavIndex = userData.favorites.findIndex(
-				(fav) => fav.episodeId === episodeId
-			);
+      // Check if the episode is already favorited
+      const existingFavIndex = userData.favorites.findIndex(
+        (fav) => fav.episodeId === episodeId
+      );
 
-			if (isFavorited && existingFavIndex === -1) {
-				// Add to favorites
-				const newFav = createFavEpisode(
-					showId,
-					seasonNumber,
-					episodeId,
-					showName,
-					episodeNumber
-				);
-				userData.favorites.push(newFav);
-				console.log('New fav added successfully.');
-			} else if (!isFavorited && existingFavIndex !== -1) {
-				console.log(existingFavIndex);
-				// Remove from favorites
-				userData.favorites.splice(existingFavIndex, 1);
-				console.log('Fav removed successfully.');
-			}
-			console.log(userData);
-			console.log(docRef);
-			// Update the user's document with the modified user_data
-			await updateDoc(docRef, { user_data: userData });
-		} else {
-			console.log('User document not found.');
-		}
-	} catch (error) {
-		console.error('Error toggling fav:', error);
-	}
+      if (isFavorited && existingFavIndex === -1) {
+        // Add to favorites
+        const newFav = createFavEpisode(
+          showId,
+          seasonNumber,
+          episodeId,
+          showName,
+          episodeNumber
+        );
+        userData.favorites.push(newFav);
+      } else if (!isFavorited && existingFavIndex !== -1) {
+        console.log(existingFavIndex);
+        // Remove from favorites
+      }
+      // Update the user's document with the modified user_data
+      await updateDoc(docRef, { user_data: userData });
+    } else {
+      console.log("User document not found.");
+    }
+  } catch (error) {
+    console.error("Error toggling fav:", error);
+  }
 };
 
 const toggleMovieFav = async (
-	// For movies
-	movieId,
-	movieName,
-	isFavorited
+  // For movies
+  movieId,
+  movieName,
+  isFavorited
 ) => {
-	try {
-		const docRef = doc(db, 'users', userUid);
-		const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
 
-			// Check if the movie is already favorited
-			const existingFavIndex = userData.favorites.findIndex(
-				(fav) => fav.movieId === movieId
-			);
+      // Check if the movie is already favorited
+      const existingFavIndex = userData.favorites.findIndex(
+        (fav) => fav.movieId === movieId
+      );
 
-			if (isFavorited && existingFavIndex === -1) {
-				// Add to favorites
-				const newFav = createFavMovie(movieId, movieName);
-				userData.favorites.push(newFav);
-				console.log('New favorite movie added successfully.');
-			} else if (!isFavorited && existingFavIndex !== -1) {
-				// Remove from favorites
-				userData.favorites.splice(existingFavIndex, 1);
-				console.log('Favorite movie removed successfully.');
-			}
+      if (isFavorited && existingFavIndex === -1) {
+        // Add to favorites
+        const newFav = createFavMovie(movieId, movieName);
+        userData.favorites.push(newFav);
+      } else if (!isFavorited && existingFavIndex !== -1) {
+        // Remove from favorites
+        userData.favorites.splice(existingFavIndex, 1);
+      }
 
-			// Update the user's document with the modified user_data
-			await updateDoc(docRef, { user_data: userData });
-		} else {
-			console.log('User document not found.');
-		}
-	} catch (error) {
-		console.error('Error toggling favorite:', error);
-	}
+      // Update the user's document with the modified user_data
+      await updateDoc(docRef, { user_data: userData });
+    } else {
+      console.log("User document not found.");
+    }
+  } catch (error) {
+    console.error("Error toggling favorite:", error);
+  }
 };
 
 const getFavorites = async () => {
-	try {
-		const docRef = doc(db, 'users', userUid);
-		const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
-			const favorites = userData.favorites;
-			console.log(favorites);
-			if (favorites) {
-				console.log('Favorites found');
-				console.log(favorites);
-				return favorites;
-			} else {
-				console.log('No favorites found.');
-				return [];
-			}
-		} else {
-			console.log('User document not found.');
-			return [];
-		}
-	} catch (error) {
-		console.error('Error getting favorites:', error);
-		return [];
-	}
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const favorites = userData.favorites;
+      if (favorites) {
+        return favorites;
+      } else {
+        return [];
+      }
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting favorites:", error);
+    return [];
+  }
 };
 
 const getFavEpisodes = async () => {
-	try {
-		const docRef = doc(db, 'users', userUid);
-		const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
-			const favorites = userData.tv_shows;
-			console.log(favorites);
-			if (favorites) {
-				console.log('Favorite episodes found');
-				return favorites;
-			} else {
-				console.log('No favorites found.');
-				return [];
-			}
-		} else {
-			console.log('User document not found.');
-			return [];
-		}
-	} catch (error) {
-		console.error('Error getting favorites:', error);
-		return [];
-	}
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const favorites = userData.tv_shows;
+      if (favorites) {
+        return favorites;
+      } else {
+        return [];
+      }
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting favorites:", error);
+    return [];
+  }
 };
 
 ///////////////////////// MOVIES /////////////////////////////////////
 
 const addNewMovie = async (movieId, movieName, movieTags, movieNotes) => {
-	try {
-		// Retrieve the user's document reference
-		const docRef = doc(db, 'users', userUid);
+  try {
+    // Retrieve the user's document reference
+    const docRef = doc(db, "users", userUid);
 
-		// Get the user's document snapshot
-		const docSnap = await getDoc(docRef);
+    // Get the user's document snapshot
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
 
-			// Create a new movie object
-			const newMovie = createMovie(movieId, movieName, movieTags, movieNotes);
+      // Create a new movie object
+      const newMovie = createMovie(movieId, movieName, movieTags, movieNotes);
 
-			// Add the new movie to the movies array
-			userData.movies.push(newMovie);
+      // Add the new movie to the movies array
+      userData.movies.push(newMovie);
 
-			// Update the user's document with the modified user_data
-			await updateDoc(docRef, { user_data: userData });
-			console.log('New movie added successfully.');
-		} else {
-			console.log('User document not found.');
-		}
-	} catch (error) {
-		console.error('Error adding new movie:', error);
-	}
+      // Update the user's document with the modified user_data
+      await updateDoc(docRef, { user_data: userData });
+    } else {
+      console.log("User document not found.");
+    }
+  } catch (error) {
+    console.error("Error adding new movie:", error);
+  }
 };
 
 const getMovie = async (movieId) => {
-	try {
-		// Retrieve the user's document reference
-		const docRef = doc(db, 'users', userUid);
+  try {
+    // Retrieve the user's document reference
+    const docRef = doc(db, "users", userUid);
 
-		// Get the user's document snapshot
-		const docSnap = await getDoc(docRef);
+    // Get the user's document snapshot
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
 
-			// Find the movie by searching for the movie ID
-			const movie = userData.movies.find((movie) => movie.movie_id === movieId);
+      // Find the movie by searching for the movie ID
+      const movie = userData.movies.find((movie) => movie.movie_id === movieId);
 
-			if (movie) {
-				console.log('movie found !!!');
-				console.log(movie.movie_tags);
-				return movie; // Return the movie if found
-			} else {
-				console.log('Movie not found. !!!!');
-				return null; // Return null if the movie is not found
-			}
-		} else {
-			console.log('User document not found.');
-			return null; // Return null if the user document is not found
-		}
-	} catch (error) {
-		console.error('Error getting movie:', error);
-		return null; // Return null if there's an error
-	}
+      if (movie) {
+        return movie; // Return the movie if found
+      } else {
+        return null; // Return null if the movie is not found
+      }
+    } else {
+      console.log("User document not found.");
+      return null; // Return null if the user document is not found
+    }
+  } catch (error) {
+    console.error("Error getting movie:", error);
+    return null; // Return null if there's an error
+  }
 };
 
 const updateMovieField = async (movieId, fieldToUpdate, newValue) => {
-	try {
-		const docRef = doc(db, 'users', userUid);
-		const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
-			const movieIndex = userData.movies.findIndex(
-				(movie) => movie.movie_id === movieId
-			);
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const movieIndex = userData.movies.findIndex(
+        (movie) => movie.movie_id === movieId
+      );
 
-			if (movieIndex !== -1) {
-				userData.movies[movieIndex][fieldToUpdate] = newValue;
-				await updateDoc(docRef, { user_data: userData });
-				console.log('Movie field updated successfully.');
-			} else {
-				console.log('Movie not found.');
-			}
-		} else {
-			console.log('User data not found.');
-		}
-	} catch (error) {
-		console.error('Error updating movie field:', error);
-	}
+      if (movieIndex !== -1) {
+        userData.movies[movieIndex][fieldToUpdate] = newValue;
+        await updateDoc(docRef, { user_data: userData });
+      } else {
+        console.log("Movie not found.");
+      }
+    } else {
+      console.log("User data not found.");
+    }
+  } catch (error) {
+    console.error("Error updating movie field:", error);
+  }
 };
 
 const deleteTagFromMovie = async (movieId, tagToDelete) => {
-	console.log(movieId);
-	try {
-		const docRef = doc(db, 'users', userUid);
-		const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
-			const movieIndex = userData.movies.findIndex(
-				(movie) => movie.movie_id === movieId
-			);
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const movieIndex = userData.movies.findIndex(
+        (movie) => movie.movie_id === movieId
+      );
 
-			if (movieIndex !== -1) {
-				// Find the tags array for the specific movie
-				const tags = userData.movies[movieIndex].movie_tags;
+      if (movieIndex !== -1) {
+        // Find the tags array for the specific movie
+        const tags = userData.movies[movieIndex].movie_tags;
 
-				// Remove the tag to delete from the tags array
-				const updatedTags = tags.filter((tag) => tag !== tagToDelete);
+        // Remove the tag to delete from the tags array
+        const updatedTags = tags.filter((tag) => tag !== tagToDelete);
 
-				// Update the tags field with the updatedTags array
-				userData.movies[movieIndex].movie_tags = updatedTags;
+        // Update the tags field with the updatedTags array
+        userData.movies[movieIndex].movie_tags = updatedTags;
 
-				// Update the user data in Firebase
-				await updateDoc(docRef, { user_data: userData });
-
-				console.log('Tag deleted successfully.');
-			} else {
-				console.log('Movie not found.');
-			}
-		} else {
-			console.log('User not found.');
-		}
-	} catch (error) {
-		console.error('Error deleting tag:', error);
-	}
+        // Update the user data in Firebase
+        await updateDoc(docRef, { user_data: userData });
+      } else {
+        console.log("Movie not found.");
+      }
+    } else {
+      console.log("User not found.");
+    }
+  } catch (error) {
+    console.error("Error deleting tag:", error);
+  }
 };
 
 ///////////////////////// EPISODES /////////////////////////////////////
 
 const updateEpisodeField = async (episodeId, fieldToUpdate, newValue) => {
-	try {
-		const docRef = doc(db, 'users', userUid);
-		const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
-			const episodeIndex = userData.tv_shows.findIndex(
-				(episode) => episode.episode_id === episodeId
-			);
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const episodeIndex = userData.tv_shows.findIndex(
+        (episode) => episode.episode_id === episodeId
+      );
 
-			if (episodeIndex !== -1) {
-				userData.tv_shows[episodeIndex][fieldToUpdate] = newValue;
-				await updateDoc(docRef, { user_data: userData });
-				console.log('Episode field updated successfully.');
-			} else {
-				console.log('hola, Episode not found.');
-			}
-		} else {
-			console.log('Show not found.');
-		}
-	} catch (error) {
-		console.error('Error updating episode field:', error);
-	}
+      if (episodeIndex !== -1) {
+        userData.tv_shows[episodeIndex][fieldToUpdate] = newValue;
+        await updateDoc(docRef, { user_data: userData });
+      } else {
+        console.log("Episode not found.");
+      }
+    } else {
+      console.log("Show not found.");
+    }
+  } catch (error) {
+    console.error("Error updating episode field:", error);
+  }
 };
 
 const deleteTagFromEpisode = async (episodeId, tagToDelete) => {
-	try {
-		const docRef = doc(db, 'users', userUid);
-		const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
-			const episodeIndex = userData.tv_shows.findIndex(
-				(episode) => episode.episode_id === episodeId
-			);
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const episodeIndex = userData.tv_shows.findIndex(
+        (episode) => episode.episode_id === episodeId
+      );
 
-			if (episodeIndex !== -1) {
-				// Find the tags array for the specific episode
-				const tags = userData.tv_shows[episodeIndex].episode_tags;
+      if (episodeIndex !== -1) {
+        // Find the tags array for the specific episode
+        const tags = userData.tv_shows[episodeIndex].episode_tags;
 
-				// Remove the tag to delete from the tags array
-				const updatedTags = tags.filter((tag) => tag !== tagToDelete);
+        // Remove the tag to delete from the tags array
+        const updatedTags = tags.filter((tag) => tag !== tagToDelete);
 
-				// Update the tags field with the updatedTags array
-				userData.tv_shows[episodeIndex].episode_tags = updatedTags;
+        // Update the tags field with the updatedTags array
+        userData.tv_shows[episodeIndex].episode_tags = updatedTags;
 
-				// Update the user data in Firebase
-				await updateDoc(docRef, { user_data: userData });
-
-				console.log('Tag deleted successfully.');
-			} else {
-				console.log('Episode not found.');
-			}
-		} else {
-			console.log('User not found.');
-		}
-	} catch (error) {
-		console.error('Error deleting tag:', error);
-	}
+        // Update the user data in Firebase
+        await updateDoc(docRef, { user_data: userData });
+      } else {
+        console.log("Episode not found.");
+      }
+    } else {
+      console.log("User not found.");
+    }
+  } catch (error) {
+    console.error("Error deleting tag:", error);
+  }
 };
 
 const addNewEpisode = async (
-	episodeId,
-	showName,
-	episodeNumber,
-	episodeTags,
-	episodeNotes,
-	isHeartClicked,
-	showId,
-	seasonNumber
+  episodeId,
+  showName,
+  episodeNumber,
+  episodeTags,
+  episodeNotes,
+  isHeartClicked,
+  showId,
+  seasonNumber
 ) => {
-	try {
-		const docRef = doc(db, 'users', userUid);
-		const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
-			const newEpisode = createEpisode(
-				episodeId,
-				showName,
-				episodeNumber,
-				episodeTags,
-				episodeNotes,
-				isHeartClicked,
-				showId,
-				seasonNumber
-			);
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const newEpisode = createEpisode(
+        episodeId,
+        showName,
+        episodeNumber,
+        episodeTags,
+        episodeNotes,
+        isHeartClicked,
+        showId,
+        seasonNumber
+      );
 
-			userData.tv_shows.push(newEpisode);
+      userData.tv_shows.push(newEpisode);
 
-			await updateDoc(docRef, { user_data: userData });
-			console.log('New episode added successfully.');
-		} else {
-			console.log('Show not found.');
-		}
-	} catch (error) {
-		console.error('Error adding new episode:', error);
-	}
+      await updateDoc(docRef, { user_data: userData });
+    } else {
+      console.log("Show not found.");
+    }
+  } catch (error) {
+    console.error("Error adding new episode:", error);
+  }
 };
 
 const getEpisode = async (episodeId) => {
-	try {
-		// Retrieve the user's document reference
-		const docRef = doc(db, 'users', userUid);
+  try {
+    // Retrieve the user's document reference
+    const docRef = doc(db, "users", userUid);
 
-		// Get the user's document snapshot
-		const docSnap = await getDoc(docRef);
+    // Get the user's document snapshot
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
 
-			// Find the movie by searching for the movie ID
-			const episode = userData.tv_shows.find(
-				(episode) => episode.episode_id === episodeId
-			);
+      // Find the movie by searching for the movie ID
+      const episode = userData.tv_shows.find(
+        (episode) => episode.episode_id === episodeId
+      );
 
-			if (episode) {
-				console.log('episode found');
-
-				return episode; // Return the movie if found
-			} else {
-				console.log('hi, episode not found.');
-				return null; // Return null if the movie is not found
-			}
-		} else {
-			console.log('User document not found.');
-			return null; // Return null if the user document is not found
-		}
-	} catch (error) {
-		console.error('Error getting episode:', error);
-		return null; // Return null if there's an error
-	}
+      if (episode) {
+        return episode; // Return the movie if found
+      } else {
+        return null; // Return null if the movie is not found
+      }
+    } else {
+      console.log("User document not found.");
+      return null; // Return null if the user document is not found
+    }
+  } catch (error) {
+    console.error("Error getting episode:", error);
+    return null; // Return null if there's an error
+  }
 };
 
 //////////////////////////SAVED//////////////////////////////////
 
 const getTVShowsWithTags = async () => {
-	try {
-		const docRef = doc(db, 'users', userUid);
-		const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
-			const tvShows = userData.tv_shows || [];
-			console.log(userData.tv_shows);
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const tvShows = userData.tv_shows || [];
 
-			const tvShowsWithTags = tvShows.filter((episode) => {
-				return episode.episode_tags && episode.episode_tags.length > 0;
-			});
+      const tvShowsWithTags = tvShows.filter((episode) => {
+        return episode.episode_tags && episode.episode_tags.length > 0;
+      });
 
-			console.log(tvShowsWithTags);
-			if (tvShowsWithTags.length > 0) {
-				console.log('TV Shows with episode tags found');
-				return tvShowsWithTags;
-			} else {
-				console.log('No TV Shows with episode tags found.');
-				return [];
-			}
-		} else {
-			console.log('User document not found.');
-			return [];
-		}
-	} catch (error) {
-		console.error('Error getting TV Shows with episode tags:', error);
-		return [];
-	}
+      if (tvShowsWithTags.length > 0) {
+        return tvShowsWithTags;
+      } else {
+        return [];
+      }
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting TV Shows with episode tags:", error);
+    return [];
+  }
 };
 
 const getFavoritedEps = async () => {
-	try {
-		const docRef = doc(db, 'users', userUid);
-		const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
-			const tvShows = userData.tv_shows || [];
-			console.log(userData.tv_shows);
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const tvShows = userData.tv_shows || [];
 
-			const favoritedEp = tvShows.filter((episode) => episode.is_heart_clicked);
+      const favoritedEp = tvShows.filter((episode) => episode.is_heart_clicked);
 
-			console.log(favoritedEp);
-			if (favoritedEp.length > 0) {
-				console.log('TV faves found');
-				return favoritedEp;
-			} else {
-				console.log('No tv faves found.');
-				return [];
-			}
-		} else {
-			console.log('User document not found.');
-			return [];
-		}
-	} catch (error) {
-		console.error('Error getting favorited TV Shows:', error);
-		return [];
-	}
+      if (favoritedEp.length > 0) {
+        return favoritedEp;
+      } else {
+        return [];
+      }
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting favorited TV Shows:", error);
+    return [];
+  }
 };
 
 const getAllTags = async (userUid) => {
-	try {
-		const docRef = doc(db, 'users', userUid);
-		const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
-			const allTags = [];
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const allTags = [];
 
-			userData.tv_shows.forEach((episode) => {
-				if (episode.episode_tags) {
-					episode.episode_tags.forEach((tag) => {
-						if (!allTags.includes(tag)) {
-							allTags.push(tag);
-						}
-					});
-				}
-			});
+      userData.tv_shows.forEach((episode) => {
+        if (episode.episode_tags) {
+          episode.episode_tags.forEach((tag) => {
+            if (!allTags.includes(tag)) {
+              allTags.push(tag);
+            }
+          });
+        }
+      });
 
-			console.log('All tags:', allTags);
-			return allTags;
-		} else {
-			console.log('User document not found.');
-			return [];
-		}
-	} catch (error) {
-		console.error('Error getting all tags:', error);
-		return [];
-	}
+      return allTags;
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting all tags:", error);
+    return [];
+  }
 };
 
 const getFavTags = async (userUid) => {
-	try {
-		const docRef = doc(db, 'users', userUid);
-		const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
-			const favTags = [];
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const favTags = [];
 
-			userData.tv_shows.forEach((episode) => {
-				if (episode.is_heart_clicked && episode.episode_tags) {
-					episode.episode_tags.forEach((tag) => {
-						if (!favTags.includes(tag)) {
-							favTags.push(tag);
-						}
-					});
-				}
-			});
+      userData.tv_shows.forEach((episode) => {
+        if (episode.is_heart_clicked && episode.episode_tags) {
+          episode.episode_tags.forEach((tag) => {
+            if (!favTags.includes(tag)) {
+              favTags.push(tag);
+            }
+          });
+        }
+      });
 
-			console.log('All tags:', favTags);
-			return favTags;
-		} else {
-			console.log('User document not found.');
-			return [];
-		}
-	} catch (error) {
-		console.error('Error getting all tags:', error);
-		return [];
-	}
+      return favTags;
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting all tags:", error);
+    return [];
+  }
 };
 
 const getEpisodeTags = async (userUid) => {
-	try {
-		const docRef = doc(db, 'users', userUid);
-		const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", userUid);
+    const docSnap = await getDoc(docRef);
 
-		if (docSnap.exists()) {
-			const userData = docSnap.data().user_data;
-			const tvShows = userData.tv_shows || [];
+    if (docSnap.exists()) {
+      const userData = docSnap.data().user_data;
+      const tvShows = userData.tv_shows || [];
 
-			// Extract episode tags from each TV show and flatten the result into a single array
-			const allTags = tvShows.flatMap((episode) => episode.episode_tags || []);
+      // Extract episode tags from each TV show and flatten the result into a single array
+      const allTags = tvShows.flatMap((episode) => episode.episode_tags || []);
 
-			// To get unique tags, convert the array into a Set and back into an array
-			const uniqueTags = [...new Set(allTags)];
+      // To get unique tags, convert the array into a Set and back into an array
+      const uniqueTags = [...new Set(allTags)];
 
-			return uniqueTags;
-		} else {
-			console.log('User document not found.');
-			return [];
-		}
-	} catch (error) {
-		console.error('Error getting episode tags:', error);
-		return [];
-	}
+      return uniqueTags;
+    } else {
+      console.log("User document not found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error getting episode tags:", error);
+    return [];
+  }
 };
 
 export default getEpisodeTags;
 
 export {
-	//authentification
-	signInWithGoogle,
-	logout,
-	db,
-	auth,
-	//movies
-	getMovie,
-	addNewMovie,
-	updateMovieField,
-	deleteTagFromMovie,
-	//episodes
-	updateEpisodeField,
-	deleteTagFromEpisode,
-	addNewEpisode,
-	getEpisode,
-	//favorites
-	toggleEpFav,
-	getFavEpisodes,
-	getFavorites,
-	toggleMovieFav,
-	getFavTags,
-	//saved
-	getTVShowsWithTags,
-	getFavoritedEps,
-	getAllTags,
-	getEpisodeTags,
+  //authentification
+  signInWithGoogle,
+  logout,
+  db,
+  auth,
+  //movies
+  getMovie,
+  addNewMovie,
+  updateMovieField,
+  deleteTagFromMovie,
+  //episodes
+  updateEpisodeField,
+  deleteTagFromEpisode,
+  addNewEpisode,
+  getEpisode,
+  //favorites
+  toggleEpFav,
+  getFavEpisodes,
+  getFavorites,
+  toggleMovieFav,
+  getFavTags,
+  //saved
+  getTVShowsWithTags,
+  getFavoritedEps,
+  getAllTags,
+  getEpisodeTags,
 };
