@@ -8,6 +8,7 @@ import {
   getFavTags,
   getFavoritedEps,
 } from "../firebase/firebase";
+import RefreshButton from '../components/refreshbutton';
 
 const FavoritesPage = ({ user }) => {
   const [favorites, setFavorites] = useState([]);
@@ -194,7 +195,10 @@ const FavoritesPage = ({ user }) => {
     <div className='grid h-full grid-cols-6 gap-4'>
       <div className='sticky top-0 h-screen col-span-1 overflow-y-auto rounded-xl bg-base-200'>
         <div className='p-2'>
-          <h1 className='mb-4 text-xl font-bold text-center'>Filters</h1>
+        <div className="flex items-center justify-between p-2 mb-4">
+						<h1 className="text-xl font-bold">Filters</h1>
+						<RefreshButton />
+					</div>
           <div class='collapse collapse-plus border'>
             <input type='checkbox' />
             <div class='collapse-title text-xl font-medium'>Filter Shows</div>
@@ -220,7 +224,7 @@ const FavoritesPage = ({ user }) => {
               {filteredShows.map((show) => (
                 <button
                   key={show}
-                  className={`mb-2 mr-2 badge badge-lg badge-secondary ${
+                  className={`mb-2 mr-2 badge badge-lg badge-secondary break-all h-auto  ${
                     selectedShow === show ? "ring-2 ring-primary" : ""
                   }`}
                   onClick={() =>
