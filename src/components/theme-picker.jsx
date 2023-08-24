@@ -22,11 +22,18 @@ const ThemePicker = () => {
         setTheme(initialThemeFromDocument);
       }
     }
-  }, []);
+    console.log(
+      "theme mounted",
+      document.documentElement.getAttribute("data-toggle-theme", theme)
+    );
+  }, [theme]);
 
   // useEffect to update the data-theme attribute on the document element and store in localStorage
   useEffect(() => {
     document.documentElement.setAttribute("data-toggle-theme", theme);
+    console.log(
+      document.documentElement.getAttribute("data-toggle-theme", theme)
+    );
   }, [theme]);
 
   return (
