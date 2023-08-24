@@ -8,7 +8,9 @@ const ThemePicker = () => {
 
   // Toggle theme function
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "rain" ? "dracula" : "rain"));
+    setTheme((prevTheme) =>
+      prevTheme === "sceneitLight" ? "sceneit" : "sceneitLight"
+    );
   };
 
   useEffect(() => {
@@ -31,10 +33,10 @@ const ThemePicker = () => {
     <button
       className='btn join-item'
       data-act-class='ACTIVECLASS'
-      data-toggle-theme='dracula,rain'
+      data-toggle-theme='sceneit,sceneitLight'
       onClick={toggleTheme}
     >
-      {theme === "rain" ? (
+      {theme === "sceneitLight" ? (
         <RiSunLine className='w-4 h-4' />
       ) : (
         <RiMoonLine className='w-4 h-4' />

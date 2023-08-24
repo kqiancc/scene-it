@@ -40,43 +40,20 @@ module.exports = {
   daisyui: {
     styled: true,
     themes: [
-      "dracula",
       {
-        rain: {
-          primary: "#ca9ff5", //accents and title, bright
-          secondary: "#f5cee4", //typed text, should be dark
-          "base-100": "#ffeede", //background, dark
-          "base-content": "#ADD3FF", //text color, bright
+        sceneit: {
+          primary: "#FF79C6", //accents and title, bright
+          secondary: "#8BE9FD", //typed text, should be dark
+          "base-100": "#0E1419", //background, dark
+          "base-content": "#FFFFFF", //text color, bright
+        },
+        sceneitLight: {
+          primary: "#FF79C6", //accents and title 008639 - green
+          secondary: "#FFB86C", //typed text FFB86C - orange, 04c1eb - blue
+          "base-100": "#F1EBE6", //background
+          "base-content": "#000000", //text color
         },
       },
-      "acid",
-      "aqua",
-      "autumn",
-      "bumblebee",
-      "black",
-      "business",
-      "coffee",
-      "corporate",
-      "cupcake",
-      "cyberpunk",
-      "cmyk",
-      "dark",
-      "emerald",
-      "fantasy",
-      "forest",
-      "garden",
-      "halloween",
-      "lemonade",
-      "light",
-      "lofi",
-      "luxury",
-      "night",
-      "pastel",
-      "retro",
-      "synthwave",
-      "valentine",
-      "winter",
-      "wireframe",
     ],
     base: true,
     utils: true,

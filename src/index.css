@@ -13,21 +13,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
-@keyframes shrink {
-  0% {
-    font-size: 11rem;
-  }
-  100% {
-    font-size: 6rem;
-  }
-}
-
-@keyframes grow {
-  0% {
-    font-size: 6rem;
-  }
-  100% {
-    font-size: 11rem;
-  }
-}
