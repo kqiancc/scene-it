@@ -1,5 +1,5 @@
-import { RiArrowGoBackLine } from 'react-icons/ri';
-import {useNavigate} from 'react-router-dom';
+import { RiArrowGoBackLine } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
 
 const BackButton = () => {
   const navigate = useNavigate();
@@ -9,8 +9,8 @@ const BackButton = () => {
   };
 
   return (
-    <div onClick={goBack} className="join-item btn bg-base-200">
-      <RiArrowGoBackLine />
+    <div onClick={goBack}>
+      <RiArrowGoBackLine className='w-4 h-4' />
     </div>
   );
 };

@@ -8,7 +8,7 @@ import {
   getFavTags,
   getFavoritedEps,
 } from "../firebase/firebase";
-import RefreshButton from '../components/refreshbutton';
+import RefreshButton from "../components/refreshbutton";
 
 const FavoritesPage = ({ user }) => {
   const [favorites, setFavorites] = useState([]);
@@ -192,13 +192,13 @@ const FavoritesPage = ({ user }) => {
   }
 
   return user ? (
-    <div className='grid h-full grid-cols-6 gap-4'>
+    <div className='grid h-full grid-cols-6'>
       <div className='sticky top-0 h-screen col-span-1 overflow-y-auto rounded-xl bg-base-200'>
         <div className='p-2'>
-        <div className="flex items-center justify-between p-2 mb-4">
-						<h1 className="text-xl font-bold">Filters</h1>
-						<RefreshButton />
-					</div>
+          <div className='flex items-center justify-between p-2 mb-4'>
+            <h1 className='text-xl font-bold'>Filters</h1>
+            <RefreshButton />
+          </div>
           <div class='collapse collapse-plus border'>
             <input type='checkbox' />
             <div class='collapse-title text-xl font-medium'>Filter Shows</div>

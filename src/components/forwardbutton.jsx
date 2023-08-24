@@ -1,4 +1,4 @@
-import { RiArrowGoForwardLine } from 'react-icons/ri';
+import { RiArrowGoForwardLine } from "react-icons/ri";
 
 const ForwardButton = () => {
   const goForward = () => {
@@ -6,8 +6,8 @@ const ForwardButton = () => {
   };
 
   return (
-    <div onClick={goForward} className="join-item btn bg-base-200">
-      <RiArrowGoForwardLine />
+    <div onClick={goForward}>
+      <RiArrowGoForwardLine className='w-4 h-4' />
     </div>
   );
 };
