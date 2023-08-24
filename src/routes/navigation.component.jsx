@@ -29,7 +29,7 @@ const Navigation = ({ user }) => {
             </label>
             <ul
               tabIndex={0}
-              className='menu menu-lg dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box'
+              className='menu dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box'
             >
               <li>
                 <BackButton />
@@ -74,37 +74,31 @@ const Navigation = ({ user }) => {
             </li>
           </ul>
         </div>
-        <div className='navbar-center lg:flex'>
-          <Link to='/'>
-            <PiPopcorn className='w-10 h-10' />
-          </Link>
-        </div>
+        <Link className='btn btn-ghost navbar-center lg:flex' to='/'>
+          <PiPopcorn className='w-10 h-10' />
+        </Link>
         <div className='navbar-end'>
           {user ? (
-            <div className='p-2'>
-              <div className='dropdown dropdown-bottom dropdown-end '>
-                <button tabIndex={-1}>
-                  <RiUser3Line className='w-5 h-10' />
-                </button>
-                <ul
-                  tabIndex={-1}
-                  className='w-32 p-2 shadow dropdown-content menu bg-secondary rounded-box'
-                >
-                  <li className='m-1 text-center'>{user.displayName}</li>
-                  <li className='m-1 text-center'>
-                    <button onClick={logout}>
-                      <RiLogoutBoxLine className='w-5 h-5' />
-                      logout
-                    </button>
-                  </li>
-                </ul>
-              </div>
+            <div className='dropdown dropdown-bottom dropdown-end '>
+              <Link className='btn btn-ghost' tabIndex={-1}>
+                <RiUser3Line className='w-4 h-4' />
+              </Link>
+              <ul
+                tabIndex={-1}
+                className='w-32 p-2 shadow dropdown-content menu bg-base-200 rounded-box'
+              >
+                <li className='m-1 text-center'>{user.displayName}</li>
+                <li className='m-1 text-center'>
+                  <button onClick={logout}>
+                    <RiLogoutBoxLine className='w-5 h-5' />
+                    logout
+                  </button>
+                </li>
+              </ul>
             </div>
           ) : (
-            <Link to='/login'>
-              <button className='absolute top-5 right-5' tabIndex={-1}>
-                <RiUser3Line className='w-5 h-10' />
-              </button>
+            <Link className='btn btn-ghost' to='/login'>
+              <RiUser3Line className='w-4 h-4' />
             </Link>
           )}
         </div>
