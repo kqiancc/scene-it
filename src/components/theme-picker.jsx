@@ -1,6 +1,12 @@
 import { RiSunLine, RiMoonLine } from "react-icons/ri";
+import { useEffect } from "react";
+import { themeChange } from "theme-change";
 
 const ThemePicker = () => {
+  useEffect(() => {
+    themeChange(false);
+  }, []);
+
   return (
     <label class='swap swap-flip'>
       <input type='checkbox' />

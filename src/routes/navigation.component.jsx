@@ -1,6 +1,5 @@
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { Outlet, Link } from "react-router-dom";
-import { themeChange } from "theme-change";
 import ThemePicker from "../components/theme-picker";
 import {
   RiUser3Line,
@@ -15,10 +14,6 @@ import ForwardButton from "../components/forwardbutton";
 import BackButton from "../components/backbutton";
 
 const Navigation = ({ user }) => {
-  useEffect(() => {
-    themeChange(false);
-  }, []);
-
   return (
     <Fragment>
       <div className='mb-4 navbar'>
