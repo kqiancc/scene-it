@@ -75,9 +75,9 @@ const Navigation = ({ user }) => {
         <div className='navbar-end'>
           {user ? (
             <div className='dropdown dropdown-bottom dropdown-end '>
-              <Link className='btn btn-ghost' tabIndex={-1}>
+              <button className='btn btn-ghost' tabIndex={-1}>
                 <RiUser3Line className='w-4 h-4' />
-              </Link>
+              </button>
               <ul
                 tabIndex={-1}
                 className='w-32 p-2 shadow dropdown-content menu bg-base-200 rounded-box'
