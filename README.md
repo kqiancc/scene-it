@@ -2,7 +2,7 @@
 [SceneIt](https://sceneit.tv/) is a web application designed for cataloging user-generated insights on TV shows and movies. Developed using React and Firebase, it allows users to filter and navigate through insights using user-created tags. 
 ## Features
 * All movies and TV shows are searchable, displaying detailed information, including seasons and respective episodes for TV shows.
-* One-click Google sign-in for convenience
+* One-click Google sign-in
 * Users can write down insights on specific episodes or movies.
 * Users have the ability to apply personalized tags to TV show episodes, aiding in navigation and filtering.
 * Various filtering methods for episodes:
@@ -17,4 +17,4 @@
 * React
 * Firebase
 * Tailwind CSS
-* DaisyUI
+  * DaisyUI
