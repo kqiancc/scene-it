@@ -1,5 +1,5 @@
 # Welcome to SceneIt!
-SceneIt is a web application that stores user-generated insights on TV shows and movies, allowing for filtering through user-created tags, developed using React and Firebase. 
+[SceneIt](https://sceneit.tv/) is a web application that stores user-generated insights on TV shows and movies, allowing for filtering through user-created tags, developed using React and Firebase. 
 ## Features
 * All movies and TV shows are searchable, with comprehensive and up-to-date information displayed, including seasons and season episodes for TV shows.
 * One click sign in with Google, saving all information users input.
